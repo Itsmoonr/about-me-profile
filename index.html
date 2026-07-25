@@ -1084,7 +1084,7 @@
         <p class="ending__continue"><span data-i18n="ending.continue">Continue?</span> <span style="color:var(--accent-blue);">Y</span> / N</p>
     </footer>
 
-    <!-- Premium Music Player (Web Audio API) -->
+    <!-- Premium Music Player (Audio Element) -->
     <div class="music-player" id="musicPlayer" title="Ambient Soundtrack">
         <button class="music-player__btn" id="musicToggle" aria-label="Play ambient music">▶</button>
         <div class="music-player__visualizer">
@@ -1094,7 +1094,10 @@
             <div class="visualizer-bar" style="height:12px;"></div>
         </div>
     </div>
-    <!-- Audio element removed, replaced by Web Audio API -->
+    <!-- 👇 Your audio file inside the audio/ folder 👇 -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="audio/ambient.mp3" type="audio/mpeg">
+    </audio>
 
     <!-- Easter Egg -->
     <div class="toast" id="toast" data-i18n="toast">✦ Secret found: Explorer's essence</div>
@@ -1478,69 +1481,50 @@
             init(); animate(); window.addEventListener('resize', resize);
         } catch(e) { document.getElementById('heroCanvas').style.display='none'; }
 
-        // ─── Web Audio API Music Player ───
+        // ─── Audio Element Music Player ───
         (function() {
             const musicBtn = document.getElementById('musicToggle');
             const musicPlayer = document.getElementById('musicPlayer');
-            let audioContext = null;
-            let oscillator = null;
-            let gainNode = null;
-            let isPlaying = false;
+            const bgMusic = document.getElementById('bgMusic');
+            let playing = false;
 
-            function startAudio() {
-                try {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    oscillator = audioContext.createOscillator();
-                    gainNode = audioContext.createGain();
-
-                    // Soft ambient sound (sine wave with low frequency, low volume)
-                    oscillator.type = 'sine';
-                    oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3 note, calm
-                    gainNode.gain.setValueAtTime(0.08, audioContext.currentTime); // Very subtle
-
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    oscillator.start();
-
-                    isPlaying = true;
-                    musicBtn.textContent = '❚❚';
-                    musicBtn.classList.add('playing');
-                    musicPlayer.classList.add('playing');
-                } catch (e) {
-                    console.warn('Web Audio API not supported', e);
-                    // Show a small toast if audio fails
-                    const toast = document.getElementById('toast');
-                    toast.textContent = 'Audio not supported on this device';
-                    toast.classList.add('show');
-                    setTimeout(() => toast.classList.remove('show'), 2000);
+            // Preload the audio on first interaction
+            function ensureLoaded() {
+                if (bgMusic.readyState === 0) {
+                    bgMusic.load();
                 }
             }
 
-            function stopAudio() {
-                if (oscillator) {
-                    oscillator.stop();
-                    oscillator.disconnect();
-                }
-                if (gainNode) {
-                    gainNode.disconnect();
-                }
-                if (audioContext) {
-                    audioContext.close();
-                }
-                oscillator = null;
-                gainNode = null;
-                audioContext = null;
-                isPlaying = false;
-                musicBtn.textContent = '▶';
-                musicBtn.classList.remove('playing');
-                musicPlayer.classList.remove('playing');
+            function showError(msg) {
+                const toast = document.getElementById('toast');
+                toast.textContent = '⚠ ' + msg;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
             }
+
+            bgMusic.addEventListener('error', () => {
+                console.error('Audio file failed to load. Check path and format.');
+                showError('Audio file not found or corrupted');
+            });
 
             musicBtn.addEventListener('click', () => {
-                if (!isPlaying) {
-                    startAudio();
+                ensureLoaded();
+                if (!playing) {
+                    bgMusic.play().then(() => {
+                        playing = true;
+                        musicBtn.textContent = '❚❚';
+                        musicBtn.classList.add('playing');
+                        musicPlayer.classList.add('playing');
+                    }).catch((err) => {
+                        console.warn('Playback failed:', err);
+                        showError('Cannot play audio');
+                    });
                 } else {
-                    stopAudio();
+                    bgMusic.pause();
+                    playing = false;
+                    musicBtn.textContent = '▶';
+                    musicBtn.classList.remove('playing');
+                    musicPlayer.classList.remove('playing');
                 }
             });
         })();
