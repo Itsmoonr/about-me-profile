@@ -876,7 +876,7 @@
             <div class="hero__content">
                 <div class="hero__text">
                     <h1 class="hero__name">ROSS</h1>
-                    <p class="hero__tagline" data-i18n="hero.tagline">Crafting stories with code and light.</p>
+                    <p class="hero__tagline" data-i18n="hero.tagline">Writing stories in code and light.</p>
                     <p class="hero__invite" data-i18n="hero.invite">Step into my world. Every frame holds a memory. Every chapter a story.</p>
                     <a href="#profile" class="hero__cta" data-i18n="hero.cta">Begin Journey</a>
                 </div>
@@ -913,6 +913,7 @@
                     <div class="profile__stat"><dt data-i18n="profile.stat.path">Path</dt><dd data-i18n="profile.stat.pathValue">University Student</dd></div>
                     <div class="profile__stat"><dt data-i18n="profile.stat.essence">Essence</dt><dd data-i18n="profile.stat.essenceValue">Curious, Empathetic, Meticulous</dd></div>
                     <div class="profile__stat"><dt data-i18n="profile.stat.spec">Specialization</dt><dd data-i18n="profile.stat.specValue">Tech × Design × Story</dd></div>
+                    <div class="profile__stat"><dt data-i18n="profile.stat.listening">Listening to</dt><dd data-i18n="profile.stat.listeningValue">Lo-fi / Rain sounds</dd></div>
                 </dl>
             </div>
         </section>
@@ -1083,9 +1084,9 @@
         <p class="ending__continue"><span data-i18n="ending.continue">Continue?</span> <span style="color:var(--accent-blue);">Y</span> / N</p>
     </footer>
 
-    <!-- Premium Music Player -->
+    <!-- Premium Music Player (Web Audio API) -->
     <div class="music-player" id="musicPlayer" title="Ambient Soundtrack">
-        <button class="music-player__btn" id="musicToggle" aria-label="Toggle ambient music">▶</button>
+        <button class="music-player__btn" id="musicToggle" aria-label="Play ambient music">▶</button>
         <div class="music-player__visualizer">
             <div class="visualizer-bar" style="height:8px;"></div>
             <div class="visualizer-bar" style="height:14px;"></div>
@@ -1093,9 +1094,7 @@
             <div class="visualizer-bar" style="height:12px;"></div>
         </div>
     </div>
-    <audio id="bgMusic" loop preload="none">
-        <source src="#" type="audio/mpeg">
-    </audio>
+    <!-- Audio element removed, replaced by Web Audio API -->
 
     <!-- Easter Egg -->
     <div class="toast" id="toast" data-i18n="toast">✦ Secret found: Explorer's essence</div>
@@ -1106,7 +1105,7 @@
             en: {
                 skipLink: "Skip to Content",
                 hero: {
-                    tagline: "Crafting stories with code and light.",
+                    tagline: "Writing stories in code and light.",
                     invite: "Step into my world. Every frame holds a memory. Every chapter a story.",
                     cta: "Begin Journey",
                     caption: "Tokyo, 2023 – a quiet moment",
@@ -1134,7 +1133,9 @@
                         essence: "Essence",
                         essenceValue: "Curious, Empathetic, Meticulous",
                         spec: "Specialization",
-                        specValue: "Tech × Design × Story"
+                        specValue: "Tech × Design × Story",
+                        listening: "Listening to",
+                        listeningValue: "Lo-fi / Rain sounds"
                     }
                 },
                 chapters: {
@@ -1211,7 +1212,9 @@
                         essence: "Bản chất",
                         essenceValue: "Tò mò, đồng cảm, tỉ mỉ",
                         spec: "Chuyên môn",
-                        specValue: "Công nghệ × Thiết kế × Kể chuyện"
+                        specValue: "Công nghệ × Thiết kế × Kể chuyện",
+                        listening: "Đang nghe",
+                        listeningValue: "Lo-fi / Mưa rơi"
                     }
                 },
                 chapters: {
@@ -1288,7 +1291,9 @@
                         essence: "本質",
                         essenceValue: "好奇心、共感、几帳面",
                         spec: "専門",
-                        specValue: "テクノロジー × デザイン × ストーリー"
+                        specValue: "テクノロジー × デザイン × ストーリー",
+                        listening: "聴いている",
+                        listeningValue: "ローファイ / 雨音"
                     }
                 },
                 chapters: {
@@ -1351,7 +1356,6 @@
                 }
             });
             localStorage.setItem('lang', lang);
-            // Update custom dropdown display
             const langData = { en: '🇬🇧 EN', vi: '🇻🇳 VI', ja: '🇯🇵 JA' };
             document.querySelector('.current-lang-text').textContent = langData[lang];
             document.querySelectorAll('.lang-dropdown li').forEach(li => {
@@ -1391,7 +1395,6 @@
             });
         });
 
-        // Load saved language or default
         const savedLang = localStorage.getItem('lang') || 'en';
         applyLanguage(savedLang);
 
@@ -1475,32 +1478,83 @@
             init(); animate(); window.addEventListener('resize', resize);
         } catch(e) { document.getElementById('heroCanvas').style.display='none'; }
 
-        const musicBtn = document.getElementById('musicToggle');
-        const bgMusic = document.getElementById('bgMusic');
-        const musicPlayer = document.getElementById('musicPlayer');
-        let playing = false;
-        musicBtn.addEventListener('click', ()=>{
-            if(!playing) {
-                bgMusic.play().then(()=>{
-                    playing=true;
-                    musicBtn.textContent='❚❚';
+        // ─── Web Audio API Music Player ───
+        (function() {
+            const musicBtn = document.getElementById('musicToggle');
+            const musicPlayer = document.getElementById('musicPlayer');
+            let audioContext = null;
+            let oscillator = null;
+            let gainNode = null;
+            let isPlaying = false;
+
+            function startAudio() {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    oscillator = audioContext.createOscillator();
+                    gainNode = audioContext.createGain();
+
+                    // Soft ambient sound (sine wave with low frequency, low volume)
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(220, audioContext.currentTime); // A3 note, calm
+                    gainNode.gain.setValueAtTime(0.08, audioContext.currentTime); // Very subtle
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    oscillator.start();
+
+                    isPlaying = true;
+                    musicBtn.textContent = '❚❚';
                     musicBtn.classList.add('playing');
                     musicPlayer.classList.add('playing');
-                }).catch(()=>{});
-            } else {
-                bgMusic.pause();
-                playing=false;
-                musicBtn.textContent='▶';
+                } catch (e) {
+                    console.warn('Web Audio API not supported', e);
+                    // Show a small toast if audio fails
+                    const toast = document.getElementById('toast');
+                    toast.textContent = 'Audio not supported on this device';
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 2000);
+                }
+            }
+
+            function stopAudio() {
+                if (oscillator) {
+                    oscillator.stop();
+                    oscillator.disconnect();
+                }
+                if (gainNode) {
+                    gainNode.disconnect();
+                }
+                if (audioContext) {
+                    audioContext.close();
+                }
+                oscillator = null;
+                gainNode = null;
+                audioContext = null;
+                isPlaying = false;
+                musicBtn.textContent = '▶';
                 musicBtn.classList.remove('playing');
                 musicPlayer.classList.remove('playing');
             }
-        });
+
+            musicBtn.addEventListener('click', () => {
+                if (!isPlaying) {
+                    startAudio();
+                } else {
+                    stopAudio();
+                }
+            });
+        })();
 
         const toast = document.getElementById('toast');
         document.addEventListener('keydown', e => {
             if(e.key === 'e' || e.key === 'E') {
                 toast.classList.add('show');
                 setTimeout(()=> toast.classList.remove('show'), 2000);
+            }
+            // Press Y to restart journey
+            if(e.key === 'y' || e.key === 'Y') {
+                const hero = document.getElementById('hero');
+                if(hero) scrollToTarget(hero, 60);
             }
         });
     </script>
