@@ -11,11 +11,19 @@
     <meta name="theme-color" content="#0b0b0f">
     <title>Ross | Enter the World</title>
 
-    <!-- Custom Favicon (inline SVG) -->
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:title" content="Ross | Enter the World">
+    <meta property="og:description" content="Creative student based in Japan. Technology, design, storytelling.">
+    <meta property="og:image" content="https://YOUR-DOMAIN.com/images/ross-portrait.jpg"> <!-- UPDATE THIS URL -->
+    <meta property="og:url" content="https://YOUR-DOMAIN.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ross | Enter the World">
+    <meta name="twitter:description" content="Creative student based in Japan. Technology, design, storytelling.">
+
+    <!-- Custom Favicon -->
     <link rel="icon" type="image/png" href="images/favicon.png">
 
-    <!-- GSAP (optional) -->
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <!-- Lenis Smooth Scroll -->
     <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
@@ -200,7 +208,7 @@
             .nav { padding: 12px 20px; }
         }
 
-        /* Language Switcher - Premium Custom Dropdown */
+        /* Language Switcher - Accessible Premium Dropdown */
         .lang-custom {
             position: relative;
             margin-left: 24px;
@@ -263,8 +271,10 @@
             gap: 8px;
             color: var(--text-secondary);
             font-size: 0.75rem;
+            outline: none;
         }
-        .lang-dropdown li:hover {
+        .lang-dropdown li:hover,
+        .lang-dropdown li:focus-visible {
             background: rgba(74,144,226,0.15);
             color: #fff;
         }
@@ -712,6 +722,7 @@
             padding-bottom: 4px;
             transition: all var(--transition-fast);
             margin-bottom: 20px;
+            cursor: pointer;
         }
         .terminal__email:hover { color: #fff; border-bottom-color: #fff; }
         .terminal__socials {
@@ -795,6 +806,9 @@
             align-items: center;
             gap: 10px;
             transition: all var(--transition-smooth);
+        }
+        .music-player.hidden {
+            display: none;
         }
         .music-player:hover {
             border-color: var(--accent-blue);
@@ -885,14 +899,14 @@
                     <li><a href="#terminal" data-section="terminal" data-i18n="nav.terminal">Terminal</a></li>
                 </ul>
             </nav>
-            <!-- Premium Language Switcher -->
-            <div class="lang-custom" id="langCustom">
+            <!-- Premium Accessible Language Switcher -->
+            <div class="lang-custom" id="langCustom" role="listbox" aria-expanded="false" aria-label="Select language">
                 <span class="current-lang-text">🇬🇧 EN</span>
-                <span class="arrow">▾</span>
-                <ul class="lang-dropdown" id="langDropdown">
-                    <li data-lang="en" class="active">🇬🇧 English</li>
-                    <li data-lang="vi">🇻🇳 Tiếng Việt</li>
-                    <li data-lang="ja">🇯🇵 日本語</li>
+                <span class="arrow" aria-hidden="true">▾</span>
+                <ul class="lang-dropdown" id="langDropdown" role="listbox" aria-activedescendant="lang-en">
+                    <li id="lang-en" data-lang="en" class="active" role="option" aria-selected="true">🇬🇧 English</li>
+                    <li id="lang-vi" data-lang="vi" class="" role="option" aria-selected="false">🇻🇳 Tiếng Việt</li>
+                    <li id="lang-ja" data-lang="ja" class="" role="option" aria-selected="false">🇯🇵 日本語</li>
                 </ul>
             </div>
         </div>
@@ -911,7 +925,7 @@
                     <a href="#profile" class="hero__cta" data-i18n="hero.cta">Begin Journey</a>
                 </div>
                 <div class="hero__portrait">
-                    <img src="images/ross-portrait.jpg" alt="Ross, a Vietnamese student in Japan">
+                    <img src="images/ross-portrait.jpg" onerror="this.style.display='none'" alt="Ross, a Vietnamese student in Japan">
                     <span class="hero__portrait-caption" data-i18n="hero.caption">Tokyo, 2023 – a quiet moment</span>
                 </div>
             </div>
@@ -983,8 +997,8 @@
                 </div>
                 <div class="chapter-item">
                     <p class="chapter-number" data-i18n="chapters.6.number">Chapter VI</p>
-                    <p class="chapter-title" data-i18n="chapters.6.title">Horizon · Germany & Beyond</p>
-                    <p class="chapter-desc" data-i18n="chapters.6.desc">The next chapter waits across the sea. I'm preparing to carry my stories to new cultures, to collaborate, and to become a creator who leaves a gentle but lasting mark.</p>
+                    <p class="chapter-title" data-i18n="chapters.6.title">Horizon · The Next Frontier</p>
+                    <p class="chapter-desc" data-i18n="chapters.6.desc">After building my foundation in Japan, I'm preparing to take my craft to an English-speaking world. New cultures, new collaborations, and a future where design knows no borders.</p>
                 </div>
             </div>
         </section>
@@ -1066,27 +1080,27 @@
             </div>
             <div class="journal__grid">
                 <div class="journal-item">
-                    <img src="images/gallery-1.jpg" alt="Tokyo first snowfall">
+                    <img src="images/gallery-1.jpg" onerror="this.style.display='none'" alt="Tokyo first snowfall">
                     <div class="journal-item__meta"><span>Tokyo</span><span data-i18n="journal.1.desc">2022 · First snowfall</span></div>
                 </div>
                 <div class="journal-item">
-                    <img src="images/gallery-2.jpg" alt="Late night design">
+                    <img src="images/gallery-2.jpg" onerror="this.style.display='none'" alt="Late night design">
                     <div class="journal-item__meta"><span>University</span><span data-i18n="journal.2.desc">2024 · Late-night design</span></div>
                 </div>
                 <div class="journal-item">
-                    <img src="images/gallery-3.jpg" alt="Osaka neon rain">
+                    <img src="images/gallery-3.jpg" onerror="this.style.display='none'" alt="Osaka neon rain">
                     <div class="journal-item__meta"><span>Osaka</span><span data-i18n="journal.3.desc">2023 · Neon rain</span></div>
                 </div>
                 <div class="journal-item">
-                    <img src="images/gallery-4.jpg" alt="Quiet hour in the studio">
+                    <img src="images/gallery-4.jpg" onerror="this.style.display='none'" alt="Quiet hour in the studio">
                     <div class="journal-item__meta"><span>Studio</span><span data-i18n="journal.4.desc">2024 · The quiet hour</span></div>
                 </div>
                 <div class="journal-item">
-                    <img src="images/gallery-5.jpg" alt="Stranger's smile">
+                    <img src="images/gallery-5.jpg" onerror="this.style.display='none'" alt="Stranger's smile">
                     <div class="journal-item__meta"><span>People</span><span data-i18n="journal.5.desc">2023 · Stranger's smile</span></div>
                 </div>
                 <div class="journal-item">
-                    <img src="images/gallery-6.jpg" alt="Kyoto temple of light">
+                    <img src="images/gallery-6.jpg" onerror="this.style.display='none'" alt="Kyoto temple of light">
                     <div class="journal-item__meta"><span>Kyoto</span><span data-i18n="journal.6.desc">2022 · Temple of light</span></div>
                 </div>
             </div>
@@ -1100,7 +1114,7 @@
                 <div class="section__divider"></div>
             </div>
             <div class="terminal__inner">
-                <a href="mailto:moonsicson@gmail.com" class="terminal__email">moonsicson@gmail.com</a>
+                <span id="emailLink" class="terminal__email" role="link" tabindex="0" aria-label="Send email to Ross"></span>
                 <p style="color:var(--text-secondary);margin-bottom:24px;" data-i18n="terminal.invite">Collaborations, freelance, or just a conversation — always welcome.</p>
                 <div class="terminal__socials">
                     <a href="https://github.com/MoonDaReal" class="terminal__social-link" target="_blank" rel="noopener">GitHub</a>
@@ -1112,17 +1126,17 @@
     </main>
 
     <!-- Ending Scene -->
-<footer class="ending" role="contentinfo">
-    <p class="ending__title" data-i18n="ending.title">Game Saved</p>
-    <p class="ending__message" data-i18n="ending.message">Until the next journey.</p>
-    <p class="ending__continue"><span data-i18n="ending.continue">Continue?</span> <span style="color:var(--accent-blue);">Y</span> / N</p>
-    
-    <p class="copyright">
-        &copy; <span id="footerYear"></span> 
-        <span style="color: var(--accent-blue); font-weight: 600; letter-spacing: 0.02em;">Ross Nguyen</span>. 
-        Licensed under the <a href="LICENSE" style="color:var(--accent-blue); text-decoration:underline; text-underline-offset: 2px;">MIT License</a>.
-    </p>
-</footer>
+    <footer class="ending" role="contentinfo">
+        <p class="ending__title" data-i18n="ending.title">Game Saved</p>
+        <p class="ending__message" data-i18n="ending.message">Until the next journey.</p>
+        <p class="ending__continue"><span data-i18n="ending.continue">Continue?</span> <span style="color:var(--accent-blue);">Y</span> / N</p>
+        
+        <p class="copyright">
+            &copy; <span id="footerYear"></span> 
+            <span style="color: var(--accent-blue); font-weight: 600; letter-spacing: 0.02em;">Ross Nguyen</span>. 
+            Licensed under the <a href="LICENSE" style="color:var(--accent-blue); text-decoration:underline; text-underline-offset: 2px;">MIT License</a>.
+        </p>
+    </footer>
 
     <!-- Premium Music Player (Audio Element) -->
     <div class="music-player" id="musicPlayer" title="Ambient Soundtrack">
@@ -1144,6 +1158,33 @@
 
     <script>
         // Copyright (c) 2026 Ross Nguyen - MIT License
+
+        // ─── Email Obfuscation ───
+        (function() {
+            const emailSpan = document.getElementById('emailLink');
+            if (emailSpan) {
+                const user = 'moonsicson';
+                const domain = 'gmail.com';
+                const fullEmail = user + '@' + domain;
+                const link = document.createElement('a');
+                link.href = 'mailto:' + fullEmail;
+                link.textContent = fullEmail;
+                link.style.cssText = 'color: inherit; text-decoration: none;';
+                emailSpan.innerHTML = '';
+                emailSpan.appendChild(link);
+                // Make the span behave like a link
+                emailSpan.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = 'mailto:' + fullEmail;
+                });
+                emailSpan.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        window.location.href = 'mailto:' + fullEmail;
+                    }
+                });
+            }
+        })();
 
         // ─── Translations ───
         const translations = {
@@ -1191,7 +1232,7 @@
                     3: { number: "Chapter III", title: "Awakening · High School Years", desc: "Between calculus and calligraphy club, I found my voice. I wrote my first short story, shot my first roll of film, and built my first website – tiny universes that felt truly mine." },
                     4: { number: "Chapter IV", title: "Guardian · Cybersecurity Volunteer", desc: "I volunteered to protect the digital spaces of those who couldn't protect themselves. It taught me that technology isn't just about innovation – it's about responsibility and care." },
                     5: { number: "Chapter V", title: "Scholar · University", desc: "Now, I walk the halls of a university in Japan, notebooks filled with ideas. I'm learning that design isn't about making things pretty – it's about understanding people, then making them feel seen." },
-                    6: { number: "Chapter VI", title: "Horizon · Germany & Beyond", desc: "The next chapter waits across the sea. I'm preparing to carry my stories to new cultures, to collaborate, and to become a creator who leaves a gentle but lasting mark." }
+                    6: { number: "Chapter VI", title: "Horizon · The Next Frontier", desc: "After building my foundation in Japan, I'm preparing to take my craft to an English-speaking world. New cultures, new collaborations, and a future where design knows no borders." }
                 },
                 missions: {
                     label: "Mission Archive",
@@ -1298,7 +1339,7 @@
                     3: { number: "Chương III", title: "Thức tỉnh · Những năm cấp ba", desc: "Giữa giờ học toán và câu lạc bộ thư pháp, mình tìm thấy tiếng nói của riêng mình. Mình viết truyện ngắn đầu tiên, chụp cuộn phim đầu tiên, và xây dựng trang web đầu tiên – những vũ trụ nhỏ bé nhưng thực sự là của mình." },
                     4: { number: "Chương IV", title: "Người bảo vệ · Tình nguyện viên An ninh mạng", desc: "Mình tình nguyện bảo vệ không gian số cho những người không thể tự bảo vệ mình. Điều đó dạy mình rằng công nghệ không chỉ là đổi mới – mà còn là trách nhiệm và sự quan tâm." },
                     5: { number: "Chương V", title: "Học giả · Đại học", desc: "Giờ đây, mình bước đi trong hành lang một trường đại học ở Nhật, những cuốn sổ đầy ắp ý tưởng. Mình đang học rằng thiết kế không phải là làm cho mọi thứ đẹp hơn – mà là hiểu con người, rồi khiến họ cảm thấy được nhìn thấy." },
-                    6: { number: "Chương VI", title: "Chân trời · Đức và xa hơn nữa", desc: "Chương tiếp theo đang chờ ở phía bên kia đại dương. Mình đang chuẩn bị mang câu chuyện của mình đến những nền văn hóa mới, để hợp tác, và để trở thành một người sáng tạo để lại dấu ấn nhẹ nhàng nhưng bền lâu." }
+                    6: { number: "Chương VI", title: "Chân trời · Biên giới tiếp theo", desc: "Sau khi xây dựng nền tảng ở Nhật Bản, mình đang chuẩn bị mang kỹ năng của mình đến một thế giới nói tiếng Anh. Văn hóa mới, hợp tác mới, và một tương lai nơi thiết kế không còn biên giới." }
                 },
                 missions: {
                     label: "Hồ sơ Nhiệm vụ",
@@ -1405,7 +1446,7 @@
                     3: { number: "第三章", title: "目覚め · 高校時代", desc: "数学の授業と書道部の合間で、自分の声を見つけた。初めて短編小説を書き、初めてフィルムを撮り、初めてウェブサイトを作った――どれも小さいけれど、確かに自分だけの宇宙だった。" },
                     4: { number: "第四章", title: "守護者 · サイバーセキュリティボランティア", desc: "自分の身を守れない人たちのデジタル空間を守るため、ボランティアに参加した。技術とは革新だけではなく、責任と思いやりでもあるのだと教わった。" },
                     5: { number: "第五章", title: "学徒 · 大学生活", desc: "今、日本の大学の廊下を歩き、ノートはアイデアで埋め尽くされている。デザインとは物事を綺麗に見せることではなく、人を理解し、その人に「見てもらえている」と感じさせることなのだと学んでいる。" },
-                    6: { number: "第六章", title: "地平線 · ドイツ、そしてその先へ", desc: "次の章は海の向こうで待っている。新しい文化に自分の物語を運び、共に創り、そして静かでも確かな爪痕を残せるクリエイターになる準備をしている。" }
+                    6: { number: "第六章", title: "地平線 · 次のフロンティア", desc: "日本で基盤を築いた後、自分の技術を英語圏の世界に持ち込む準備をしている。新しい文化、新しいコラボレーション、そしてデザインに国境がなくなる未来へ。" }
                 },
                 missions: {
                     label: "ミッションアーカイブ",
@@ -1470,7 +1511,12 @@
             }
         };
 
-        // ─── Language switcher logic ───
+        // ─── Language switcher logic (Accessible) ───
+        const langCustom = document.getElementById('langCustom');
+        const langDropdown = document.getElementById('langDropdown');
+        const langItems = langDropdown.querySelectorAll('li');
+        let currentFocusIndex = -1;
+
         function applyLanguage(lang) {
             const elements = document.querySelectorAll('[data-i18n]');
             elements.forEach(el => {
@@ -1487,9 +1533,15 @@
             localStorage.setItem('lang', lang);
             const langData = { en: '🇬🇧 EN', vi: '🇻🇳 VI', ja: '🇯🇵 JA' };
             document.querySelector('.current-lang-text').textContent = langData[lang];
-            document.querySelectorAll('.lang-dropdown li').forEach(li => {
-                li.classList.toggle('active', li.getAttribute('data-lang') === lang);
+            langItems.forEach(li => {
+                const isActive = li.getAttribute('data-lang') === lang;
+                li.classList.toggle('active', isActive);
+                li.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
+            langCustom.setAttribute('aria-activedescendant', 'lang-' + lang);
+            langCustom.setAttribute('aria-expanded', 'false');
+            langCustom.classList.remove('open');
+            currentFocusIndex = -1;
         }
 
         function getNestedTranslation(lang, path) {
@@ -1502,28 +1554,74 @@
             return value;
         }
 
-        // Custom dropdown toggle
-        const langCustom = document.getElementById('langCustom');
-        const langDropdown = document.getElementById('langDropdown');
+        // Toggle dropdown
+        function toggleDropdown(forceState) {
+            const isOpen = forceState !== undefined ? forceState : !langCustom.classList.contains('open');
+            langCustom.classList.toggle('open', isOpen);
+            langCustom.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            if (isOpen) {
+                const activeItem = langDropdown.querySelector('.active');
+                if (activeItem) {
+                    currentFocusIndex = Array.from(langItems).indexOf(activeItem);
+                    activeItem.focus();
+                    langCustom.setAttribute('aria-activedescendant', activeItem.id);
+                }
+            } else {
+                currentFocusIndex = -1;
+                langCustom.removeAttribute('aria-activedescendant');
+            }
+        }
 
         langCustom.addEventListener('click', (e) => {
             e.stopPropagation();
-            langCustom.classList.toggle('open');
+            toggleDropdown();
         });
 
         document.addEventListener('click', () => {
-            langCustom.classList.remove('open');
+            if (langCustom.classList.contains('open')) {
+                toggleDropdown(false);
+            }
         });
 
-        langDropdown.querySelectorAll('li').forEach(li => {
+        langItems.forEach((li, index) => {
             li.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const lang = li.getAttribute('data-lang');
                 applyLanguage(lang);
-                langCustom.classList.remove('open');
+                toggleDropdown(false);
+            });
+
+            li.addEventListener('keydown', (e) => {
+                const total = langItems.length;
+                switch (e.key) {
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        currentFocusIndex = (currentFocusIndex + 1) % total;
+                        langItems[currentFocusIndex].focus();
+                        langCustom.setAttribute('aria-activedescendant', langItems[currentFocusIndex].id);
+                        break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        currentFocusIndex = (currentFocusIndex - 1 + total) % total;
+                        langItems[currentFocusIndex].focus();
+                        langCustom.setAttribute('aria-activedescendant', langItems[currentFocusIndex].id);
+                        break;
+                    case 'Enter':
+                        e.preventDefault();
+                        const lang = li.getAttribute('data-lang');
+                        applyLanguage(lang);
+                        toggleDropdown(false);
+                        break;
+                    case 'Escape':
+                        e.preventDefault();
+                        toggleDropdown(false);
+                        langCustom.focus();
+                        break;
+                }
             });
         });
 
+        // Restore saved language
         const savedLang = localStorage.getItem('lang') || 'en';
         applyLanguage(savedLang);
 
@@ -1607,12 +1705,17 @@
             init(); animate(); window.addEventListener('resize', resize);
         } catch(e) { document.getElementById('heroCanvas').style.display='none'; }
 
-        // ─── Audio Element Music Player ───
+        // ─── Audio Element Music Player (with fallback) ───
         (function() {
             const musicBtn = document.getElementById('musicToggle');
             const musicPlayer = document.getElementById('musicPlayer');
             const bgMusic = document.getElementById('bgMusic');
             let playing = false;
+            let audioError = false;
+
+            function hidePlayer() {
+                musicPlayer.classList.add('hidden');
+            }
 
             function ensureLoaded() {
                 if (bgMusic.readyState === 0) {
@@ -1628,11 +1731,14 @@
             }
 
             bgMusic.addEventListener('error', () => {
-                console.error('Audio file failed to load. Check path and format.');
-                showError('Audio file not found or corrupted');
+                console.warn('Audio file not found or unsupported. Hiding player.');
+                audioError = true;
+                hidePlayer();
+                showError('Audio unavailable');
             });
 
             musicBtn.addEventListener('click', () => {
+                if (audioError) return;
                 ensureLoaded();
                 if (!playing) {
                     bgMusic.play().then(() => {
@@ -1642,6 +1748,8 @@
                         musicPlayer.classList.add('playing');
                     }).catch((err) => {
                         console.warn('Playback failed:', err);
+                        audioError = true;
+                        hidePlayer();
                         showError('Cannot play audio');
                     });
                 } else {
