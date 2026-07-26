@@ -1,3 +1,7 @@
+<!--
+ * Copyright (c) 2026 Ross Nguyen
+ * SPDX-License-Identifier: MIT
+ -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
     <style>
+        /* Copyright (c) 2026 Ross Nguyen - MIT License */
         :root {
             --bg-deep: #0b0b0f;
             --bg-surface: #111118;
@@ -758,6 +763,22 @@
             color: var(--text-muted);
             margin-top: 16px;
         }
+        .copyright {
+            margin-top: 28px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            letter-spacing: 0.03em;
+        }
+        .copyright a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent-blue);
+        }
+        .copyright a:hover {
+            color: #fff;
+            border-bottom-color: #fff;
+        }
 
         /* Premium Music Player */
         .music-player {
@@ -1095,6 +1116,10 @@
         <p class="ending__title" data-i18n="ending.title">Game Saved</p>
         <p class="ending__message" data-i18n="ending.message">Until the next journey.</p>
         <p class="ending__continue"><span data-i18n="ending.continue">Continue?</span> <span style="color:var(--accent-blue);">Y</span> / N</p>
+        <p class="copyright">
+            &copy; <span id="footerYear"></span> Ross Nguyen. 
+            Licensed under the <a href="LICENSE" style="color:var(--accent-blue);text-decoration:underline;">MIT License</a>.
+        </p>
     </footer>
 
     <!-- Premium Music Player (Audio Element) -->
@@ -1116,6 +1141,8 @@
     <div class="toast" id="toast" data-i18n="toast">✦ Secret found: Explorer's essence</div>
 
     <script>
+        // Copyright (c) 2026 Ross Nguyen - MIT License
+
         // ─── Translations ───
         const translations = {
             en: {
@@ -1649,6 +1676,10 @@
                 if(hero) scrollToTarget(hero, 60);
             }
         });
+
+        // ─── Dynamic year for footer ───
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+
     </script>
 </body>
 </html>
