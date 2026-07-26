@@ -85,7 +85,7 @@
         }
         html {
             scroll-behavior: auto;
-            font-size: 16px;
+            font-size: 18px; /* increased base size for better readability */
             -webkit-font-smoothing: antialiased;
         }
         html.lenis,
@@ -99,11 +99,12 @@
             font-family: var(--font-display);
             background-color: var(--bg-deep);
             color: var(--text-primary);
-            line-height: 1.7;
+            line-height: 1.8;
             overflow-x: hidden;
             min-height: 100vh;
             cursor: default;
             -webkit-tap-highlight-color: transparent;
+            font-size: 1rem;
         }
 
         /* ─── Focus-visible ─── */
@@ -180,7 +181,7 @@
         }
         .nav__logo {
             font-family: var(--font-mono);
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 700;
             letter-spacing: 0.08em;
             background: var(--accent-gradient);
@@ -199,7 +200,7 @@
         .nav__links a {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -269,7 +270,7 @@
             position: relative;
             margin-left: 24px;
             font-family: var(--font-mono);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             letter-spacing: 0.05em;
             color: var(--text-secondary);
             cursor: pointer;
@@ -326,7 +327,7 @@
             align-items: center;
             gap: 8px;
             color: var(--text-secondary);
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             outline: none;
         }
         .lang-dropdown li:hover,
@@ -349,7 +350,7 @@
         .section {
             position: relative;
             z-index: var(--z-content);
-            padding: 120px 32px;
+            padding: 140px 32px;
             max-width: 1100px;
             margin: 0 auto;
             opacity: 0;
@@ -407,14 +408,14 @@
             margin-bottom: 8px;
         }
         .hero__subtitle {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 400;
             color: var(--accent-soft);
             letter-spacing: 0.08em;
             margin-bottom: 16px;
         }
         .hero__tagline {
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             font-weight: 300;
             color: var(--text-secondary);
             letter-spacing: 0.03em;
@@ -422,7 +423,7 @@
             line-height: 1.6;
         }
         .hero__invite {
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             color: var(--text-muted);
             margin-bottom: 28px;
             line-height: 1.8;
@@ -430,12 +431,12 @@
         }
         .hero__cta {
             display: inline-block;
-            padding: 12px 32px;
+            padding: 14px 36px;
             border: 2px solid var(--accent-blue);
             color: var(--accent-blue);
             text-decoration: none;
             font-family: var(--font-mono);
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             letter-spacing: 0.1em;
             border-radius: var(--radius-xl);
             transition: all var(--transition-smooth);
@@ -472,7 +473,7 @@
             position: absolute;
             bottom: 16px;
             left: 16px;
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: rgba(255,255,255,0.6);
             letter-spacing: 0.05em;
             background: rgba(0,0,0,0.3);
@@ -490,7 +491,7 @@
             align-items: center;
             gap: 8px;
             color: var(--accent-soft);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             letter-spacing: 0.2em;
             text-transform: lowercase;
         }
@@ -518,14 +519,14 @@
         }
         .section__label {
             font-family: var(--font-mono);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             letter-spacing: 0.2em;
             color: var(--accent-blue);
             text-transform: uppercase;
             margin-bottom: 8px;
         }
         .section__title {
-            font-size: clamp(2rem, 4.5vw, 3rem);
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
             font-weight: 800;
             letter-spacing: -0.01em;
             color: #fff;
@@ -553,7 +554,7 @@
         }
         @media (max-width: 768px) { .profile__grid { grid-template-columns: 1fr; } }
         .profile__quote {
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             font-weight: 300;
             color: var(--accent-soft);
             line-height: 1.6;
@@ -564,7 +565,7 @@
         }
         .profile__info p {
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 1.05rem;
             line-height: 1.8;
             margin-bottom: 16px;
         }
@@ -586,13 +587,13 @@
         }
         .profile__stat dt {
             font-family: var(--font-mono);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             letter-spacing: 0.08em;
             color: var(--accent-blue);
             text-transform: uppercase;
         }
         .profile__stat dd {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: #fff;
             margin-top: 4px;
@@ -607,7 +608,7 @@
         }
         .chapters__theme {
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--accent-soft);
             letter-spacing: 0.1em;
             margin-bottom: 40px;
@@ -649,27 +650,27 @@
         }
         .chapter-number {
             font-family: var(--font-mono);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             letter-spacing: 0.2em;
             color: var(--accent-blue);
             text-transform: uppercase;
             margin-bottom: 4px;
         }
         .chapter-title {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #fff;
             margin-bottom: 4px;
         }
         .chapter-desc {
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             line-height: 1.8;
         }
 
         /* ─── Missions ─── */
         .missions__intro {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
             margin-bottom: 40px;
             max-width: 600px;
@@ -729,7 +730,7 @@
         }
         .dossier-card__stamp {
             font-family: var(--font-mono);
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             letter-spacing: 0.15em;
             color: var(--accent-blue);
             border: 1px solid var(--accent-blue);
@@ -742,19 +743,19 @@
         }
         .dossier-card__status {
             font-family: var(--font-mono);
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             letter-spacing: 0.1em;
             color: var(--text-muted);
             margin-top: 8px;
         }
         .dossier-card__title {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 700;
             color: #fff;
             margin-bottom: 8px;
         }
         .dossier-card__brief {
-            font-size: 0.85rem;
+            font-size: 1rem;
             color: var(--text-secondary);
             margin-bottom: 16px;
             line-height: 1.6;
@@ -768,7 +769,7 @@
             display: flex;
             gap: 8px;
             font-family: var(--font-mono);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
         .dossier-card__arrow {
@@ -791,15 +792,15 @@
         .abilities__grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
         }
         .ability-tag {
-            padding: 10px 20px;
+            padding: 12px 22px;
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-xl);
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             letter-spacing: 0.05em;
             color: var(--text-primary);
             background: var(--bg-card);
@@ -817,7 +818,7 @@
             width: 100%;
             text-align: left;
             font-family: var(--font-mono);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: var(--accent-soft);
             letter-spacing: 0.1em;
             margin: 20px 0 8px;
@@ -871,7 +872,7 @@
             padding: 16px;
             background: linear-gradient(transparent, rgba(0,0,0,0.8));
             color: #fff;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             opacity: 0;
             transition: opacity var(--transition-fast);
             display: flex;
@@ -889,7 +890,7 @@
         .terminal__email {
             display: inline-block;
             font-family: var(--font-mono);
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             color: var(--accent-blue);
             text-decoration: none;
             border-bottom: 2px dashed var(--accent-blue);
@@ -907,7 +908,7 @@
         }
         .terminal__social-link {
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
             text-decoration: none;
             padding: 10px 20px;
@@ -940,27 +941,27 @@
         }
         .ending__title {
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             letter-spacing: 0.2em;
             color: var(--accent-blue);
             margin-bottom: 12px;
         }
         .ending__message {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 300;
             color: #fff;
             margin-bottom: 8px;
         }
         .ending__continue {
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
             margin-top: 16px;
         }
         .ending__reflection {
             max-width: 500px;
             margin: 20px auto 0;
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--text-secondary);
             line-height: 1.8;
             font-style: italic;
@@ -968,13 +969,13 @@
         .ending__signature {
             margin-top: 24px;
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--accent-soft);
             letter-spacing: 0.1em;
         }
         .copyright {
             margin-top: 32px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
             font-family: var(--font-mono);
             letter-spacing: 0.03em;
@@ -1064,7 +1065,7 @@
             border-radius: var(--radius-md);
             color: #fff;
             font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             z-index: 3000;
             opacity: 0;
             transform: translateY(10px);
@@ -1322,7 +1323,7 @@
             </div>
             <div class="terminal__inner">
                 <span id="emailLink" class="terminal__email" role="link" tabindex="0" aria-label="Send email to Ross" spellcheck="false"></span>
-                <p style="color:var(--text-secondary);margin-bottom:24px;" data-i18n="terminal.invite">Collaborations, freelance, or just a conversation - always welcome.</p>
+                <p style="color:var(--text-secondary);margin-bottom:24px; font-size:1rem;" data-i18n="terminal.invite">Collaborations, freelance, or just a conversation - always welcome.</p>
                 <div class="terminal__socials">
                     <a href="https://github.com/MoonDaReal" class="terminal__social-link" target="_blank" rel="noopener" title="GitHub">GitHub</a>
                     <a href="https://steamcommunity.com/id/moondareal/" class="terminal__social-link" target="_blank" rel="noopener" title="Steam">Steam</a>
