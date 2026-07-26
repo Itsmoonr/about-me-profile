@@ -554,8 +554,10 @@
             justify-content: space-between;
             text-decoration: none;
             color: inherit;
+            outline: none;
         }
-        .dossier-card:hover {
+        .dossier-card:hover,
+        .dossier-card:focus-visible {
             border-color: var(--accent-blue);
             box-shadow: 0 8px 28px rgba(0,0,0,0.6);
             transform: translateY(-4px);
@@ -586,7 +588,11 @@
             line-height: 1.5;
             display: none;
         }
-        .dossier-card:hover .dossier-card__brief { display: block; }
+        /* Show brief on hover or when expanded */
+        .dossier-card:hover .dossier-card__brief,
+        .dossier-card.expanded .dossier-card__brief {
+            display: block;
+        }
         .dossier-card__tags {
             display: flex;
             gap: 8px;
@@ -602,7 +608,8 @@
             color: var(--text-muted);
             transition: all var(--transition-smooth);
         }
-        .dossier-card:hover .dossier-card__arrow {
+        .dossier-card:hover .dossier-card__arrow,
+        .dossier-card:focus-visible .dossier-card__arrow {
             color: var(--accent-blue);
             transform: translate(4px, -4px);
         }
@@ -959,7 +966,7 @@
             </div>
         </section>
 
-        <!-- Mission Archive -->
+        <!-- Mission Archive (updated with real content & click-to-expand) -->
         <section class="section" id="missions" aria-labelledby="missions-heading">
             <div class="section__header">
                 <p class="section__label" data-i18n="missions.label">Mission Archive</p>
@@ -967,34 +974,38 @@
                 <div class="section__divider"></div>
             </div>
             <div class="missions__grid">
-                <a href="#" class="dossier-card">
+                <!-- Mission 1 -->
+                <div class="dossier-card" role="button" tabindex="0">
                     <span class="dossier-card__stamp" data-i18n="missions.1.stamp">Top Secret</span>
                     <span class="dossier-card__arrow">↗</span>
-                    <h3 class="dossier-card__title" data-i18n="missions.1.title">Operation: Digital Zen</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.1.brief">A meditation on calm interfaces. I stripped away noise until only feeling remained. 2,000+ users found a moment of peace.</p>
-                    <div class="dossier-card__tags">UI/UX · Prototype · Research</div>
-                </a>
-                <a href="#" class="dossier-card">
+                    <h3 class="dossier-card__title" data-i18n="missions.1.title">Operation: Phoenix Protocol</h3>
+                    <p class="dossier-card__brief" data-i18n="missions.1.brief">Once in the shadows, now a shield for 50,000+ people. Turning "knowing how to scam" into "knowing how to protect."</p>
+                    <div class="dossier-card__tags" data-i18n="missions.1.tags">Anti-Fraud · Community · Vietnam</div>
+                </div>
+                <!-- Mission 2 -->
+                <div class="dossier-card" role="button" tabindex="0">
                     <span class="dossier-card__stamp" data-i18n="missions.2.stamp">Classified</span>
                     <span class="dossier-card__arrow">↗</span>
-                    <h3 class="dossier-card__title" data-i18n="missions.2.title">Project: Story Engine</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.2.brief">A love letter to interactive fiction. Readers choose, branches bloom. The narrative never ends, just like our minds.</p>
-                    <div class="dossier-card__tags">Writing · Interactive · Web</div>
-                </a>
-                <a href="#" class="dossier-card">
+                    <h3 class="dossier-card__title" data-i18n="missions.2.title">Project: Cash Guardian</h3>
+                    <p class="dossier-card__brief" data-i18n="missions.2.brief">Three years standing at the line between money and trust. Every reconciled cent is proof of precision.</p>
+                    <div class="dossier-card__tags" data-i18n="missions.2.tags">Finance · Trust · Ramen House</div>
+                </div>
+                <!-- Mission 3 -->
+                <div class="dossier-card" role="button" tabindex="0">
                     <span class="dossier-card__stamp" data-i18n="missions.3.stamp">Confidential</span>
                     <span class="dossier-card__arrow">↗</span>
-                    <h3 class="dossier-card__title" data-i18n="missions.3.title">Light Trails</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.3.brief">Photography meets motion. Each image is a still from a film that never was, capturing the in-between moments of Tokyo nights.</p>
-                    <div class="dossier-card__tags">Photography · Animation · Performance</div>
-                </a>
-                <a href="#" class="dossier-card">
+                    <h3 class="dossier-card__title" data-i18n="missions.3.title">Mission: Radiant Ascension</h3>
+                    <p class="dossier-card__brief" data-i18n="missions.3.brief">Not everyone who picks up a mouse reaches the top. Reflexes and relentless practice forged a top-tier fragger.</p>
+                    <div class="dossier-card__tags" data-i18n="missions.3.tags">Tactics · CS2 · Faceit Lvl 10</div>
+                </div>
+                <!-- Mission 4 -->
+                <div class="dossier-card" role="button" tabindex="0">
                     <span class="dossier-card__stamp" data-i18n="missions.4.stamp">Prototype</span>
                     <span class="dossier-card__arrow">↗</span>
-                    <h3 class="dossier-card__title" data-i18n="missions.4.title">Echoes</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.4.brief">A game about memories that linger. Atmospheric and haunting, it asks: what do you keep, and what do you let go?</p>
-                    <div class="dossier-card__tags">Game Design · Narrative · Audio</div>
-                </a>
+                    <h3 class="dossier-card__title" data-i18n="missions.4.title">Codename: Polyglot</h3>
+                    <p class="dossier-card__brief" data-i18n="missions.4.brief">7+ years abroad, 3 languages mastered, unlocking a 4th.</p>
+                    <div class="dossier-card__tags" data-i18n="missions.4.tags">Vietnamese · Japanese · English · German</div>
+                </div>
             </div>
         </section>
 
@@ -1094,7 +1105,7 @@
             <div class="visualizer-bar" style="height:12px;"></div>
         </div>
     </div>
-    <!-- 👇 Your audio file inside the audio/ folder 👇 -->
+    <!-- Audio file in audio/ folder -->
     <audio id="bgMusic" loop preload="auto">
         <source src="audio/ambient.mp3" type="audio/mpeg">
     </audio>
@@ -1103,7 +1114,7 @@
     <div class="toast" id="toast" data-i18n="toast">✦ Secret found: Explorer's essence</div>
 
     <script>
-        // ─── Translations (completely natural, storytelling style) ───
+        // ─── Translations ───
         const translations = {
             en: {
                 skipLink: "Skip to Content",
@@ -1154,16 +1165,44 @@
                 missions: {
                     label: "Mission Archive",
                     title: "Classified <span class='highlight'>dossiers</span>",
-                    1: { stamp: "Top Secret", title: "Operation: Digital Zen", brief: "A meditation on calm interfaces. I stripped away noise until only feeling remained. 2,000+ users found a moment of peace." },
-                    2: { stamp: "Classified", title: "Project: Story Engine", brief: "A love letter to interactive fiction. Readers choose, branches bloom. The narrative never ends, just like our minds." },
-                    3: { stamp: "Confidential", title: "Light Trails", brief: "Photography meets motion. Each image is a still from a film that never was, capturing the in-between moments of Tokyo nights." },
-                    4: { stamp: "Prototype", title: "Echoes", brief: "A game about memories that linger. Atmospheric and haunting, it asks: what do you keep, and what do you let go?" }
+                    1: {
+                        stamp: "Top Secret",
+                        title: "Operation: Phoenix Protocol",
+                        brief: "Once in the shadows, now a shield for 50,000+ people. Turning \"knowing how to scam\" into \"knowing how to protect.\"",
+                        tags: "Anti-Fraud · Community · Vietnam"
+                    },
+                    2: {
+                        stamp: "Classified",
+                        title: "Project: Cash Guardian",
+                        brief: "Three years standing at the line between money and trust. Every reconciled cent is proof of precision.",
+                        tags: "Finance · Trust · Ramen House"
+                    },
+                    3: {
+                        stamp: "Confidential",
+                        title: "Mission: Radiant Ascension",
+                        brief: "Not everyone who picks up a mouse reaches the top. Reflexes and relentless practice forged a top-tier fragger.",
+                        tags: "Tactics · CS2 · Faceit Lvl 10"
+                    },
+                    4: {
+                        stamp: "Prototype",
+                        title: "Codename: Polyglot",
+                        brief: "7+ years abroad, 3 languages mastered, unlocking a 4th.",
+                        tags: "Vietnamese · Japanese · English · German"
+                    }
                 },
                 abilities: {
                     label: "Abilities",
                     title: "Unlocked <span class='highlight'>skills</span>",
-                    cat1: "The Craft", skill1: "Creative Thinking", skill2: "Storytelling", skill3: "UI/UX Design", skill4: "Photography", skill5: "Video Editing",
-                    cat2: "The Tools", skill6: "Web Development", skill7: "Research", skill8: "Cybersecurity Basics",
+                    cat1: "The Craft",
+                    skill1: "Creative Thinking",
+                    skill2: "Storytelling",
+                    skill3: "UI/UX Design",
+                    skill4: "Photography",
+                    skill5: "Video Editing",
+                    cat2: "The Tools",
+                    skill6: "Web Development",
+                    skill7: "Research",
+                    skill8: "Cybersecurity Basics",
                     cat3: "The Voice"
                 },
                 journal: {
@@ -1185,162 +1224,218 @@
                 toast: "✦ Secret found: Explorer's essence"
             },
             vi: {
-                skipLink: "Bỏ qua nội dung",
+                skipLink: "Bỏ qua đến Nội dung",
                 hero: {
-                    tagline: "Viết chuyện bằng code và ánh sáng.",
-                    invite: "Bước vào thế giới của mình nhé. Mỗi khung hình là một kỷ niệm, mỗi chương là một câu chuyện.",
+                    tagline: "Viết nên câu chuyện bằng code và ánh sáng.",
+                    invite: "Bước vào thế giới của mình. Mỗi khung hình là một kỷ niệm. Mỗi chương là một câu chuyện.",
                     cta: "Bắt đầu hành trình",
-                    caption: "Tokyo, 2023 – một khoảnh khắc lặng",
-                    scroll: "cuộn"
+                    caption: "Tokyo, 2023 – một khoảnh khắc lặng yên",
+                    scroll: "cuộn xuống"
                 },
                 nav: {
                     profile: "Hồ sơ",
-                    chapters: "Chương",
+                    chapters: "Các chương",
                     missions: "Nhiệm vụ",
                     abilities: "Kỹ năng",
                     journal: "Nhật ký",
-                    terminal: "Liên lạc"
+                    terminal: "Liên hệ"
                 },
                 profile: {
-                    label: "Hồ sơ người chơi",
-                    title: "<span class='highlight'>Ross</span> là ai?",
-                    quote: "“Giữa code và cảm xúc, mình xây những nhịp cầu. Thiết kế là cách mình lắng nghe thế giới.”",
-                    desc: "Gốc Việt, cành Nhật, lá vươn ra toàn cầu. Mình là một đứa mê khám phá cuộc sống – chụp ảnh để giữ khoảnh khắc, viết code để kể chuyện, và tìm thơ trong từng pixel đời thường.",
+                    label: "Hồ sơ nhân vật",
+                    title: "Ross là <span class='highlight'>ai?</span>",
+                    quote: "“Giữa code và cảm xúc, mình xây những cây cầu. Thiết kế là cách mình lắng nghe thế giới.”",
+                    desc: "Gốc rễ Việt Nam, cành lá Nhật Bản, và những chiếc lá vươn ra thế giới. Mình là một người học từ cuộc sống – ghi lại khoảnh khắc bằng máy ảnh, kể chuyện bằng code, và tìm chất thơ trong từng pixel đời thường.",
                     stat: {
-                        codename: "Biệt danh",
-                        location: "Địa điểm",
-                        origin: "Nguồn cội",
+                        codename: "Mật danh",
+                        location: "Vị trí",
+                        origin: "Xuất thân",
                         path: "Con đường",
                         pathValue: "Sinh viên đại học",
                         essence: "Bản chất",
-                        essenceValue: "Tò mò, đồng cảm, tỉ mỉ",
+                        essenceValue: "Tò mò, Đồng cảm, Tỉ mỉ",
                         spec: "Chuyên môn",
                         specValue: "Công nghệ × Thiết kế × Kể chuyện",
                         listening: "Đang nghe",
-                        listeningValue: "Lo-fi / Mưa rơi"
+                        listeningValue: "Lo-fi / Tiếng mưa"
                     }
                 },
                 chapters: {
-                    label: "Chế độ cốt truyện",
-                    title: "Những <span class='highlight'>chương</span>",
-                    1: { number: "Chương I", title: "Quê nhà · Việt Nam", desc: "Sinh ra giữa những cơn mưa và cánh đồng lúa. Mình học cách nhìn ra câu chuyện ẩn trong những điều bình thường – nụ cười ông lão, tiếng xe máy rì rầm. Sáng tạo bắt đầu như một cách níu giữ những khoảnh khắc mong manh." },
-                    2: { number: "Chương II", title: "Cú nhảy · Đến Nhật", desc: "Mười sáu tuổi, mình bước xuống sân bay với một thứ tiếng không hiểu và một thành phố không ngủ. Cô đơn hóa thành khung vẽ, và mình tô lên đó những tình bạn mới, những khám phá đầu đời." },
-                    3: { number: "Chương III", title: "Thức tỉnh · Những năm cấp ba", desc: "Lẩn giữa toán học và câu lạc bộ thư pháp, mình tìm ra tiếng nói riêng. Truyện ngắn đầu tay, cuộn phim đầu tiên, website đầu đời – những vũ trụ nho nhỏ thực sự thuộc về mình." },
-                    4: { number: "Chương IV", title: "Người bảo vệ · Tình nguyện an ninh mạng", desc: "Mình tình nguyện bảo vệ không gian số cho những người không thể tự bảo vệ. Nó dạy mình rằng công nghệ không chỉ là đổi mới – mà còn là trách nhiệm và sự quan tâm." },
-                    5: { number: "Chương V", title: "Học giả · Đại học", desc: "Giờ đây, mình bước trên hành lang một trường đại học ở Nhật, cặp sách đầy ý tưởng. Mình nhận ra thiết kế không phải là làm mọi thứ đẹp lên, mà là thấu hiểu con người, rồi khiến họ cảm thấy được nhìn thấy." },
-                    6: { number: "Chương VI", title: "Chân trời · Đức và xa hơn", desc: "Chương tiếp theo đợi phía bên kia đại dương. Mình đang chuẩn bị mang câu chuyện của mình đến những nền văn hóa mới, cùng hợp tác và trở thành một người sáng tạo để lại dấu ấn nhẹ nhàng mà bền lâu." }
+                    label: "Chế độ Cốt truyện",
+                    title: "Những <span class='highlight'>chương truyện</span>",
+                    1: { number: "Chương I", title: "Quê nhà · Việt Nam", desc: "Sinh ra giữa những cơn mưa và cánh đồng lúa. Mình học cách nhìn thấy câu chuyện trong những điều bình dị nhất – nụ cười của một cụ già, tiếng xe máy rì rầm. Sự sáng tạo bắt đầu như một cách để giữ lại những khoảnh khắc thoáng qua." },
+                    2: { number: "Chương II", title: "Cú nhảy · Đặt chân đến Nhật Bản", desc: "Năm mười sáu tuổi, mình bước xuống sân bay giữa một ngôn ngữ chưa từng biết và một thành phố không bao giờ ngủ. Sự cô đơn trở thành tấm toan trắng, và mình vẽ lên đó bằng những tình bạn mới và những khám phá." },
+                    3: { number: "Chương III", title: "Thức tỉnh · Những năm cấp ba", desc: "Giữa giờ học toán và câu lạc bộ thư pháp, mình tìm thấy tiếng nói của riêng mình. Mình viết truyện ngắn đầu tiên, chụp cuộn phim đầu tiên, và xây dựng trang web đầu tiên – những vũ trụ nhỏ bé nhưng thực sự là của mình." },
+                    4: { number: "Chương IV", title: "Người bảo vệ · Tình nguyện viên An ninh mạng", desc: "Mình tình nguyện bảo vệ không gian số cho những người không thể tự bảo vệ mình. Điều đó dạy mình rằng công nghệ không chỉ là đổi mới – mà còn là trách nhiệm và sự quan tâm." },
+                    5: { number: "Chương V", title: "Học giả · Đại học", desc: "Giờ đây, mình bước đi trong hành lang một trường đại học ở Nhật, những cuốn sổ đầy ắp ý tưởng. Mình đang học rằng thiết kế không phải là làm cho mọi thứ đẹp hơn – mà là hiểu con người, rồi khiến họ cảm thấy được nhìn thấy." },
+                    6: { number: "Chương VI", title: "Chân trời · Đức và xa hơn nữa", desc: "Chương tiếp theo đang chờ ở phía bên kia đại dương. Mình đang chuẩn bị mang câu chuyện của mình đến những nền văn hóa mới, để hợp tác, và để trở thành một người sáng tạo để lại dấu ấn nhẹ nhàng nhưng bền lâu." }
                 },
                 missions: {
-                    label: "Kho lưu trữ nhiệm vụ",
-                    title: "Hồ sơ <span class='highlight'>mật</span>",
-                    1: { stamp: "Tối mật", title: "Chiến dịch: Digital Zen", brief: "Một bản thiền về giao diện tĩnh lặng. Mình gỡ bỏ mọi ồn ào, chỉ giữ lại cảm xúc. Hơn 2.000 người đã tìm thấy một khoảnh khắc bình yên." },
-                    2: { stamp: "Mật", title: "Dự án: Story Engine", brief: "Bức thư tình gửi cho tiểu thuyết tương tác. Người đọc chọn lối, câu chuyện nở nhánh. Mạch truyện không bao giờ kết thúc, như tâm trí chúng ta vậy." },
-                    3: { stamp: "Bảo mật", title: "Light Trails", brief: "Nhiếp ảnh gặp chuyển động. Mỗi bức ảnh là một khung hình từ thước phim chưa từng tồn tại, bắt lấy những khoảnh khắc lưng chừng trong đêm Tokyo." },
-                    4: { stamp: "Nguyên mẫu", title: "Echoes", brief: "Một trò chơi về những ký ức còn vương lại. Đượm không khí và đầy ám ảnh, nó hỏi: bạn sẽ giữ lại điều gì, và buông bỏ điều chi?" }
+                    label: "Hồ sơ Nhiệm vụ",
+                    title: "Những <span class='highlight'>hồ sơ mật</span>",
+                    1: {
+                        stamp: "Tuyệt mật",
+                        title: "Chiến dịch: Phoenix Protocol",
+                        brief: "Từng là kẻ trong bóng tối, giờ là lá chắn cho hơn 50.000 người. Biến \"biết cách lừa\" thành \"biết cách bảo vệ\".",
+                        tags: "Chống lừa đảo · Cộng đồng · Việt Nam"
+                    },
+                    2: {
+                        stamp: "Mật",
+                        title: "Dự án: Cash Guardian",
+                        brief: "Ba năm đứng giữa lằn ranh của tiền bạc và niềm tin. Mỗi đồng khớp sổ là một minh chứng cho sự tỉ mỉ.",
+                        tags: "Tài chính · Niềm tin · Nhà hàng Ramen"
+                    },
+                    3: {
+                        stamp: "Tối mật",
+                        title: "Nhiệm vụ: Radiant Ascension",
+                        brief: "Không phải ai cầm chuột cũng chạm được đỉnh cao. Phản xạ và luyện tập không ngừng đã tạo nên một tay súng hàng đầu.",
+                        tags: "Chiến thuật · CS2 · Faceit Lvl 10"
+                    },
+                    4: {
+                        stamp: "Nguyên mẫu",
+                        title: "Mật danh: Polyglot",
+                        brief: "Hơn 7 năm nơi đất khách, thành thạo 3 ngôn ngữ, và đang mở khóa ngôn ngữ thứ 4.",
+                        tags: "Tiếng Việt · Tiếng Nhật · Tiếng Anh · Tiếng Đức"
+                    }
                 },
                 abilities: {
                     label: "Kỹ năng",
-                    title: "Đã mở khóa <span class='highlight'>kỹ năng</span>",
-                    cat1: "Nghề thủ công", skill1: "Tư duy sáng tạo", skill2: "Kể chuyện", skill3: "Thiết kế UI/UX", skill4: "Nhiếp ảnh", skill5: "Biên tập video",
-                    cat2: "Công cụ", skill6: "Phát triển web", skill7: "Nghiên cứu", skill8: "An ninh mạng cơ bản",
-                    cat3: "Ngôn ngữ"
+                    title: "Những <span class='highlight'>kỹ năng đã mở khóa</span>",
+                    cat1: "Nghệ thuật",
+                    skill1: "Tư duy sáng tạo",
+                    skill2: "Kể chuyện",
+                    skill3: "Thiết kế UI/UX",
+                    skill4: "Nhiếp ảnh",
+                    skill5: "Dựng phim",
+                    cat2: "Công cụ",
+                    skill6: "Phát triển Web",
+                    skill7: "Nghiên cứu",
+                    skill8: "Kiến thức cơ bản về An ninh mạng",
+                    cat3: "Tiếng nói"
                 },
                 journal: {
-                    label: "Nhật ký điện ảnh",
-                    title: "Những khung hình <span class='highlight'>đời</span>",
-                    1: { desc: "2022 · Tuyết đầu mùa" },
-                    2: { desc: "2024 · Thiết kế đêm khuya" },
-                    3: { desc: "2023 · Mưa neon" },
-                    4: { desc: "2024 · Giờ yên tĩnh" },
-                    5: { desc: "2023 · Nụ cười xa lạ" },
-                    6: { desc: "2022 · Ngôi đền ánh sáng" }
+                    label: "Nhật ký Điện ảnh",
+                    title: "Những <span class='highlight'>khung hình cuộc sống</span>",
+                    1: { desc: "2022 · Trận tuyết đầu tiên" },
+                    2: { desc: "2024 · Thiết kế lúc nửa đêm" },
+                    3: { desc: "2023 · Mưa dưới ánh đèn neon" },
+                    4: { desc: "2024 · Giờ khắc tĩnh lặng" },
+                    5: { desc: "2023 · Nụ cười của một người lạ" },
+                    6: { desc: "2022 · Ngôi đền dưới ánh sáng" }
                 },
                 terminal: {
-                    label: "Trạm liên lạc",
-                    title: "Mở <span class='highlight'>kênh</span>",
-                    invite: "Hợp tác, làm việc tự do, hay chỉ đơn giản là trò chuyện — luôn chào đón nhé."
+                    label: "Kênh liên lạc",
+                    title: "Mở <span class='highlight'>kết nối</span>",
+                    invite: "Hợp tác, freelance, hay chỉ đơn giản là một cuộc trò chuyện — luôn được chào đón."
                 },
-                ending: { title: "Đã lưu game", message: "Hẹn gặp ở hành trình tiếp theo.", continue: "Tiếp tục chứ?" },
-                toast: "✦ Bí mật đã mở: Tinh chất của kẻ khám phá"
+                ending: { title: "Đã lưu game", message: "Hẹn gặp lại ở hành trình tiếp theo.", continue: "Tiếp tục?" },
+                toast: "✦ Đã tìm thấy bí mật: Bản chất của Người khám phá"
             },
             ja: {
-                skipLink: "コンテンツにスキップ",
+                skipLink: "コンテンツへスキップ",
                 hero: {
                     tagline: "コードと光で物語を紡ぐ。",
-                    invite: "僕の世界へどうぞ。どのフレームにも思い出が、どの章にも物語が詰まっている。",
+                    invite: "僕の世界へようこそ。すべてのフレームに記憶が宿り、すべての章に物語がある。",
                     cta: "旅を始める",
                     caption: "東京、2023年 – 静かなひととき",
                     scroll: "スクロール"
                 },
                 nav: {
                     profile: "プロフィール",
-                    chapters: "章",
+                    chapters: "チャプター",
                     missions: "ミッション",
-                    abilities: "能力",
-                    journal: "日記",
-                    terminal: "通信"
+                    abilities: "スキル",
+                    journal: "ジャーナル",
+                    terminal: "ターミナル"
                 },
                 profile: {
                     label: "プレイヤープロフィール",
-                    title: "<span class='highlight'>ロス</span>って？",
-                    quote: "「コードと感情のあいだに橋を架ける。デザインは、僕が世界に耳を澄ます方法なんだ。」",
-                    desc: "ベトナムに根を張り、日本で枝を伸ばし、世界へ葉を広げる。僕は人生を学ぶ学生 – カメラで瞬間を切り取り、コードで物語を語り、日常のピクセルに詩を探している。",
+                    title: "<span class='highlight'>Ross</span>って、どんな人?",
+                    quote: "「コードと感情の間に、僕は橋を架ける。デザインは、世界に耳を傾ける僕なりの方法だ。」",
+                    desc: "ベトナムに根を持ち、日本で枝を伸ばし、世界へと葉を広げる。僕は人生の生徒みたいなもの――カメラで瞬間を切り取り、コードで物語を語り、日常のピクセルの中に詩を探している。",
                     stat: {
                         codename: "コードネーム",
-                        location: "場所",
+                        location: "現在地",
                         origin: "出身",
-                        path: "進路",
+                        path: "進む道",
                         pathValue: "大学生",
                         essence: "本質",
-                        essenceValue: "好奇心、共感、几帳面",
-                        spec: "専門",
-                        specValue: "テクノロジー × デザイン × ストーリー",
-                        listening: "聴いている",
-                        listeningValue: "ローファイ / 雨音"
+                        essenceValue: "好奇心旺盛、共感力、几帳面",
+                        spec: "専門分野",
+                        specValue: "テクノロジー × デザイン × ストーリーテリング",
+                        listening: "今聴いているもの",
+                        listeningValue: "Lo-fi / 雨音"
                     }
                 },
                 chapters: {
                     label: "ストーリーモード",
-                    title: "僕の<span class='highlight'>章</span>",
-                    1: { number: "第一章", title: "故郷 · ベトナム", desc: "雨と田んぼの世界に生まれて、ありふれたものの中に物語を見つけることを覚えた。老人の笑顔、バイクの音。クリエイティビティは、はかない瞬間をつなぎとめる手段だった。" },
-                    2: { number: "第二章", title: "跳躍 · 日本へ", desc: "16歳、言葉もわからない国に降り立った。眠らない街で、孤独がキャンバスになった。新しい友だちや発見で、その空白を少しずつ塗りつぶしていった。" },
-                    3: { number: "第三章", title: "目覚め · 高校時代", desc: "数学と書道部のあいだで、自分の声を見つけた。初めて書いた短編小説、初めて撮ったフィルム、初めて作ったウェブサイト – どれも本当に自分のものだと思える、小さな宇宙だった。" },
-                    4: { number: "第四章", title: "守り手 · サイバーセキュリティボランティア", desc: "自分を守れない人のデジタルな居場所を守るボランティアをした。テクノロジーは革新だけじゃない、責任と思いやりだと教えられた。" },
-                    5: { number: "第五章", title: "学徒 · 大学", desc: "いま、日本の大学の廊下を歩きながら、アイデアをノートに詰め込んでいる。デザインは見た目を整えることじゃなくて、人を理解して、その人に「ちゃんと見てるよ」と感じてもらうことだと学んでいる。" },
-                    6: { number: "第六章", title: "地平線 · ドイツ、その先へ", desc: "次の章は海の向こうで待っている。自分の物語を新しい文化に届け、協力しあいながら、そっとでも確かな足跡を残すクリエイターになる準備をしている。" }
+                    title: "<span class='highlight'>チャプター</span>たち",
+                    1: { number: "第一章", title: "故郷 · ベトナム", desc: "雨と稲田の世界に生まれた。おじいさんの微笑み、バイクの音――ありふれた日常の中に物語を見出すことを学んだ。創作は、過ぎ去っていく瞬間を留めておくための手段として始まった。" },
+                    2: { number: "第二章", title: "跳躍 · 来日", desc: "十六歳、話せない言葉と眠らない街の中に降り立った。孤独は真っ白なキャンバスとなり、そこに新しい友情と発見の色を重ねていった。" },
+                    3: { number: "第三章", title: "目覚め · 高校時代", desc: "数学の授業と書道部の合間で、自分の声を見つけた。初めて短編小説を書き、初めてフィルムを撮り、初めてウェブサイトを作った――どれも小さいけれど、確かに自分だけの宇宙だった。" },
+                    4: { number: "第四章", title: "守護者 · サイバーセキュリティボランティア", desc: "自分の身を守れない人たちのデジタル空間を守るため、ボランティアに参加した。技術とは革新だけではなく、責任と思いやりでもあるのだと教わった。" },
+                    5: { number: "第五章", title: "学徒 · 大学生活", desc: "今、日本の大学の廊下を歩き、ノートはアイデアで埋め尽くされている。デザインとは物事を綺麗に見せることではなく、人を理解し、その人に「見てもらえている」と感じさせることなのだと学んでいる。" },
+                    6: { number: "第六章", title: "地平線 · ドイツ、そしてその先へ", desc: "次の章は海の向こうで待っている。新しい文化に自分の物語を運び、共に創り、そして静かでも確かな爪痕を残せるクリエイターになる準備をしている。" }
                 },
                 missions: {
                     label: "ミッションアーカイブ",
-                    title: "機密<span class='highlight'>文書</span>",
-                    1: { stamp: "トップシークレット", title: "作戦: デジタルゼン", brief: "静けさをもたらすインターフェイスの瞑想。雑音をすべて取り去り、感覚だけを残した。2,000人以上のユーザーが、ほんの少しの平和を見つけた。" },
-                    2: { stamp: "機密", title: "プロジェクト: ストーリーエンジン", brief: "インタラクティブフィクションへのラブレター。読者が選び、枝が花開く。物語は決して終わらない、人の心と同じように。" },
-                    3: { stamp: "親展", title: "ライトトレイル", brief: "写真と動きの融合。一枚一枚が、存在しなかった映画のスチル。東京の夜の、はざまの瞬間をとらえる。" },
-                    4: { stamp: "プロトタイプ", title: "エコーズ", brief: "残りつづける記憶についてのゲーム。どこか懐かしく、忘れがたい。問いかける – 君は何を残し、何を手放す？" }
+                    title: "機密<span class='highlight'>ファイル</span>",
+                    1: {
+                        stamp: "トップシークレット",
+                        title: "作戦:フェニックス・プロトコル",
+                        brief: "かつて闇の中にいた者が、今は5万人以上を守る盾となる。「騙す術を知る者」から「守る術を知る者」へ。",
+                        tags: "詐欺対策 · コミュニティ · ベトナム"
+                    },
+                    2: {
+                        stamp: "機密",
+                        title: "プロジェクト:キャッシュ・ガーディアン",
+                        brief: "3年間、お金と信頼の境界線に立ち続けた。一円一円を合わせることが、緻密さの証だった。",
+                        tags: "経理 · 信頼 · ラーメン店"
+                    },
+                    3: {
+                        stamp: "極秘",
+                        title: "ミッション:レディアント・アセンション",
+                        brief: "マウスを握る者全員が頂点に届くわけではない。反射神経とひたむきな練習が、トップクラスのプレイヤーを作り上げた。",
+                        tags: "戦術 · CS2 · Faceitレベル10"
+                    },
+                    4: {
+                        stamp: "プロトタイプ",
+                        title: "コードネーム:ポリグロット",
+                        brief: "海外生活7年以上、3ヶ国語をマスターし、4つ目の言語を習得中。",
+                        tags: "ベトナム語 · 日本語 · 英語 · ドイツ語"
+                    }
                 },
                 abilities: {
-                    label: "能力",
-                    title: "アンロックされた<span class='highlight'>スキル</span>",
-                    cat1: "クラフト", skill1: "創造的思考", skill2: "ストーリーテリング", skill3: "UI/UXデザイン", skill4: "写真", skill5: "動画編集",
-                    cat2: "ツール", skill6: "ウェブ開発", skill7: "リサーチ", skill8: "サイバーセキュリティ基礎",
-                    cat3: "言語"
+                    label: "スキル",
+                    title: "解放された<span class='highlight'>能力</span>",
+                    cat1: "クラフト",
+                    skill1: "クリエイティブシンキング",
+                    skill2: "ストーリーテリング",
+                    skill3: "UI/UXデザイン",
+                    skill4: "写真",
+                    skill5: "映像編集",
+                    cat2: "ツール",
+                    skill6: "ウェブ開発",
+                    skill7: "リサーチ",
+                    skill8: "サイバーセキュリティ基礎",
+                    cat3: "声"
                 },
                 journal: {
                     label: "シネマティックジャーナル",
                     title: "人生の<span class='highlight'>フレーム</span>",
-                    1: { desc: "2022 · 初雪" },
-                    2: { desc: "2024 · 深夜のデザイン" },
-                    3: { desc: "2023 · ネオンの雨" },
-                    4: { desc: "2024 · 静かな時間" },
-                    5: { desc: "2023 · 見知らぬ人の笑顔" },
-                    6: { desc: "2022 · 光の社" }
+                    1: { desc: "2022年 · 初雪" },
+                    2: { desc: "2024年 · 深夜のデザイン作業" },
+                    3: { desc: "2023年 · ネオンの雨" },
+                    4: { desc: "2024年 · 静かな時間" },
+                    5: { desc: "2023年 · 見知らぬ人の微笑み" },
+                    6: { desc: "2022年 · 光に包まれた寺院" }
                 },
                 terminal: {
-                    label: "通信端末",
-                    title: "開かれた<span class='highlight'>チャンネル</span>",
-                    invite: "コラボ、フリーランス、あるいはただのおしゃべりでも — いつでも歓迎です。"
+                    label: "通信ターミナル",
+                    title: "<span class='highlight'>チャンネル</span>を開く",
+                    invite: "コラボレーション、フリーランスのお仕事、あるいはただの雑談でも――いつでも歓迎です。"
                 },
-                ending: { title: "ゲームをセーブしました", message: "次の旅まで。", continue: "つづけますか？" },
-                toast: "✦ 秘密を発見：探検者のエッセンス"
+                ending: { title: "ゲームをセーブしました", message: "また次の旅で。", continue: "続ける?" },
+                toast: "✦ 秘密を発見:探検家の本質"
             }
         };
 
@@ -1488,7 +1583,6 @@
             const bgMusic = document.getElementById('bgMusic');
             let playing = false;
 
-            // Preload the audio on first interaction
             function ensureLoaded() {
                 if (bgMusic.readyState === 0) {
                     bgMusic.load();
@@ -1529,13 +1623,25 @@
             });
         })();
 
+        // ─── Mission Dossier: click to expand ───
+        document.querySelectorAll('.dossier-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                this.classList.toggle('expanded');
+            });
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.classList.toggle('expanded');
+                }
+            });
+        });
+
         const toast = document.getElementById('toast');
         document.addEventListener('keydown', e => {
             if(e.key === 'e' || e.key === 'E') {
                 toast.classList.add('show');
                 setTimeout(()=> toast.classList.remove('show'), 2000);
             }
-            // Press Y to restart journey
             if(e.key === 'y' || e.key === 'Y') {
                 const hero = document.getElementById('hero');
                 if(hero) scrollToTarget(hero, 60);
