@@ -1003,7 +1003,7 @@
             </div>
         </section>
 
-        <!-- Mission Archive (updated with real content & click-to-expand) -->
+        <!-- Mission Archive -->
         <section class="section" id="missions" aria-labelledby="missions-heading">
             <div class="section__header">
                 <p class="section__label" data-i18n="missions.label">Mission Archive</p>
@@ -1012,7 +1012,7 @@
             </div>
             <div class="missions__grid">
                 <!-- Mission 1 -->
-                <div class="dossier-card" role="button" tabindex="0">
+                <div class="dossier-card" role="button" tabindex="0" aria-expanded="false">
                     <span class="dossier-card__stamp" data-i18n="missions.1.stamp">Top Secret</span>
                     <span class="dossier-card__arrow">↗</span>
                     <h3 class="dossier-card__title" data-i18n="missions.1.title">Operation: Phoenix Protocol</h3>
@@ -1020,7 +1020,7 @@
                     <div class="dossier-card__tags" data-i18n="missions.1.tags">Anti-Fraud · Community · Vietnam</div>
                 </div>
                 <!-- Mission 2 -->
-                <div class="dossier-card" role="button" tabindex="0">
+                <div class="dossier-card" role="button" tabindex="0" aria-expanded="false">
                     <span class="dossier-card__stamp" data-i18n="missions.2.stamp">Classified</span>
                     <span class="dossier-card__arrow">↗</span>
                     <h3 class="dossier-card__title" data-i18n="missions.2.title">Project: Cash Guardian</h3>
@@ -1028,7 +1028,7 @@
                     <div class="dossier-card__tags" data-i18n="missions.2.tags">Finance · Trust · Ramen House</div>
                 </div>
                 <!-- Mission 3 -->
-                <div class="dossier-card" role="button" tabindex="0">
+                <div class="dossier-card" role="button" tabindex="0" aria-expanded="false">
                     <span class="dossier-card__stamp" data-i18n="missions.3.stamp">Confidential</span>
                     <span class="dossier-card__arrow">↗</span>
                     <h3 class="dossier-card__title" data-i18n="missions.3.title">Mission: Radiant Ascension</h3>
@@ -1036,7 +1036,7 @@
                     <div class="dossier-card__tags" data-i18n="missions.3.tags">Tactics · CS2 · Faceit Lvl 10</div>
                 </div>
                 <!-- Mission 4 -->
-                <div class="dossier-card" role="button" tabindex="0">
+                <div class="dossier-card" role="button" tabindex="0" aria-expanded="false">
                     <span class="dossier-card__stamp" data-i18n="missions.4.stamp">Prototype</span>
                     <span class="dossier-card__arrow">↗</span>
                     <h3 class="dossier-card__title" data-i18n="missions.4.title">Codename: Polyglot</h3>
@@ -1518,6 +1518,9 @@
         let currentFocusIndex = -1;
 
         function applyLanguage(lang) {
+            // Tweak 1: Update the HTML lang attribute for screen readers
+            document.documentElement.lang = lang;
+
             const elements = document.querySelectorAll('[data-i18n]');
             elements.forEach(el => {
                 const key = el.getAttribute('data-i18n');
@@ -1762,15 +1765,19 @@
             });
         })();
 
-        // ─── Mission Dossier: click to expand ───
+        // ─── Mission Dossier: click to expand (with aria-expanded toggle) ───
         document.querySelectorAll('.dossier-card').forEach(card => {
             card.addEventListener('click', function(e) {
                 this.classList.toggle('expanded');
+                // Tweak 3: Update aria-expanded for screen readers
+                this.setAttribute('aria-expanded', this.classList.contains('expanded'));
             });
             card.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     this.classList.toggle('expanded');
+                    // Tweak 3: Update aria-expanded for screen readers
+                    this.setAttribute('aria-expanded', this.classList.contains('expanded'));
                 }
             });
         });
@@ -1781,9 +1788,20 @@
                 toast.classList.add('show');
                 setTimeout(()=> toast.classList.remove('show'), 2000);
             }
-            if(e.key === 'y' || e.key === 'Y') {
+            // Tweak 2: Make "N" key trigger Game Over
+            else if(e.key === 'n' || e.key === 'N') {
+                toast.textContent = '💀 Game Over. Press Y to respawn.';
+                toast.classList.add('show');
+                setTimeout(()=> toast.classList.remove('show'), 2500);
+                // Scroll to footer for dramatic effect
+                const footer = document.querySelector('.ending');
+                if(footer) scrollToTarget(footer, 60);
+            }
+            else if(e.key === 'y' || e.key === 'Y') {
                 const hero = document.getElementById('hero');
                 if(hero) scrollToTarget(hero, 60);
+                // Reset toast message if it was showing game over
+                toast.textContent = '✦ Secret found: Explorer\'s essence';
             }
         });
 
