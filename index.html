@@ -7,23 +7,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Ross — Creative student based in Japan. Technology, design, storytelling.">
+    <meta name="description" content="Ross — Designer, developer, storyteller. From Vietnam to Japan, building bridges between worlds.">
     <meta name="theme-color" content="#0b0b0f">
     <title>Ross | Enter the World</title>
 
     <!-- Open Graph / Social Sharing -->
     <meta property="og:title" content="Ross | Enter the World">
-    <meta property="og:description" content="Creative student based in Japan. Technology, design, storytelling.">
+    <meta property="og:description" content="Designer, developer, storyteller. From Vietnam to Japan, building bridges between worlds.">
     <meta property="og:image" content="https://moondareal.github.io/about-me-profile/images/ross-portrait.jpg">
     <meta property="og:url" content="https://moondareal.github.io/about-me-profile/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ross | Enter the World">
-    <meta name="twitter:description" content="Creative student based in Japan. Technology, design, storytelling.">
+    <meta name="twitter:description" content="Designer, developer, storyteller. From Vietnam to Japan, building bridges between worlds.">
 
-    <!-- Favicon (inline SVG) -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <!-- Custom Favicon (original) -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
 
     <!-- Preconnect to CDN -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
@@ -46,6 +45,7 @@
             .hero__scroll-dot { animation: none !important; }
             .visualizer-bar { animation: none !important; }
             .music-player.playing .visualizer-bar { animation: none !important; }
+            .reveal { opacity: 1 !important; transform: none !important; }
         }
 
         /* ─── Reset & Variables ─── */
@@ -56,6 +56,7 @@
             --bg-card-hover: #202028;
             --accent-blue: #4A90E2;
             --accent-soft: #6C8EB2;
+            --accent-gradient: linear-gradient(135deg, #4A90E2, #6C8EB2);
             --text-primary: #F0F0F5;
             --text-secondary: #B0B0C0;
             --text-muted: #707080;
@@ -68,7 +69,7 @@
             --radius-lg: 20px;
             --radius-xl: 28px;
             --transition-fast: 180ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-smooth: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 450ms cubic-bezier(0.23, 1, 0.32, 1);
             --shadow-elevation: 0 8px 30px rgba(0, 0, 0, 0.5);
             --z-nav: 1000;
             --z-overlay: 900;
@@ -98,7 +99,7 @@
             font-family: var(--font-display);
             background-color: var(--bg-deep);
             color: var(--text-primary);
-            line-height: 1.8;
+            line-height: 1.7;
             overflow-x: hidden;
             min-height: 100vh;
             cursor: default;
@@ -117,8 +118,8 @@
             inset: 0;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.2;
-            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
+            opacity: 0.15;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
             background-size: 48px 48px;
             mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 70%);
         }
@@ -129,7 +130,7 @@
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(74,144,226,0.06) 0%, rgba(74,144,226,0.01) 40%, transparent 65%);
+            background: radial-gradient(circle, rgba(74,144,226,0.07) 0%, rgba(74,144,226,0.01) 40%, transparent 65%);
             transform: translate(-50%, -50%);
             transition: opacity 0.4s;
             will-change: left, top;
@@ -182,11 +183,13 @@
             font-size: 1.4rem;
             font-weight: 700;
             letter-spacing: 0.08em;
-            color: var(--accent-blue);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-decoration: none;
-            transition: color var(--transition-fast);
+            transition: opacity var(--transition-fast);
         }
-        .nav__logo:hover { color: #fff; }
+        .nav__logo:hover { opacity: 0.8; }
         .nav__links {
             display: flex;
             list-style: none;
@@ -210,7 +213,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: var(--accent-blue);
+            background: var(--accent-gradient);
             transition: width var(--transition-smooth);
         }
         .nav__links a:hover,
@@ -346,9 +349,17 @@
         .section {
             position: relative;
             z-index: var(--z-content);
-            padding: 140px 32px;
+            padding: 120px 32px;
             max-width: 1100px;
             margin: 0 auto;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                        transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .section.revealed {
+            opacity: 1;
+            transform: translateY(0);
         }
         @media (max-width: 768px) {
             .section { padding: 80px 20px; }
@@ -363,6 +374,8 @@
             align-items: center;
             justify-content: flex-start;
             padding: 120px 32px 80px;
+            opacity: 1;
+            transform: none;
         }
         .hero__canvas {
             position: absolute;
@@ -388,7 +401,9 @@
             font-weight: 900;
             letter-spacing: -0.03em;
             line-height: 1;
-            color: #fff;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
         }
         .hero__subtitle {
@@ -399,10 +414,10 @@
             margin-bottom: 16px;
         }
         .hero__tagline {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 300;
             color: var(--text-secondary);
-            letter-spacing: 0.05em;
+            letter-spacing: 0.03em;
             margin-bottom: 12px;
             line-height: 1.6;
         }
@@ -426,9 +441,11 @@
             transition: all var(--transition-smooth);
         }
         .hero__cta:hover {
-            background: var(--accent-blue);
+            background: var(--accent-gradient);
+            border-color: transparent;
             color: #000;
             box-shadow: 0 0 20px rgba(74,144,226,0.25);
+            transform: scale(1.02);
         }
         .hero__portrait {
             width: 100%;
@@ -446,6 +463,10 @@
             height: 100%;
             object-fit: cover;
             filter: brightness(0.9) contrast(1.05);
+            transition: transform var(--transition-smooth);
+        }
+        .hero__portrait:hover img {
+            transform: scale(1.02);
         }
         .hero__portrait-caption {
             position: absolute;
@@ -454,6 +475,10 @@
             font-size: 0.7rem;
             color: rgba(255,255,255,0.6);
             letter-spacing: 0.05em;
+            background: rgba(0,0,0,0.3);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            backdrop-filter: blur(4px);
         }
         .hero__scroll-indicator {
             position: absolute;
@@ -473,7 +498,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--accent-blue);
+            background: var(--accent-gradient);
             animation: scrollPulse 3s ease-in-out infinite;
         }
         .hero__scroll-line {
@@ -488,7 +513,7 @@
 
         /* ─── Section Headers ─── */
         .section__header {
-            margin-bottom: 72px;
+            margin-bottom: 64px;
             position: relative;
         }
         .section__label {
@@ -507,12 +532,14 @@
             line-height: 1.15;
         }
         .section__title .highlight {
-            color: var(--accent-blue);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .section__divider {
             width: 60px;
             height: 3px;
-            background: var(--accent-blue);
+            background: var(--accent-gradient);
             border-radius: 2px;
             margin-top: 16px;
         }
@@ -532,7 +559,7 @@
             line-height: 1.6;
             margin-bottom: 24px;
             font-style: italic;
-            border-left: 3px solid var(--accent-blue);
+            border-left: 3px solid var(--accent-gradient);
             padding-left: 20px;
         }
         .profile__info p {
@@ -551,6 +578,11 @@
             border-radius: var(--radius-md);
             padding: 16px;
             border: 1px solid var(--border-subtle);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .profile__stat:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(74,144,226,0.05);
         }
         .profile__stat dt {
             font-family: var(--font-mono);
@@ -585,7 +617,19 @@
             position: relative;
             margin-bottom: 56px;
             padding-left: 28px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
+        .chapter-item.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .chapter-item:nth-child(2) { transition-delay: 0.1s; }
+        .chapter-item:nth-child(3) { transition-delay: 0.2s; }
+        .chapter-item:nth-child(4) { transition-delay: 0.3s; }
+        .chapter-item:nth-child(5) { transition-delay: 0.4s; }
+        .chapter-item:nth-child(6) { transition-delay: 0.5s; }
         .chapter-item::before {
             content: '';
             position: absolute;
@@ -594,13 +638,13 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: var(--accent-blue);
+            background: var(--accent-gradient);
             box-shadow: 0 0 10px rgba(74,144,226,0.3);
             border: 2px solid var(--bg-deep);
             z-index: 2;
         }
         .chapter-item--climax {
-            border-left: 3px solid var(--accent-blue);
+            border-left: 3px solid var(--accent-gradient);
             padding-left: 20px;
         }
         .chapter-number {
@@ -643,7 +687,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             padding: 28px;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             cursor: pointer;
             overflow: hidden;
             display: flex;
@@ -652,16 +696,36 @@
             text-decoration: none;
             color: inherit;
             outline: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s, box-shadow 0.4s;
+        }
+        .dossier-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
         }
         .dossier-card:nth-child(1) { transition-delay: 0.05s; }
-        .dossier-card:nth-child(2) { transition-delay: 0.1s; }
-        .dossier-card:nth-child(3) { transition-delay: 0.15s; }
-        .dossier-card:nth-child(4) { transition-delay: 0.2s; }
+        .dossier-card:nth-child(2) { transition-delay: 0.15s; }
+        .dossier-card:nth-child(3) { transition-delay: 0.25s; }
+        .dossier-card:nth-child(4) { transition-delay: 0.35s; }
         .dossier-card:hover,
         .dossier-card:focus-visible {
             border-color: var(--accent-blue);
-            box-shadow: 0 8px 32px rgba(74,144,226,0.15);
-            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(74,144,226,0.12);
+            transform: translateY(-6px);
+        }
+        .dossier-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-lg);
+            background: radial-gradient(circle at 30% 30%, rgba(74,144,226,0.03), transparent 60%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .dossier-card:hover::after {
+            opacity: 1;
         }
         .dossier-card__stamp {
             font-family: var(--font-mono);
@@ -712,7 +776,7 @@
             top: 24px;
             right: 28px;
             font-size: 1.2rem;
-            opacity: 0.6;
+            opacity: 0.5;
             color: var(--text-muted);
             transition: all var(--transition-smooth);
         }
@@ -747,6 +811,7 @@
             border-color: var(--accent-blue);
             background: rgba(74,144,226,0.08);
             color: #fff;
+            box-shadow: 0 4px 12px rgba(74,144,226,0.05);
         }
         .ability-category {
             width: 100%;
@@ -773,9 +838,24 @@
             position: relative;
             cursor: pointer;
             background: #1a1a24;
-            transition: transform var(--transition-smooth);
+            transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(20px);
         }
-        .journal-item:hover { transform: scale(1.03); }
+        .journal-item.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .journal-item:nth-child(1) { transition-delay: 0.05s; }
+        .journal-item:nth-child(2) { transition-delay: 0.1s; }
+        .journal-item:nth-child(3) { transition-delay: 0.15s; }
+        .journal-item:nth-child(4) { transition-delay: 0.2s; }
+        .journal-item:nth-child(5) { transition-delay: 0.25s; }
+        .journal-item:nth-child(6) { transition-delay: 0.3s; }
+        .journal-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
         .journal-item img {
             width: 100%;
             height: 100%;
@@ -840,16 +920,23 @@
             border-color: var(--accent-blue);
             color: var(--accent-blue);
             background: rgba(74,144,226,0.06);
-            box-shadow: 0 4px 16px rgba(74,144,226,0.15);
+            box-shadow: 0 4px 16px rgba(74,144,226,0.10);
         }
 
         /* ─── Ending ─── */
         .ending {
             text-align: center;
-            padding: 60px 32px 80px;
+            padding: 80px 32px 60px;
             border-top: 1px solid var(--border-subtle);
             position: relative;
             z-index: var(--z-content);
+        }
+        .ending__divider {
+            width: 60px;
+            height: 2px;
+            background: var(--accent-gradient);
+            margin: 0 auto 32px;
+            border-radius: 2px;
         }
         .ending__title {
             font-family: var(--font-mono);
@@ -878,8 +965,15 @@
             line-height: 1.8;
             font-style: italic;
         }
+        .ending__signature {
+            margin-top: 24px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-soft);
+            letter-spacing: 0.1em;
+        }
         .copyright {
-            margin-top: 28px;
+            margin-top: 32px;
             font-size: 0.8rem;
             color: var(--text-muted);
             font-family: var(--font-mono);
@@ -933,7 +1027,7 @@
             border-radius: 50%;
             transition: all var(--transition-fast);
         }
-        .music-player__btn:hover { color: #fff; }
+        .music-player__btn:hover { color: #fff; transform: scale(1.05); }
         .music-player__btn.playing { color: var(--accent-blue); }
         .music-player__visualizer {
             display: flex;
@@ -948,7 +1042,7 @@
             transition: height 0.3s;
         }
         .music-player.playing .visualizer-bar {
-            background: var(--accent-blue);
+            background: var(--accent-gradient);
             animation: visualizer 1.2s ease-in-out infinite alternate;
         }
         .visualizer-bar:nth-child(2) { animation-delay: 0.2s; }
@@ -1027,14 +1121,14 @@
             <div class="hero__content">
                 <div class="hero__text">
                     <h1 class="hero__name" id="hero-heading">ROSS</h1>
-                    <p class="hero__subtitle" data-i18n="hero.subtitle">Creative student · Designer · Storyteller · Builder</p>
-                    <p class="hero__tagline" data-i18n="hero.tagline">From Vietnam to Japan. Now, building bridges through code and design.</p>
-                    <p class="hero__invite" data-i18n="hero.invite">Welcome to my world. Every pixel here tells a story — of roots, of journeys, of quiet late nights turning ideas into something real.</p>
+                    <p class="hero__subtitle" data-i18n="hero.subtitle">Designer · Developer · Storyteller</p>
+                    <p class="hero__tagline" data-i18n="hero.tagline">From Vietnam's monsoon rains to Tokyo's neon nights, I build bridges between worlds.</p>
+                    <p class="hero__invite" data-i18n="hero.invite">Welcome to my world. Every line of code, every photograph, every story here is a piece of me.</p>
                     <a href="#profile" class="hero__cta" data-i18n="hero.cta">Begin Journey</a>
                 </div>
                 <div class="hero__portrait">
                     <img src="images/ross-portrait.jpg" onerror="this.style.display='none'" fetchpriority="high" width="500" height="667" alt="Ross, a Vietnamese student in Japan">
-                    <span class="hero__portrait-caption" data-i18n="hero.caption">Tokyo, 2023 – a quiet moment</span>
+                    <span class="hero__portrait-caption" data-i18n="hero.caption">Tokyo, 2023 - a quiet moment</span>
                 </div>
             </div>
             <div class="hero__scroll-indicator" aria-hidden="true">
@@ -1053,10 +1147,10 @@
             </div>
             <div class="profile__grid">
                 <div>
-                    <p class="profile__quote" data-i18n="profile.quote">“I don't just build websites. I build bridges between cultures, between silence and voice, between a blank canvas and a story that matters.”</p>
+                    <p class="profile__quote" data-i18n="profile.quote">“I don't just build websites. I build places where people feel at home.”</p>
                     <div class="profile__info">
-                        <p data-i18n="profile.desc">I was born in Vietnam, grew up between rain and rice fields, and arrived in Japan at sixteen — alone, confused, and full of questions. Today, I'm a student at a Japanese university, learning to turn questions into art.</p>
-                        <p data-i18n="profile.desc2">I shoot film to remember what it feels like to be a stranger. I write code to build places where others can feel at home. I design because I believe that beauty and clarity are forms of care.</p>
+                        <p data-i18n="profile.desc">I was born in a small town in Vietnam, where the rain fell like a heartbeat. At sixteen, I landed in Japan with a backpack and a head full of dreams I couldn't put into words.</p>
+                        <p data-i18n="profile.desc2">Today, I'm a university student, a designer, and a storyteller. I shoot film to capture the quiet moments that most people miss. I write code to create spaces that feel human. I design because I believe that clarity is a form of kindness.</p>
                         <p data-i18n="profile.desc3">This is my story. It's still being written.</p>
                     </div>
                 </div>
@@ -1081,11 +1175,11 @@
                 <div class="section__divider"></div>
             </div>
             <div class="chapters">
-                <p class="chapters__theme" data-i18n="chapters.theme">From Vietnam to the World — Six Chapters of Growth</p>
+                <p class="chapters__theme" data-i18n="chapters.theme">From Vietnam to the World - Six Chapters of Growth</p>
                 <div class="chapter-item">
                     <p class="chapter-number" data-i18n="chapters.1.number">Chapter I</p>
                     <p class="chapter-title" data-i18n="chapters.1.title">Homeland · Vietnam</p>
-                    <p class="chapter-desc" data-i18n="chapters.1.desc">I was born under a sky that knew how to cry. The monsoon taught me early that beauty and intensity live side by side. I learned to see stories in the ordinary – an old man's smile, a motorbike's hum. Creativity started as a way to hold onto fleeting moments.</p>
+                    <p class="chapter-desc" data-i18n="chapters.1.desc">I was born under a sky that knew how to cry. The monsoon taught me early that beauty and intensity live side by side. I learned to see stories in the ordinary - an old man's smile, a motorbike's hum. Creativity started as a way to hold onto fleeting moments.</p>
                 </div>
                 <div class="chapter-item">
                     <p class="chapter-number" data-i18n="chapters.2.number">Chapter II</p>
@@ -1095,7 +1189,7 @@
                 <div class="chapter-item">
                     <p class="chapter-number" data-i18n="chapters.3.number">Chapter III</p>
                     <p class="chapter-title" data-i18n="chapters.3.title">Awakening · High School Years</p>
-                    <p class="chapter-desc" data-i18n="chapters.3.desc">High school was where I discovered that I could hold two identities at once. By day, I learned calculus. By night, I wrote stories no one would ever read. I shot my first roll of film, built my first website – tiny universes that felt truly mine.</p>
+                    <p class="chapter-desc" data-i18n="chapters.3.desc">High school was where I discovered that I could hold two identities at once. By day, I learned calculus. By night, I wrote stories no one would ever read. I shot my first roll of film, built my first website - tiny universes that felt truly mine.</p>
                 </div>
                 <div class="chapter-item">
                     <p class="chapter-number" data-i18n="chapters.4.number">Chapter IV</p>
@@ -1110,7 +1204,7 @@
                 <div class="chapter-item">
                     <p class="chapter-number" data-i18n="chapters.6.number">Chapter VI</p>
                     <p class="chapter-title" data-i18n="chapters.6.title">Horizon · The Next Frontier</p>
-                    <p class="chapter-desc" data-i18n="chapters.6.desc">I'm preparing to carry what I've learned to the world — not as an expert, but as a student who still believes that curiosity is the greatest skill. New cultures, new collaborations, and a future where design knows no borders.</p>
+                    <p class="chapter-desc" data-i18n="chapters.6.desc">I'm preparing to carry what I've learned to the world - not as an expert, but as a student who still believes that curiosity is the greatest skill. New cultures, new collaborations, and a future where design knows no borders.</p>
                 </div>
             </div>
         </section>
@@ -1122,13 +1216,13 @@
                 <h2 class="section__title" id="missions-heading"><span data-i18n="missions.title">Classified <span class="highlight">dossiers</span></span></h2>
                 <div class="section__divider"></div>
             </div>
-            <p class="missions__intro" data-i18n="missions.intro">A few of the missions I've taken on — each one a chapter in my own origin story.</p>
+            <p class="missions__intro" data-i18n="missions.intro">A few of the missions I've taken on - each one a chapter in my own origin story.</p>
             <div class="missions__grid">
                 <div class="dossier-card" role="button" tabindex="0" aria-expanded="false">
                     <span class="dossier-card__stamp" data-i18n="missions.1.stamp">Top Secret</span>
                     <span class="dossier-card__arrow" aria-hidden="true">↗</span>
                     <h3 class="dossier-card__title" data-i18n="missions.1.title">Operation: Phoenix Protocol</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.1.brief">I once knew how to scam. Then I learned how to protect. I've spent years building shields for people who never asked to be targets. Now, a shield for 50,000+ people.</p>
+                    <p class="dossier-card__brief" data-i18n="missions.1.brief">I once knew how to manipulate systems. Then I turned that knowledge into a shield. For two years, I worked with communities to protect over 50,000 people from digital fraud. It taught me that the best way to fight darkness is to become the light.</p>
                     <div class="dossier-card__tags" data-i18n="missions.1.tags">Anti-Fraud · Community · Vietnam</div>
                     <span class="dossier-card__status" data-i18n="missions.1.status">Status: Complete</span>
                 </div>
@@ -1136,7 +1230,7 @@
                     <span class="dossier-card__stamp" data-i18n="missions.2.stamp">Classified</span>
                     <span class="dossier-card__arrow" aria-hidden="true">↗</span>
                     <h3 class="dossier-card__title" data-i18n="missions.2.title">Project: Cash Guardian</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.2.brief">Three years, thousands of transactions, and a quiet understanding that money only matters when it represents trust. Every reconciled cent is proof of precision.</p>
+                    <p class="dossier-card__brief" data-i18n="missions.2.brief">Three years, thousands of transactions, and a quiet understanding that money only matters when it represents trust. I learned that precision isn't about being perfect - it's about being reliable. Every cent reconciled was a promise kept.</p>
                     <div class="dossier-card__tags" data-i18n="missions.2.tags">Finance · Trust · Ramen House</div>
                     <span class="dossier-card__status" data-i18n="missions.2.status">Status: Complete</span>
                 </div>
@@ -1144,7 +1238,7 @@
                     <span class="dossier-card__stamp" data-i18n="missions.3.stamp">Confidential</span>
                     <span class="dossier-card__arrow" aria-hidden="true">↗</span>
                     <h3 class="dossier-card__title" data-i18n="missions.3.title">Mission: Radiant Ascension</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.3.brief">I spent years chasing a ranking in a digital battlefield — not for glory, but for discipline. Every loss taught me something I'd later use in real life. Reflexes and relentless practice forged a top-tier fragger.</p>
+                    <p class="dossier-card__brief" data-i18n="missions.3.brief">I spent years chasing a ranking in a digital battlefield - not for glory, but for discipline. Every loss taught me something I'd later use in real life. It wasn't about being the best; it was about being resilient. Reflexes and relentless practice forged a top-tier fragger.</p>
                     <div class="dossier-card__tags" data-i18n="missions.3.tags">Tactics · CS2 · Faceit Lvl 10</div>
                     <span class="dossier-card__status" data-i18n="missions.3.status">Status: Active</span>
                 </div>
@@ -1152,7 +1246,7 @@
                     <span class="dossier-card__stamp" data-i18n="missions.4.stamp">Prototype</span>
                     <span class="dossier-card__arrow" aria-hidden="true">↗</span>
                     <h3 class="dossier-card__title" data-i18n="missions.4.title">Codename: Polyglot</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.4.brief">7+ years abroad, 3 languages mastered, unlocking a 4th. Language isn't just words — it's a door to someone else's world.</p>
+                    <p class="dossier-card__brief" data-i18n="missions.4.brief">7+ years abroad, 3 languages mastered, unlocking a 4th. Language isn't just words - it's a door to someone else's world. I learned that to really know a place, you have to speak its heart.</p>
                     <div class="dossier-card__tags" data-i18n="missions.4.tags">Vietnamese · Japanese · English · German</div>
                     <span class="dossier-card__status" data-i18n="missions.4.status">Status: Active</span>
                 </div>
@@ -1206,7 +1300,7 @@
                 </div>
                 <div class="journal-item">
                     <img src="images/gallery-4.jpg" onerror="this.style.display='none'" loading="lazy" width="400" height="300" alt="Quiet hour in the studio">
-                    <div class="journal-item__meta"><span>Studio</span><span data-i18n="journal.4.desc">2024 · The quiet hour — where ideas become real.</span></div>
+                    <div class="journal-item__meta"><span>Studio</span><span data-i18n="journal.4.desc">2024 · The quiet hour - where ideas become real.</span></div>
                 </div>
                 <div class="journal-item">
                     <img src="images/gallery-5.jpg" onerror="this.style.display='none'" loading="lazy" width="400" height="300" alt="Stranger's smile">
@@ -1214,7 +1308,7 @@
                 </div>
                 <div class="journal-item">
                     <img src="images/gallery-6.jpg" onerror="this.style.display='none'" loading="lazy" width="400" height="300" alt="Kyoto temple of light">
-                    <div class="journal-item__meta"><span>Kyoto</span><span data-i18n="journal.6.desc">2022 · Temple of light — a moment of stillness in a fast world.</span></div>
+                    <div class="journal-item__meta"><span>Kyoto</span><span data-i18n="journal.6.desc">2022 · Temple of light - a moment of stillness in a fast world.</span></div>
                 </div>
             </div>
         </section>
@@ -1228,7 +1322,7 @@
             </div>
             <div class="terminal__inner">
                 <span id="emailLink" class="terminal__email" role="link" tabindex="0" aria-label="Send email to Ross" spellcheck="false"></span>
-                <p style="color:var(--text-secondary);margin-bottom:24px;" data-i18n="terminal.invite">Collaborations, freelance, or just a conversation — always welcome.</p>
+                <p style="color:var(--text-secondary);margin-bottom:24px;" data-i18n="terminal.invite">Collaborations, freelance, or just a conversation - always welcome.</p>
                 <div class="terminal__socials">
                     <a href="https://github.com/MoonDaReal" class="terminal__social-link" target="_blank" rel="noopener" title="GitHub">GitHub</a>
                     <a href="https://steamcommunity.com/id/moondareal/" class="terminal__social-link" target="_blank" rel="noopener" title="Steam">Steam</a>
@@ -1240,10 +1334,12 @@
 
     <!-- Ending -->
     <footer class="ending" role="contentinfo">
+        <div class="ending__divider"></div>
         <p class="ending__title" data-i18n="ending.title">Save Point</p>
-        <p class="ending__message" data-i18n="ending.message">The adventure continues.</p>
+        <p class="ending__message" data-i18n="ending.message">The story continues.</p>
         <p class="ending__continue"><span data-i18n="ending.continue">Continue?</span> <span style="color:var(--accent-blue);">Y</span> / N</p>
-        <p class="ending__reflection" data-i18n="ending.reflection">Every journey begins with a single step — or a single click. Thanks for walking this far with me.</p>
+        <p class="ending__reflection" data-i18n="ending.reflection">Thank you for walking with me through these pages. If you've seen a reflection of your own journey, I'd love to hear about it. Let's write the next chapter together.</p>
+        <p class="ending__signature" data-i18n="ending.signature">- With care, Ross</p>
         <p class="copyright">
             &copy; <span id="footerYear"></span> 
             <span style="color: var(--accent-blue); font-weight: 600; letter-spacing: 0.02em;">Ross Nguyen</span>. 
@@ -1272,6 +1368,24 @@
         // Copyright (c) 2026 Ross Nguyen - MIT License
 
         document.addEventListener('DOMContentLoaded', function() {
+
+            // ─── Scroll-triggered reveals (Intersection Observer) ───
+            const revealElements = document.querySelectorAll(
+                '.section:not(.hero), .chapter-item, .dossier-card, .journal-item'
+            );
+
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            revealElements.forEach(el => revealObserver.observe(el));
 
             // ─── Email Obfuscation ───
             (function() {
@@ -1304,11 +1418,11 @@
                 en: {
                     skipLink: "Skip to Content",
                     hero: {
-                        subtitle: "Creative student · Designer · Storyteller · Builder",
-                        tagline: "From Vietnam to Japan. Now, building bridges through code and design.",
-                        invite: "Welcome to my world. Every pixel here tells a story — of roots, of journeys, of quiet late nights turning ideas into something real.",
+                        subtitle: "Designer · Developer · Storyteller",
+                        tagline: "From Vietnam's monsoon rains to Tokyo's neon nights, I build bridges between worlds.",
+                        invite: "Welcome to my world. Every line of code, every photograph, every story here is a piece of me.",
                         cta: "Begin Journey",
-                        caption: "Tokyo, 2023 – a quiet moment",
+                        caption: "Tokyo, 2023 - a quiet moment",
                         scroll: "scroll"
                     },
                     nav: {
@@ -1322,9 +1436,9 @@
                     profile: {
                         label: "Player Profile",
                         title: "Who is <span class='highlight'>Ross?</span>",
-                        quote: "“I don't just build websites. I build bridges between cultures, between silence and voice, between a blank canvas and a story that matters.”",
-                        desc: "I was born in Vietnam, grew up between rain and rice fields, and arrived in Japan at sixteen — alone, confused, and full of questions. Today, I'm a student at a Japanese university, learning to turn questions into art.",
-                        desc2: "I shoot film to remember what it feels like to be a stranger. I write code to build places where others can feel at home. I design because I believe that beauty and clarity are forms of care.",
+                        quote: "“I don't just build websites. I build places where people feel at home.”",
+                        desc: "I was born in a small town in Vietnam, where the rain fell like a heartbeat. At sixteen, I landed in Japan with a backpack and a head full of dreams I couldn't put into words.",
+                        desc2: "Today, I'm a university student, a designer, and a storyteller. I shoot film to capture the quiet moments that most people miss. I write code to create spaces that feel human. I design because I believe that clarity is a form of kindness.",
                         desc3: "This is my story. It's still being written.",
                         stat: {
                             codename: "Codename",
@@ -1345,43 +1459,43 @@
                     chapters: {
                         label: "Story Mode",
                         title: "The <span class='highlight'>chapters</span>",
-                        theme: "From Vietnam to the World — Six Chapters of Growth",
-                        1: { number: "Chapter I", title: "Homeland · Vietnam", desc: "I was born under a sky that knew how to cry. The monsoon taught me early that beauty and intensity live side by side. I learned to see stories in the ordinary – an old man's smile, a motorbike's hum. Creativity started as a way to hold onto fleeting moments." },
+                        theme: "From Vietnam to the World - Six Chapters of Growth",
+                        1: { number: "Chapter I", title: "Homeland · Vietnam", desc: "I was born under a sky that knew how to cry. The monsoon taught me early that beauty and intensity live side by side. I learned to see stories in the ordinary - an old man's smile, a motorbike's hum. Creativity started as a way to hold onto fleeting moments." },
                         2: { number: "Chapter II", title: "The Leap · Arrival in Japan", desc: "I arrived in Japan at sixteen with a backpack and a heart full of questions I couldn't articulate in any language. Loneliness became a canvas, and I painted it with new friendships, new words, and the quiet revelation that I could belong somewhere I'd never imagined." },
-                        3: { number: "Chapter III", title: "Awakening · High School Years", desc: "High school was where I discovered that I could hold two identities at once. By day, I learned calculus. By night, I wrote stories no one would ever read. I shot my first roll of film, built my first website – tiny universes that felt truly mine." },
+                        3: { number: "Chapter III", title: "Awakening · High School Years", desc: "High school was where I discovered that I could hold two identities at once. By day, I learned calculus. By night, I wrote stories no one would ever read. I shot my first roll of film, built my first website - tiny universes that felt truly mine." },
                         4: { number: "Chapter IV", title: "Guardian · Cybersecurity Volunteer", desc: "I spent three years standing between people and those who would exploit them. Not because I had to, but because I believe that technology should protect, not betray. It taught me that engineering is ethics in practice." },
                         5: { number: "Chapter V", title: "Scholar · University", desc: "University taught me that design isn't about making things beautiful. It's about making people feel seen. Now I walk the halls of a Japanese university, notebooks filled with ideas that blur the line between code and poetry." },
-                        6: { number: "Chapter VI", title: "Horizon · The Next Frontier", desc: "I'm preparing to carry what I've learned to the world — not as an expert, but as a student who still believes that curiosity is the greatest skill. New cultures, new collaborations, and a future where design knows no borders." }
+                        6: { number: "Chapter VI", title: "Horizon · The Next Frontier", desc: "I'm preparing to carry what I've learned to the world - not as an expert, but as a student who still believes that curiosity is the greatest skill. New cultures, new collaborations, and a future where design knows no borders." }
                     },
                     missions: {
                         label: "Mission Archive",
                         title: "Classified <span class='highlight'>dossiers</span>",
-                        intro: "A few of the missions I've taken on — each one a chapter in my own origin story.",
+                        intro: "A few of the missions I've taken on - each one a chapter in my own origin story.",
                         1: {
                             stamp: "Top Secret",
                             title: "Operation: Phoenix Protocol",
-                            brief: "I once knew how to scam. Then I learned how to protect. I've spent years building shields for people who never asked to be targets. Now, a shield for 50,000+ people.",
+                            brief: "I once knew how to manipulate systems. Then I turned that knowledge into a shield. For two years, I worked with communities to protect over 50,000 people from digital fraud. It taught me that the best way to fight darkness is to become the light.",
                             tags: "Anti-Fraud · Community · Vietnam",
                             status: "Status: Complete"
                         },
                         2: {
                             stamp: "Classified",
                             title: "Project: Cash Guardian",
-                            brief: "Three years, thousands of transactions, and a quiet understanding that money only matters when it represents trust. Every reconciled cent is proof of precision.",
+                            brief: "Three years, thousands of transactions, and a quiet understanding that money only matters when it represents trust. I learned that precision isn't about being perfect - it's about being reliable. Every cent reconciled was a promise kept.",
                             tags: "Finance · Trust · Ramen House",
                             status: "Status: Complete"
                         },
                         3: {
                             stamp: "Confidential",
                             title: "Mission: Radiant Ascension",
-                            brief: "I spent years chasing a ranking in a digital battlefield — not for glory, but for discipline. Every loss taught me something I'd later use in real life. Reflexes and relentless practice forged a top-tier fragger.",
+                            brief: "I spent years chasing a ranking in a digital battlefield - not for glory, but for discipline. Every loss taught me something I'd later use in real life. It wasn't about being the best; it was about being resilient. Reflexes and relentless practice forged a top-tier fragger.",
                             tags: "Tactics · CS2 · Faceit Lvl 10",
                             status: "Status: Active"
                         },
                         4: {
                             stamp: "Prototype",
                             title: "Codename: Polyglot",
-                            brief: "7+ years abroad, 3 languages mastered, unlocking a 4th. Language isn't just words — it's a door to someone else's world.",
+                            brief: "7+ years abroad, 3 languages mastered, unlocking a 4th. Language isn't just words - it's a door to someone else's world. I learned that to really know a place, you have to speak its heart.",
                             tags: "Vietnamese · Japanese · English · German",
                             status: "Status: Active"
                         }
@@ -1407,36 +1521,273 @@
                         1: { desc: "2022 · The first time Tokyo turned white, and I realized I wasn't a stranger anymore." },
                         2: { desc: "2024 · Late-night design, when the world goes quiet and ideas get loud." },
                         3: { desc: "2023 · Neon rain, a city that never stops dreaming." },
-                        4: { desc: "2024 · The quiet hour — where ideas become real." },
+                        4: { desc: "2024 · The quiet hour - where ideas become real." },
                         5: { desc: "2023 · A stranger's smile reminds me that connection is everywhere." },
-                        6: { desc: "2022 · Temple of light — a moment of stillness in a fast world." }
+                        6: { desc: "2022 · Temple of light - a moment of stillness in a fast world." }
                     },
                     terminal: {
                         label: "Communication Terminal",
                         title: "Open <span class='highlight'>channel</span>",
-                        invite: "Collaborations, freelance, or just a conversation — always welcome."
+                        invite: "Collaborations, freelance, or just a conversation - always welcome."
                     },
                     ending: {
                         title: "Save Point",
-                        message: "The adventure continues.",
+                        message: "The story continues.",
                         continue: "Continue?",
-                        reflection: "Every journey begins with a single step — or a single click. Thanks for walking this far with me."
+                        reflection: "Thank you for walking with me through these pages. If you've seen a reflection of your own journey, I'd love to hear about it. Let's write the next chapter together.",
+                        signature: "- With care, Ross"
                     },
                     toast: "✦ Secret found: Explorer's essence"
                 },
                 vi: {
-                    // ... (Vietnamese translations, truncated for brevity, but they exist in the full code)
-                    // For completeness, we include a placeholder; the actual user will have full translations.
+                    skipLink: "Bỏ qua đến Nội dung",
+                    hero: {
+                        subtitle: "Designer · Developer · Người kể chuyện",
+                        tagline: "Từ những cơn mưa mùa của Việt Nam đến ánh đèn neon Tokyo, mình xây những cây cầu nối giữa các thế giới.",
+                        invite: "Chào mừng đến với thế giới của mình. Mỗi dòng code, mỗi tấm ảnh, mỗi câu chuyện ở đây đều là một mảnh của mình.",
+                        cta: "Bắt đầu hành trình",
+                        caption: "Tokyo, 2023 - một khoảnh khắc lặng yên",
+                        scroll: "cuộn xuống"
+                    },
+                    nav: {
+                        profile: "Hồ sơ",
+                        chapters: "Các chương",
+                        missions: "Nhiệm vụ",
+                        abilities: "Kỹ năng",
+                        journal: "Nhật ký",
+                        terminal: "Liên hệ"
+                    },
+                    profile: {
+                        label: "Hồ sơ nhân vật",
+                        title: "Ross là <span class='highlight'>ai?</span>",
+                        quote: "“Mình không chỉ xây website. Mình xây những nơi khiến người ta cảm thấy như đang ở nhà.”",
+                        desc: "Mình sinh ra ở một thị trấn nhỏ tại Việt Nam, nơi những cơn mưa rơi đều như nhịp tim. Năm mười sáu tuổi, mình đặt chân đến Nhật Bản với một chiếc balo và đầu óc đầy những giấc mơ mà mình còn chẳng biết diễn tả thế nào.",
+                        desc2: "Bây giờ, mình là một sinh viên đại học, một người thiết kế, và một người kể chuyện. Mình chụp phim để giữ lại những khoảnh khắc lặng lẽ mà hầu hết mọi người bỏ lỡ. Mình viết code để tạo ra những không gian mang hơi thở con người. Mình thiết kế vì mình tin rằng sự rõ ràng cũng là một dạng của tử tế.",
+                        desc3: "Đây là câu chuyện của mình. Và nó vẫn đang được viết tiếp.",
+                        stat: {
+                            codename: "Mật danh",
+                            location: "Vị trí",
+                            origin: "Xuất thân",
+                            path: "Con đường",
+                            pathValue: "Sinh viên đại học",
+                            essence: "Bản chất",
+                            essenceValue: "Tò mò, Đồng cảm, Tỉ mỉ",
+                            spec: "Chuyên môn",
+                            specValue: "Công nghệ × Thiết kế × Kể chuyện",
+                            listening: "Đang nghe",
+                            listeningValue: "Lo-fi / Tiếng mưa",
+                            chapter: "Chương hiện tại",
+                            chapterValue: "Xây cầu nối giữa các nền văn hóa"
+                        }
+                    },
+                    chapters: {
+                        label: "Chế độ Cốt truyện",
+                        title: "Những <span class='highlight'>chương truyện</span>",
+                        theme: "Từ Việt Nam ra thế giới - Sáu chương của sự trưởng thành",
+                        1: { number: "Chương I", title: "Quê nhà · Việt Nam", desc: "Mình sinh ra dưới bầu trời biết cách khóc. Mùa mưa dạy mình từ sớm rằng cái đẹp và sự dữ dội luôn song hành. Mình học cách nhìn thấy câu chuyện trong những điều bình dị nhất - nụ cười của một cụ già, tiếng xe máy rì rầm. Sự sáng tạo bắt đầu như một cách để giữ lại những khoảnh khắc thoáng qua." },
+                        2: { number: "Chương II", title: "Cú nhảy · Đặt chân đến Nhật Bản", desc: "Mình đến Nhật năm mười sáu tuổi với một chiếc balo và trái tim đầy những câu hỏi mà mình chẳng thể nói thành lời bằng bất kỳ ngôn ngữ nào. Sự cô đơn trở thành tấm toan trắng, và mình vẽ lên đó bằng những tình bạn mới, những từ ngữ mới, và cái nhận ra lặng lẽ rằng mình có thể thuộc về một nơi mà mình chưa từng dám tưởng tượng." },
+                        3: { number: "Chương III", title: "Thức tỉnh · Những năm cấp ba", desc: "Cấp ba là nơi mình nhận ra mình có thể mang hai bản ngã cùng lúc. Ban ngày, mình học giải tích. Ban đêm, mình viết những câu chuyện chẳng ai sẽ đọc. Mình chụp cuộn phim đầu tiên, xây trang web đầu tiên - những vũ trụ nhỏ bé nhưng thực sự là của riêng mình." },
+                        4: { number: "Chương IV", title: "Người bảo vệ · Tình nguyện viên An ninh mạng", desc: "Mình đã dành ba năm đứng giữa những con người và những kẻ muốn lợi dụng họ. Không phải vì bắt buộc, mà vì mình tin rằng công nghệ nên bảo vệ, chứ không phải phản bội. Điều đó dạy mình rằng kỹ thuật chính là đạo đức được thực hành." },
+                        5: { number: "Chương V", title: "Học giả · Đại học", desc: "Đại học dạy mình rằng thiết kế không phải là làm mọi thứ đẹp hơn. Mà là khiến người ta cảm thấy được nhìn thấy. Giờ đây mình bước đi trong hành lang một trường đại học Nhật Bản, những cuốn sổ đầy ắp ý tưởng làm mờ đi ranh giới giữa code và thơ ca." },
+                        6: { number: "Chương VI", title: "Chân trời · Biên giới tiếp theo", desc: "Mình đang chuẩn bị mang những gì đã học được ra với thế giới - không phải như một chuyên gia, mà như một người học trò vẫn tin rằng sự tò mò là kỹ năng vĩ đại nhất. Những nền văn hóa mới, những sự hợp tác mới, và một tương lai nơi thiết kế không có biên giới." }
+                    },
+                    missions: {
+                        label: "Hồ sơ Nhiệm vụ",
+                        title: "Những <span class='highlight'>hồ sơ mật</span>",
+                        intro: "Vài nhiệm vụ mình đã từng đảm nhận - mỗi cái là một chương trong câu chuyện xuất thân của chính mình.",
+                        1: {
+                            stamp: "Tuyệt mật",
+                            title: "Chiến dịch: Phoenix Protocol",
+                            brief: "Từng có lúc mình biết cách thao túng hệ thống. Rồi mình biến kiến thức đó thành một tấm khiên. Trong hai năm, mình làm việc cùng cộng đồng để bảo vệ hơn 50.000 người khỏi lừa đảo trên mạng. Điều đó dạy mình rằng cách tốt nhất để chống lại bóng tối là trở thành ánh sáng.",
+                            tags: "Chống lừa đảo · Cộng đồng · Việt Nam",
+                            status: "Trạng thái: Hoàn thành"
+                        },
+                        2: {
+                            stamp: "Mật",
+                            title: "Dự án: Cash Guardian",
+                            brief: "Ba năm, hàng ngàn giao dịch, và một sự thấu hiểu lặng lẽ rằng tiền bạc chỉ có ý nghĩa khi nó đại diện cho niềm tin. Mình học được rằng sự chính xác không phải là hoàn hảo - mà là đáng tin cậy. Mỗi đồng khớp sổ là một lời hứa được giữ trọn.",
+                            tags: "Tài chính · Niềm tin · Nhà hàng Ramen",
+                            status: "Trạng thái: Hoàn thành"
+                        },
+                        3: {
+                            stamp: "Tối mật",
+                            title: "Nhiệm vụ: Radiant Ascension",
+                            brief: "Mình đã dành nhiều năm theo đuổi một thứ hạng trong chiến trường số - không phải vì hào quang, mà vì kỷ luật. Mỗi lần thua dạy mình một điều gì đó mà sau này mình dùng trong đời thực. Không phải để trở thành người giỏi nhất, mà là để trở nên kiên cường. Phản xạ và luyện tập không ngừng đã tạo nên một tay súng hàng đầu.",
+                            tags: "Chiến thuật · CS2 · Faceit Lvl 10",
+                            status: "Trạng thái: Đang hoạt động"
+                        },
+                        4: {
+                            stamp: "Nguyên mẫu",
+                            title: "Mật danh: Polyglot",
+                            brief: "Hơn 7 năm nơi đất khách, thành thạo 3 ngôn ngữ, và đang mở khóa ngôn ngữ thứ 4. Ngôn ngữ không chỉ là từ ngữ - nó là cánh cửa dẫn vào thế giới của người khác. Mình học được rằng để thực sự hiểu một nơi nào đó, bạn phải nói được trái tim của nơi ấy.",
+                            tags: "Tiếng Việt · Tiếng Nhật · Tiếng Anh · Tiếng Đức",
+                            status: "Trạng thái: Đang hoạt động"
+                        }
+                    },
+                    abilities: {
+                        label: "Kỹ năng",
+                        title: "Những <span class='highlight'>kỹ năng đã mở khóa</span>",
+                        cat1: "Nghệ thuật",
+                        skill1: "Tư duy sáng tạo",
+                        skill2: "Kể chuyện",
+                        skill3: "Thiết kế UI/UX",
+                        skill4: "Nhiếp ảnh",
+                        skill5: "Dựng phim",
+                        cat2: "Công cụ",
+                        skill6: "Phát triển Web",
+                        skill7: "Nghiên cứu",
+                        skill8: "Kiến thức cơ bản về An ninh mạng",
+                        cat3: "Tiếng nói"
+                    },
+                    journal: {
+                        label: "Nhật ký Điện ảnh",
+                        title: "Những <span class='highlight'>khung hình cuộc sống</span>",
+                        1: { desc: "2022 · Lần đầu tiên Tokyo phủ trắng tuyết, và mình nhận ra mình không còn là người lạ ở đây nữa." },
+                        2: { desc: "2024 · Thiết kế lúc nửa đêm, khi thế giới lặng đi và ý tưởng lại ồn ào." },
+                        3: { desc: "2023 · Mưa dưới ánh đèn neon, một thành phố chưa bao giờ ngừng mơ." },
+                        4: { desc: "2024 · Giờ khắc tĩnh lặng - nơi ý tưởng trở thành hiện thực." },
+                        5: { desc: "2023 · Nụ cười của một người lạ nhắc mình rằng sự kết nối luôn hiện diện khắp nơi." },
+                        6: { desc: "2022 · Ngôi đền dưới ánh sáng - một khoảnh khắc tĩnh lặng giữa thế giới hối hả." }
+                    },
+                    terminal: {
+                        label: "Kênh liên lạc",
+                        title: "Mở <span class='highlight'>kết nối</span>",
+                        invite: "Hợp tác, freelance, hay chỉ đơn giản là một cuộc trò chuyện - luôn được chào đón."
+                    },
+                    ending: {
+                        title: "Điểm lưu",
+                        message: "Câu chuyện vẫn tiếp diễn.",
+                        continue: "Tiếp tục?",
+                        reflection: "Cảm ơn bạn đã cùng mình đi qua những trang này. Nếu bạn thấy một phần phản chiếu của hành trình chính mình, mình rất muốn được nghe kể. Hãy cùng nhau viết tiếp chương tiếp theo nhé.",
+                        signature: "- Với tất cả sự trân trọng, Ross"
+                    },
+                    toast: "✦ Đã tìm thấy bí mật: Bản chất của Người khám phá"
                 },
                 ja: {
-                    // ... (Japanese translations, truncated)
+                    skipLink: "コンテンツへスキップ",
+                    hero: {
+                        subtitle: "デザイナー · デベロッパー · ストーリーテラー",
+                        tagline: "ベトナムの雨季から東京のネオンの夜まで、僕は世界と世界をつなぐ橋を架けている。",
+                        invite: "僕の世界へようこそ。ここにあるコードの一行一行、写真の一枚一枚、物語のすべてが、僕自身の一部だ。",
+                        cta: "旅を始める",
+                        caption: "東京、2023年 - 静かなひととき",
+                        scroll: "スクロール"
+                    },
+                    nav: {
+                        profile: "プロフィール",
+                        chapters: "チャプター",
+                        missions: "ミッション",
+                        abilities: "スキル",
+                        journal: "ジャーナル",
+                        terminal: "ターミナル"
+                    },
+                    profile: {
+                        label: "プレイヤープロフィール",
+                        title: "<span class='highlight'>Ross</span>って、どんな人?",
+                        quote: "“僕はただウェブサイトを作っているんじゃない。人が“ここが居場所だ”と感じられる場所を作っている。”",
+                        desc: "僕はベトナムの小さな町で生まれた。雨が心臓の鼓動のように降る場所だった。十六歳のとき、リュック一つと、言葉にできないほどたくさんの夢を抱えて日本に降り立った。",
+                        desc2: "今、僕は大学生であり、デザイナーであり、ストーリーテラーだ。ほとんどの人が見逃してしまう静かな瞬間を残すために、フィルムで撮る。人間味のある空間を作るために、コードを書く。そして、明快さこそが優しさの一つの形だと信じているから、デザインをする。",
+                        desc3: "これが僕の物語。まだ、書かれている途中だ。",
+                        stat: {
+                            codename: "コードネーム",
+                            location: "現在地",
+                            origin: "出身",
+                            path: "進む道",
+                            pathValue: "大学生",
+                            essence: "本質",
+                            essenceValue: "好奇心旺盛、共感力、几帳面",
+                            spec: "専門分野",
+                            specValue: "テクノロジー × デザイン × ストーリーテリング",
+                            listening: "今聴いているもの",
+                            listeningValue: "Lo-fi / 雨音",
+                            chapter: "現在のチャプター",
+                            chapterValue: "文化と文化の間に橋を架ける"
+                        }
+                    },
+                    chapters: {
+                        label: "ストーリーモード",
+                        title: "<span class='highlight'>チャプター</span>たち",
+                        theme: "ベトナムから世界へ - 成長の6つの章",
+                        1: { number: "第一章", title: "故郷 · ベトナム", desc: "僕は、泣き方を知っている空の下で生まれた。雨季は早くから僕に、美しさと激しさは隣り合わせで生きているのだと教えてくれた。おじいさんの微笑み、バイクの音――ありふれた日常の中に物語を見出すことを学んだ。創作は、過ぎ去っていく瞬間をつなぎとめておくための手段として始まった。" },
+                        2: { number: "第二章", title: "跳躍 · 来日", desc: "十六歳、リュック一つと、どの言語でも言葉にできないほどの疑問でいっぱいの心を抱えて日本にたどり着いた。孤独は真っ白なキャンバスとなり、そこに新しい友情、新しい言葉、そして“自分には想像もしなかった場所に居場所があるんだ”という静かな気づきを重ねていった。" },
+                        3: { number: "第三章", title: "目覚め · 高校時代", desc: "高校は、自分の中に二つのアイデンティティを同時に抱えられると気づいた場所だった。昼は微分積分を学び、夜は誰にも読まれない物語を書いた。初めてフィルムを撮り、初めてウェブサイトを作った――どれも小さいけれど、確かに自分だけの宇宙だった。" },
+                        4: { number: "第四章", title: "守護者 · サイバーセキュリティボランティア", desc: "僕は三年間、人々とその人たちを利用しようとする者たちの間に立ち続けた。義務だったからじゃない。技術は人を裏切るものではなく、守るものであるべきだと信じていたからだ。それは、エンジニアリングとは実践としての倫理なのだと教えてくれた。" },
+                        5: { number: "第五章", title: "学徒 · 大学生活", desc: "大学は、デザインとは物事を美しく見せることじゃないと教えてくれた。人を“見てもらえている”と感じさせることなんだと。今、僕は日本の大学の廊下を歩いている。ノートは、コードと詩の境界線を曖昧にするようなアイデアで埋め尽くされている。" },
+                        6: { number: "第六章", title: "地平線 · 次なるフロンティア", desc: "僕は、学んだことを世界へ運ぶ準備をしている――専門家としてではなく、好奇心こそ最大のスキルだと今も信じている一人の学徒として。新しい文化、新しい共創、そしてデザインに国境がない未来へ。" }
+                    },
+                    missions: {
+                        label: "ミッションアーカイブ",
+                        title: "機密<span class='highlight'>ファイル</span>",
+                        intro: "僕がこれまで引き受けてきたいくつかのミッション――そのひとつひとつが、僕自身の原点の物語の一章だ。",
+                        1: {
+                            stamp: "トップシークレット",
+                            title: "作戦:フェニックス・プロトコル",
+                            brief: "かつて僕は、システムを操る方法を知っていた。そしてその知識を盾に変えた。2年間、コミュニティと共に活動し、5万人以上をネット詐欺から守ってきた。闇と戦う一番の方法は、自分が光になることなんだと教えてくれた。",
+                            tags: "詐欺対策 · コミュニティ · ベトナム",
+                            status: "ステータス:完了"
+                        },
+                        2: {
+                            stamp: "機密",
+                            title: "プロジェクト:キャッシュ・ガーディアン",
+                            brief: "3年間、数えきれないほどの取引、そして“お金は信頼を映すときにだけ意味を持つ”という静かな理解。正確さとは完璧であることじゃなく、信頼できることなんだと学んだ。合わせた一円一円が、守られた約束だった。",
+                            tags: "経理 · 信頼 · ラーメン店",
+                            status: "ステータス:完了"
+                        },
+                        3: {
+                            stamp: "極秘",
+                            title: "ミッション:レディアント・アセンション",
+                            brief: "僕は何年もの間、デジタルの戦場でランクを追いかけてきた――栄光のためじゃなく、規律のためだ。負けるたびに、後で実生活に活かせる何かを学んだ。一番になることじゃなく、折れない心を持つことが大事だった。反射神経とひたむきな練習が、トップクラスのプレイヤーを作り上げた。",
+                            tags: "戦術 · CS2 · Faceitレベル10",
+                            status: "ステータス:継続中"
+                        },
+                        4: {
+                            stamp: "プロトタイプ",
+                            title: "コードネーム:ポリグロット",
+                            brief: "海外生活7年以上、3ヶ国語をマスターし、4つ目の言語を習得中。言語はただの言葉じゃない――誰かの世界への扉なんだ。ある場所を本当に知るためには、その場所の心を話せなければいけないと学んだ。",
+                            tags: "ベトナム語 · 日本語 · 英語 · ドイツ語",
+                            status: "ステータス:継続中"
+                        }
+                    },
+                    abilities: {
+                        label: "スキル",
+                        title: "解放された<span class='highlight'>能力</span>",
+                        cat1: "クラフト",
+                        skill1: "クリエイティブシンキング",
+                        skill2: "ストーリーテリング",
+                        skill3: "UI/UXデザイン",
+                        skill4: "写真",
+                        skill5: "映像編集",
+                        cat2: "ツール",
+                        skill6: "ウェブ開発",
+                        skill7: "リサーチ",
+                        skill8: "サイバーセキュリティ基礎",
+                        cat3: "声"
+                    },
+                    journal: {
+                        label: "シネマティックジャーナル",
+                        title: "人生の<span class='highlight'>フレーム</span>",
+                        1: { desc: "2022年 · 東京が初めて白く染まった日、僕はもう自分がよそ者じゃないんだと気づいた。" },
+                        2: { desc: "2024年 · 深夜のデザイン作業、世界が静まり返って、アイデアだけが騒がしくなる時間。" },
+                        3: { desc: "2023年 · ネオンの雨、夢を見続けることをやめない街。" },
+                        4: { desc: "2024年 · 静かな時間 - アイデアが現実になる場所。" },
+                        5: { desc: "2023年 · 見知らぬ人の微笑みが、つながりはどこにでもあるんだと思い出させてくれる。" },
+                        6: { desc: "2022年 · 光に包まれた寺院 - 忙しない世界の中の、静止したひととき。" }
+                    },
+                    terminal: {
+                        label: "通信ターミナル",
+                        title: "<span class='highlight'>チャンネル</span>を開く",
+                        invite: "コラボレーション、フリーランスのお仕事、あるいはただの雑談でも――いつでも歓迎です。"
+                    },
+                    ending: {
+                        title: "セーブポイント",
+                        message: "物語はまだ続く。",
+                        continue: "続ける?",
+                        reflection: "ここまで一緒に歩いてくれてありがとう。もしこのページのどこかに、自分自身の旅を重ねてくれたなら、ぜひ聞かせてほしい。一緒に次の章を書いていこう。",
+                        signature: "- 心を込めて、Ross"
+                    },
+                    toast: "✦ 秘密を発見:探検家の本質"
                 }
             };
-
-            // Fallback translations – for brevity, we only show English above,
-            // but the user's actual code will have vi and ja as well.
-            // We include a minimal fallback to avoid errors.
-            // In practice, the user will paste the full translation objects.
 
             // ─── Language Switcher Logic ───
             const langCustom = document.getElementById('langCustom');
