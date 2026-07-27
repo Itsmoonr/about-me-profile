@@ -84,6 +84,7 @@
             --z-overlay: 900;
             --z-canvas: 1;
             --z-content: 10;
+            --z-modal: 1100;
             --light-size: 420px;
         }
 
@@ -703,6 +704,12 @@
                 grid-template-columns: 1fr;
             }
         }
+        /* Wider stat boxes for desktop readability */
+        @media (min-width: 769px) {
+            .profile__stat--wide {
+                grid-column: span 2;
+            }
+        }
         .profile__stat {
             background: var(--bg-card);
             border-radius: var(--radius-md);
@@ -1224,6 +1231,65 @@
             stroke: var(--accent-blue);
         }
 
+        /* Journal modal (click to enlarge) */
+        .journal-modal {
+            position: fixed;
+            inset: 0;
+            z-index: var(--z-modal);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .journal-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .journal-modal__content {
+            max-width: 90vw;
+            max-height: 90vh;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            overflow: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+        }
+        .journal-modal__close {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 4px;
+            transition: color var(--transition-fast);
+        }
+        .journal-modal__close:hover {
+            color: #fff;
+        }
+        .journal-modal__img {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: var(--radius-md);
+            background: #0b0b0f;
+        }
+        .journal-modal__desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+
         /* Terminal */
         .terminal__inner {
             text-align: center;
@@ -1506,6 +1572,7 @@
     <div class="nav__overlay" id="navOverlay" aria-hidden="true"></div>
 
     <main id="main-content">
+        <!-- Hero -->
         <section class="hero" id="hero">
             <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
             <div class="hero__content">
@@ -1528,7 +1595,7 @@
             </div>
         </section>
 
-        <!-- Profile -->
+        <!-- Profile (wider stat boxes added via .profile__stat--wide) -->
         <section class="section" id="profile">
             <div class="section__header">
                 <p class="section__label" data-i18n="profile.label">Player Profile</p>
@@ -1565,15 +1632,16 @@
                         <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M12 2l3 6 6 1-4 4 1 6-5-3-5 3 1-6-4-4 6-1 3-6z"/></svg></div>
                         <div><span class="profile__stat-label" data-i18n="profile.stat.essence">Essence</span><span class="profile__stat-sep">·</span><span class="profile__stat-value" data-i18n="profile.stat.essenceValue">Curious, Empathetic, Philosopher</span></div>
                     </div>
-                    <div class="profile__stat">
+                    <!-- Wider boxes for better readability on desktop -->
+                    <div class="profile__stat profile__stat--wide">
                         <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
                         <div><span class="profile__stat-label" data-i18n="profile.stat.spec">Specialization</span><span class="profile__stat-sep">·</span><span class="profile__stat-value" data-i18n="profile.stat.specValue">Tech × Design × Story</span></div>
                     </div>
-                    <div class="profile__stat">
+                    <div class="profile__stat profile__stat--wide">
                         <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
                         <div><span class="profile__stat-label" data-i18n="profile.stat.listening">Currently listening to</span><span class="profile__stat-sep">·</span><span class="profile__stat-value" data-i18n="profile.stat.listeningValue">Lo-fi / Rain sounds</span></div>
                     </div>
-                    <div class="profile__stat">
+                    <div class="profile__stat profile__stat--wide">
                         <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
                         <div><span class="profile__stat-label" data-i18n="profile.stat.chapter">Current chapter</span><span class="profile__stat-sep">·</span><span class="profile__stat-value" data-i18n="profile.stat.chapterValue">Trying to build bridges between cultures</span></div>
                     </div>
@@ -1701,7 +1769,7 @@
             </div>
         </section>
 
-        <!-- Journal -->
+        <!-- Journal (with modal for larger view) -->
         <section class="section" id="journal">
             <div class="section__header">
                 <p class="section__label" data-i18n="journal.label">Cinematic Journal</p>
@@ -1810,6 +1878,15 @@
     <audio id="bgMusic" loop preload="auto"><source src="audio/ambient.mp3" type="audio/mpeg"></audio>
 
     <div class="toast" id="toast" role="alert" aria-live="polite" aria-atomic="true" data-i18n="toast.easterEgg">✦ Secret found: Curious explorer, confirmed</div>
+
+    <!-- Journal image modal -->
+    <div class="journal-modal" id="journalModal">
+        <div class="journal-modal__content">
+            <button class="journal-modal__close" id="journalModalClose" aria-label="Close enlarged photo">✕</button>
+            <img class="journal-modal__img" id="journalModalImg" src="" alt="">
+            <p class="journal-modal__desc" id="journalModalDesc"></p>
+        </div>
+    </div>
 
     <noscript>
         <div style="background:var(--bg-surface); color:var(--text-primary); padding:2rem; text-align:center;">
@@ -2204,9 +2281,33 @@
                     if (live) live.textContent = expanded ? 'Details expanded' : 'Collapsed';
                 });
             });
+
+            // Journal modal functionality
+            const journalModal = document.getElementById('journalModal');
+            const modalImg = document.getElementById('journalModalImg');
+            const modalDesc = document.getElementById('journalModalDesc');
+            const modalClose = document.getElementById('journalModalClose');
+
             document.querySelectorAll('.journal-item').forEach(item => {
-                item.addEventListener('click', function() { const shown = this.classList.toggle('show-meta');
-                    this.setAttribute('aria-expanded', shown); });
+                item.addEventListener('click', function(e) {
+                    const img = this.querySelector('img');
+                    const fullText = this.querySelector('.journal-item__full');
+                    if (img && fullText) {
+                        modalImg.src = img.src;
+                        modalImg.alt = img.alt;
+                        modalDesc.textContent = fullText.textContent.trim();
+                        journalModal.classList.add('active');
+                    }
+                });
+            });
+
+            modalClose.addEventListener('click', () => {
+                journalModal.classList.remove('active');
+            });
+            journalModal.addEventListener('click', (e) => {
+                if (e.target === journalModal) {
+                    journalModal.classList.remove('active');
+                }
             });
 
             const chaptersPath = document.getElementById('chaptersPath'),
