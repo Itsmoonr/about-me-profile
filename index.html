@@ -49,7 +49,8 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
 
     <!-- Lenis Smooth Scroll -->
-    <script defer src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js">
+    </script>
 
     <style>
         /* ─── Custom Properties ─── */
@@ -83,25 +84,59 @@
             --z-overlay: 900;
             --z-canvas: 1;
             --z-content: 10;
+            --light-size: 420px;
         }
 
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
+            *,
+            *::before,
+            *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
-            .hero__scroll-dot { animation: none !important; }
-            .visualizer-bar { animation: none !important; }
-            .music-player.playing .visualizer-bar { animation: none !important; }
-            .reveal { opacity: 1 !important; transform: none !important; }
-            .chapter-item, .dossier-card, .journal-item { transition-delay: 0s !important; }
+            .hero__scroll-dot {
+                animation: none !important;
+            }
+            .visualizer-bar {
+                animation: none !important;
+            }
+            .music-player.playing .visualizer-bar {
+                animation: none !important;
+            }
+            .reveal {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .chapter-item,
+            .dossier-card,
+            .journal-item {
+                transition-delay: 0s !important;
+            }
+            #mouse-light {
+                display: none !important;
+            }
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: auto; font-size: 17px; -webkit-font-smoothing: antialiased; }
-        html.lenis, html.lenis body { height: auto; }
-        .lenis.lenis-smooth { scroll-behavior: auto; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: auto;
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+        }
+        html.lenis,
+        html.lenis body {
+            height: auto;
+        }
+        .lenis.lenis-smooth {
+            scroll-behavior: auto;
+        }
         body {
             font-family: var(--font-body);
             background-color: var(--bg-deep);
@@ -113,369 +148,1333 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); }
-        ::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 3px; }
+        /* ─── Mouse Light ─── */
+        #mouse-light {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9997;
+            width: var(--light-size);
+            height: var(--light-size);
+            border-radius: 50%;
+            background: radial-gradient(circle at center,
+                    rgba(74, 144, 226, 0.07) 0%,
+                    rgba(74, 144, 226, 0.03) 30%,
+                    rgba(74, 144, 226, 0.008) 55%,
+                    transparent 70%);
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+            will-change: left, top;
+            transition: opacity 0.6s;
+        }
 
-        *:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-blue), 0 0 0 6px rgba(74,144,226,0.2); outline-offset: 2px; }
+        /* ─── Parallax Background Orbs ─── */
+        .parallax-orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+            filter: blur(70px);
+            opacity: 0.10;
+        }
+        .parallax-orb.orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.6) 0%, transparent 70%);
+            top: -10%;
+            left: -8%;
+        }
+        .parallax-orb.orb-2 {
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(108, 142, 178, 0.5) 0%, transparent 70%);
+            top: 50%;
+            right: -6%;
+        }
+        .parallax-orb.orb-3 {
+            width: 440px;
+            height: 440px;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.5) 0%, transparent 70%);
+            bottom: -8%;
+            left: 20%;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-glow);
+            border-radius: 3px;
+        }
+
+        *:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--accent-blue), 0 0 0 6px rgba(74, 144, 226, 0.2);
+            outline-offset: 2px;
+        }
 
         .bg-lighting {
-            position: fixed; inset: 0; z-index: -1; pointer-events: none;
-            background: radial-gradient(ellipse at 30% 20%, rgba(74,144,226,0.08), transparent 60%);
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(ellipse at 30% 20%, rgba(74, 144, 226, 0.08), transparent 60%);
             transition: opacity 0.8s;
         }
 
         .skip-link {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--accent-blue); color: #000;
-            padding: 10px 24px; border-radius: 0 0 var(--radius-md) var(--radius-md); z-index: 1100; font-weight: 700;
-            font-size: 0.9rem; text-decoration: none; transition: top var(--transition-fast); letter-spacing: 0.04em;
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-blue);
+            color: #000;
+            padding: 10px 24px;
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            z-index: 1100;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: top var(--transition-fast);
+            letter-spacing: 0.04em;
         }
-        .skip-link:focus { top: 0; outline: 3px solid #fff; }
+        .skip-link:focus {
+            top: 0;
+            outline: 3px solid #fff;
+        }
 
         /* Navigation */
         .nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-nav); display: flex; align-items: center;
-            justify-content: space-between; padding: 16px 32px; background: rgba(11,11,15,0.85);
-            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-bottom: 1px solid var(--border-subtle);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: var(--z-nav);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 32px;
+            background: rgba(11, 11, 15, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-subtle);
             transition: background var(--transition-smooth), border-color var(--transition-smooth);
         }
-        .nav.scrolled { background: rgba(11,11,15,0.95); border-bottom-color: var(--border-glow); }
-        .nav__logo {
-            font-family: var(--font-mono); font-size: 1.6rem; font-weight: 700; letter-spacing: 0.08em;
-            background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-decoration: none; transition: opacity var(--transition-fast);
+        .nav.scrolled {
+            background: rgba(11, 11, 15, 0.95);
+            border-bottom-color: var(--border-glow);
         }
-        .nav__logo:hover { opacity: 0.8; }
-        .nav__links { display: flex; list-style: none; gap: 28px; align-items: center; }
+        .nav__logo {
+            font-family: var(--font-mono);
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            transition: opacity var(--transition-fast);
+        }
+        .nav__logo:hover {
+            opacity: 0.8;
+        }
+        .nav__links {
+            display: flex;
+            list-style: none;
+            gap: 28px;
+            align-items: center;
+        }
         .nav__links a {
-            color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500;
-            letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.3s ease; position: relative;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            position: relative;
+            cursor: pointer;
         }
         .nav__links a::after {
-            content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-            background: var(--accent-gradient); transition: width var(--transition-smooth);
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            transition: width var(--transition-smooth);
         }
-        .nav__links a:hover, .nav__links a.active { color: #fff; }
-        .nav__links a:hover::after, .nav__links a.active::after { width: 100%; }
+        .nav__links a:hover,
+        .nav__links a.active {
+            color: #fff;
+        }
+        .nav__links a:hover::after,
+        .nav__links a.active::after {
+            width: 100%;
+        }
 
         .nav__toggle {
-            display: none; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1100;
-            flex-direction: column; gap: 5px;
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1100;
+            flex-direction: column;
+            gap: 5px;
         }
-        .nav__toggle span { display: block; width: 26px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all var(--transition-fast); }
-        .nav__toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
-        .nav__toggle.active span:nth-child(2) { opacity: 0; }
-        .nav__toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+        .nav__toggle span {
+            display: block;
+            width: 26px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all var(--transition-fast);
+        }
+        .nav__toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .nav__toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav__toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
 
         @media (max-width: 768px) {
             .nav__links {
-                position: fixed; top: 0; right: -100%; width: 280px; height: 100vh; flex-direction: column;
-                background: rgba(17,17,24,0.98); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-                padding: 100px 32px 40px; gap: 20px; transition: right var(--transition-smooth);
-                border-left: 1px solid var(--border-subtle); z-index: 1050;
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                flex-direction: column;
+                background: rgba(17, 17, 24, 0.98);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                padding: 100px 32px 40px;
+                gap: 20px;
+                transition: right var(--transition-smooth);
+                border-left: 1px solid var(--border-subtle);
+                z-index: 1050;
             }
-            .nav__links.open { right: 0; }
-            .nav__toggle { display: flex; }
-            .nav { padding: 12px 20px; }
+            .nav__links.open {
+                right: 0;
+            }
+            .nav__toggle {
+                display: flex;
+            }
+            .nav {
+                padding: 12px 20px;
+            }
+            #mouse-light {
+                display: none !important;
+            }
+            html {
+                font-size: 16px;
+            }
         }
 
-        .lang-custom { position: relative; margin-left: 24px; display: flex; align-items: center; }
+        @media (pointer: coarse) {
+            #mouse-light {
+                display: none !important;
+            }
+        }
+
+        .lang-custom {
+            position: relative;
+            margin-left: 24px;
+            display: flex;
+            align-items: center;
+        }
         .lang-select {
-            appearance: none; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
-            padding: 8px 32px 8px 12px; color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.8rem;
-            letter-spacing: 0.05em; cursor: pointer; transition: border-color var(--transition-fast), color var(--transition-fast);
-            min-width: 90px; outline: none;
+            appearance: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 8px 32px 8px 12px;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: border-color var(--transition-fast), color var(--transition-fast);
+            min-width: 90px;
+            outline: none;
         }
-        .lang-select:hover, .lang-select:focus-visible { border-color: var(--accent-blue); color: #fff; }
+        .lang-select:hover,
+        .lang-select:focus-visible {
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
         .lang-custom::after {
-            content: ''; position: absolute; right: 12px; top: 50%; transform: translateY(-50%) rotate(45deg);
-            width: 6px; height: 6px; border-bottom: 2px solid var(--text-secondary); border-right: 2px solid var(--text-secondary);
-            pointer-events: none; transition: border-color var(--transition-fast);
+            content: '';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 6px;
+            height: 6px;
+            border-bottom: 2px solid var(--text-secondary);
+            border-right: 2px solid var(--text-secondary);
+            pointer-events: none;
+            transition: border-color var(--transition-fast);
         }
-        .lang-custom:focus-within::after { border-color: var(--accent-blue); }
-        @media (max-width: 768px) { .lang-custom { margin-left: auto; margin-right: 16px; } }
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        .lang-custom:focus-within::after {
+            border-color: var(--accent-blue);
+        }
+        @media (max-width: 768px) {
+            .lang-custom {
+                margin-left: auto;
+                margin-right: 16px;
+            }
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
 
         /* Sections */
         .section {
-            position: relative; z-index: var(--z-content); padding: var(--space-section-y) var(--space-section-x);
-            max-width: 1100px; margin: 0 auto; opacity: 0; transform: translateY(30px);
+            position: relative;
+            z-index: var(--z-content);
+            padding: var(--space-section-y) var(--space-section-x);
+            max-width: 1100px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
             transition: opacity var(--transition-reveal), transform var(--transition-reveal);
-            will-change: transform, opacity; content-visibility: auto; contain-intrinsic-size: 500px;
+            will-change: transform, opacity;
+            content-visibility: auto;
+            contain-intrinsic-size: 500px;
         }
-        .section.revealed { opacity: 1; transform: translateY(0); }
+        .section.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* Hero */
         .hero {
-            position: relative; z-index: var(--z-content); min-height: 100vh; display: flex; align-items: center;
-            justify-content: flex-start; padding: 120px var(--space-section-x) 80px; opacity: 1; transform: none;
+            position: relative;
+            z-index: var(--z-content);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 120px var(--space-section-x) 80px;
+            opacity: 1;
+            transform: none;
         }
-        .hero__canvas { position: absolute; inset: 0; z-index: var(--z-canvas); pointer-events: none; }
-        .hero__content { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 60px; width: 100%; }
-        @media (max-width: 768px) { .hero__content { grid-template-columns: 1fr; text-align: center; } }
-        .hero__text { max-width: 500px; }
+        .hero__canvas {
+            position: absolute;
+            inset: 0;
+            z-index: var(--z-canvas);
+            pointer-events: none;
+        }
+        .hero__content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 60px;
+            width: 100%;
+        }
+        @media (max-width: 768px) {
+            .hero__content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+            .hero {
+                padding: 100px 20px 60px;
+            }
+        }
+        .hero__text {
+            max-width: 500px;
+        }
         .hero__name {
-            font-family: var(--font-display); font-size: clamp(5rem, 12vw, 8rem); font-weight: 700; line-height: 1;
-            background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 8px; letter-spacing: -0.02em;
+            font-family: var(--font-display);
+            font-size: clamp(5rem, 12vw, 8rem);
+            font-weight: 700;
+            line-height: 1;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
-        .hero__subtitle { font-size: 1.1rem; font-weight: 400; color: var(--accent-soft); letter-spacing: 0.08em; margin-bottom: 16px; }
-        .hero__tagline { font-size: 1.6rem; font-weight: 300; color: var(--text-secondary); letter-spacing: 0.03em; margin-bottom: 12px; line-height: 1.6; }
-        .hero__invite { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 28px; line-height: 1.8; font-style: italic; }
+        .hero__subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--accent-soft);
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+        .hero__tagline {
+            font-size: 1.6rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            letter-spacing: 0.03em;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .hero__invite {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            line-height: 1.8;
+            font-style: italic;
+        }
         .hero__cta {
-            display: inline-block; padding: 14px 36px; background: var(--accent-gradient); color: #000;
-            text-decoration: none; font-family: var(--font-mono); font-size: 0.95rem; letter-spacing: 0.1em;
-            border-radius: var(--radius-xl); border: none; transition: all var(--transition-smooth); will-change: transform;
-            box-shadow: 0 0 12px rgba(74,144,226,0.25);
-        }
-        .hero__cta:hover { box-shadow: 0 0 24px rgba(74,144,226,0.4); transform: scale(1.02); }
-        .hero__portrait {
-            width: 100%; max-width: 500px; aspect-ratio: 3/4; margin: 0 auto; border-radius: var(--radius-lg);
-            overflow: hidden; box-shadow: var(--shadow-elevation); background: #1a1a24; position: relative;
+            display: inline-block;
+            padding: 14px 36px;
+            background: var(--accent-gradient);
+            color: #000;
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            letter-spacing: 0.1em;
+            border-radius: var(--radius-xl);
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
             will-change: transform;
+            box-shadow: 0 0 12px rgba(74, 144, 226, 0.25);
         }
-        .hero__portrait img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) contrast(1.05); }
+        .hero__cta:hover {
+            box-shadow: 0 0 24px rgba(74, 144, 226, 0.4);
+            transform: scale(1.02);
+        }
+        .hero__portrait {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 3/4;
+            margin: 0 auto;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-elevation);
+            background: #1a1a24;
+            position: relative;
+            will-change: transform;
+            transition: transform 0.15s ease-out;
+        }
+        .hero__portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9) contrast(1.05);
+        }
         .hero__portrait-caption {
-            position: absolute; bottom: 16px; left: 16px; font-size: 0.8rem; color: rgba(255,255,255,0.6);
-            letter-spacing: 0.05em; background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: var(--radius-sm); backdrop-filter: blur(4px);
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.05em;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            backdrop-filter: blur(4px);
         }
         .hero__scroll-indicator {
-            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column;
-            align-items: center; gap: 8px; color: var(--accent-soft); font-size: 0.8rem; letter-spacing: 0.2em; text-transform: lowercase;
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-soft);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: lowercase;
         }
-        .hero__scroll-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-gradient); animation: scrollPulse 4.5s ease-in-out infinite; }
-        .hero__scroll-line { width: 1px; height: 28px; background: linear-gradient(to bottom, var(--accent-blue), transparent); }
-        @keyframes scrollPulse { 0%,100% { transform: translateY(0); opacity:1; } 50% { transform: translateY(12px); opacity:0.35; } }
+        .hero__scroll-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            animation: scrollPulse 4.5s ease-in-out infinite;
+        }
+        .hero__scroll-line {
+            width: 1px;
+            height: 28px;
+            background: linear-gradient(to bottom, var(--accent-blue), transparent);
+        }
+        @keyframes scrollPulse {
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(12px);
+                opacity: 0.35;
+            }
+        }
 
         /* Section Headers */
-        .section__header { margin-bottom: 56px; position: relative; }
-        .section__label { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.2em; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 8px; }
-        .section__title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.01em; color: #fff; line-height: 1.15; }
-        .section__title .highlight { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .section__divider { width: 60px; height: 3px; background: var(--accent-gradient); border-radius: 2px; margin-top: 16px; }
+        .section__header {
+            margin-bottom: 56px;
+            position: relative;
+        }
+        .section__label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .section__title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: #fff;
+            line-height: 1.15;
+        }
+        .section__title .highlight {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .section__divider {
+            width: 60px;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            margin-top: 16px;
+        }
 
         /* Profile */
-        .profile__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
-        @media (max-width: 768px) { .profile__grid { grid-template-columns: 1fr; } }
-        .profile__quote { font-family: var(--font-display); font-style: italic; font-size: 1.8rem; font-weight: 400; color: var(--accent-soft); line-height: 1.6; margin-bottom: 24px; border-left: 3px solid var(--accent-gradient); padding-left: 20px; }
-        .profile__info p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; margin-bottom: 16px; }
-        .profile__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .profile__stat {
-            background: var(--bg-card); border-radius: var(--radius-md); padding: 16px; border: 1px solid var(--border-subtle);
-            transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
-            display: flex; gap: 8px; align-items: center;
+        .profile__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px;
+            align-items: center;
         }
-        .profile__stat:hover { background: var(--bg-card-hover); border-color: var(--accent-blue); box-shadow: 0 4px 12px rgba(74,144,226,0.08); }
-        .profile__stat-icon { flex-shrink: 0; width: 24px; height: 24px; opacity: 0.8; }
-        .profile__stat-label { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em; color: var(--accent-blue); text-transform: uppercase; }
-        .profile__stat-sep { color: var(--text-muted); margin: 0 4px; font-family: var(--font-mono); font-size: 0.8rem; }
-        .profile__stat-value { font-size: 1.1rem; font-weight: 600; color: #fff; }
+        .profile__grid > * {
+            min-width: 0;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        @media (max-width: 768px) {
+            .profile__grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+        }
+        .profile__quote {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--accent-soft);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            border-left: 3px solid var(--accent-gradient);
+            padding-left: 20px;
+        }
+        .profile__info p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        .profile__stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 480px) {
+            .profile__stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        .profile__stat {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            border: 1px solid var(--border-subtle);
+            transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            will-change: transform;
+            min-width: 0;
+        }
+        .profile__stat:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.08);
+        }
+        .profile__stat-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            opacity: 0.8;
+        }
+        .profile__stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .profile__stat-sep {
+            color: var(--text-muted);
+            margin: 0 4px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        .profile__stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
 
         /* Chapters */
-        .chapters { position: relative; padding-left: 48px; }
-        .chapters__theme { font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-soft); letter-spacing: 0.1em; margin-bottom: 40px; text-transform: uppercase; }
+        .chapters {
+            position: relative;
+            padding-left: 48px;
+        }
+        .chapters__theme {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--accent-soft);
+            letter-spacing: 0.1em;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
         .chapter-item {
-            position: relative; margin-bottom: 64px; padding-left: 24px; opacity: 0; transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease; will-change: transform, opacity;
+            position: relative;
+            margin-bottom: 64px;
+            padding-left: 24px;
+            opacity: 0;
+            will-change: transform, opacity;
         }
-        .chapter-item.revealed { opacity: 1; transform: translateY(0); }
-        .chapter-item:nth-child(2) { transition-delay: 0.07s; }
-        .chapter-item:nth-child(3) { transition-delay: 0.14s; }
-        .chapter-item:nth-child(4) { transition-delay: 0.21s; }
-        .chapter-item:nth-child(5) { transition-delay: 0.28s; }
-        .chapter-item:nth-child(6) { transition-delay: 0.35s; }
+        .chapter-item.revealed {
+            opacity: 1;
+        }
+        .chapter-item.scroll-down-reveal {
+            animation: revealFromBelow 0.75s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+        .chapter-item.scroll-up-reveal {
+            animation: revealFromAbove 0.65s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+        @keyframes revealFromBelow {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+                filter: blur(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+        @keyframes revealFromAbove {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+                filter: blur(3px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+        .chapter-item:nth-child(2).scroll-down-reveal {
+            animation-delay: 0.07s;
+        }
+        .chapter-item:nth-child(3).scroll-down-reveal {
+            animation-delay: 0.14s;
+        }
+        .chapter-item:nth-child(4).scroll-down-reveal {
+            animation-delay: 0.21s;
+        }
+        .chapter-item:nth-child(5).scroll-down-reveal {
+            animation-delay: 0.28s;
+        }
+        .chapter-item:nth-child(6).scroll-down-reveal {
+            animation-delay: 0.35s;
+        }
+        .chapter-item:nth-child(2).scroll-up-reveal {
+            animation-delay: 0.05s;
+        }
+        .chapter-item:nth-child(3).scroll-up-reveal {
+            animation-delay: 0.10s;
+        }
+        .chapter-item:nth-child(4).scroll-up-reveal {
+            animation-delay: 0.15s;
+        }
+        .chapter-item:nth-child(5).scroll-up-reveal {
+            animation-delay: 0.20s;
+        }
+        .chapter-item:nth-child(6).scroll-up-reveal {
+            animation-delay: 0.25s;
+        }
         .chapter-item::before {
-            content: ''; position: absolute; left: -48px; top: 8px; width: 14px; height: 14px; border-radius: 50%;
-            background: var(--accent-gradient); box-shadow: 0 0 12px rgba(74,144,226,0.4); border: 2px solid var(--bg-deep);
-            z-index: 2; transition: transform var(--transition-fast);
+            content: '';
+            position: absolute;
+            left: -48px;
+            top: 8px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            box-shadow: 0 0 12px rgba(74, 144, 226, 0.4);
+            border: 2px solid var(--bg-deep);
+            z-index: 2;
+            transition: transform var(--transition-fast), box-shadow 0.5s;
         }
-        .chapter-item:hover::before { transform: scale(1.3); }
-        .chapter-item--climax::before { width: 18px; height: 18px; left: -50px; }
+        .chapter-item.revealed::before {
+            box-shadow: 0 0 20px 7px rgba(74, 144, 226, 0.6), 0 0 45px 16px rgba(74, 144, 226, 0.25);
+        }
+        .chapter-item:hover::before {
+            transform: scale(1.3);
+        }
+        .chapter-item--climax::before {
+            width: 18px;
+            height: 18px;
+            left: -50px;
+        }
         .chapter-item--climax::after {
-            content: ''; position: absolute; top: 0; left: -20px; width: 200px; height: 100%;
-            background: radial-gradient(circle at left center, rgba(74,144,226,0.2), transparent 70%);
-            pointer-events: none; filter: blur(12px);
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -20px;
+            width: 200px;
+            height: 100%;
+            background: radial-gradient(circle at left center, rgba(74, 144, 226, 0.2), transparent 70%);
+            pointer-events: none;
+            filter: blur(12px);
         }
-        .chapter-number { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.2em; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 4px; }
-        .chapter-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
-        .chapter-desc { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; }
+        .chapter-number {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .chapter-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+            display: inline-block;
+            clip-path: inset(0 100% 0 0);
+            transition: clip-path 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .chapter-item.revealed .chapter-title {
+            clip-path: inset(0 0% 0 0);
+        }
+        .chapter-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.7s 0.25s, transform 0.7s 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .chapter-item.revealed .chapter-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        /* Timeline SVG – vertical line centred exactly behind the dots */
+        /* Timeline SVG */
         .chapters__svg {
             position: absolute;
-            left: -41px;   /* centre of the 14px dot at left:-48px is -41px */
+            left: -41px;
             top: 0;
             width: 2px;
             height: 100%;
             z-index: 0;
         }
-        .chapters__path { fill: none; stroke: var(--accent-blue); stroke-width: 2; stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 0.1s linear; }
+        .chapters__path {
+            fill: none;
+            stroke: var(--accent-blue);
+            stroke-width: 2;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            transition: stroke-dashoffset 0.1s linear;
+        }
 
         /* Missions */
-        .missions__intro { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 40px; max-width: 600px; line-height: 1.8; }
-        .missions__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; contain: layout; }
-        @media (max-width: 768px) { .missions__grid { grid-template-columns: 1fr; } }
+        .missions__intro {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 600px;
+            line-height: 1.8;
+        }
+        .missions__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            contain: layout;
+        }
+        @media (max-width: 768px) {
+            .missions__grid {
+                grid-template-columns: 1fr;
+            }
+        }
         .dossier-card {
-            position: relative; border-radius: var(--radius-lg); background: var(--bg-card); border: 1px solid var(--border-subtle);
-            padding: 28px; cursor: pointer; display: flex; flex-direction: column; gap: 12px;
-            text-decoration: none; color: inherit; outline: none; font-family: inherit; font-size: inherit; width: 100%;
-            transition: all 0.5s cubic-bezier(0.23,1,0.32,1); overflow: visible;
-            opacity: 0; transform: translateY(20px); will-change: transform, opacity;
+            position: relative;
+            border-radius: var(--radius-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            padding: 28px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+            outline: none;
+            font-family: inherit;
+            font-size: inherit;
+            width: 100%;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: visible;
+            opacity: 0;
+            transform: translateY(20px);
+            will-change: transform, opacity;
         }
-        .dossier-card.revealed { opacity: 1; transform: translateY(0); }
-        .dossier-card:nth-child(1) { transition-delay: 0.02s; }
-        .dossier-card:nth-child(2) { transition-delay: 0.1s; }
-        .dossier-card:nth-child(3) { transition-delay: 0.18s; }
-        .dossier-card:nth-child(4) { transition-delay: 0.26s; }
-        .dossier-card:hover, .dossier-card:focus-visible { border-color: var(--accent-blue); box-shadow: 0 8px 32px rgba(74,144,226,0.12); transform: translateY(-6px); }
+        .dossier-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .dossier-card:nth-child(1) {
+            transition-delay: 0.02s;
+        }
+        .dossier-card:nth-child(2) {
+            transition-delay: 0.1s;
+        }
+        .dossier-card:nth-child(3) {
+            transition-delay: 0.18s;
+        }
+        .dossier-card:nth-child(4) {
+            transition-delay: 0.26s;
+        }
+        .dossier-card:hover,
+        .dossier-card:focus-visible {
+            border-color: var(--accent-blue);
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.12);
+            transform: translateY(-6px);
+        }
+        .dossier-card__title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            display: inline-block;
+            clip-path: inset(0 100% 0 0);
+            transition: clip-path 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .dossier-card.revealed .dossier-card__title {
+            clip-path: inset(0 0% 0 0);
+        }
         .dossier-card__stamp {
-            font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; color: var(--accent-blue);
-            border: 1px solid var(--accent-blue); display: inline-block; padding: 2px 10px; border-radius: var(--radius-sm);
-            text-transform: uppercase; align-self: flex-start;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+            align-self: flex-start;
         }
-        .dossier-card__title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: #fff; }
-        .dossier-card__summary { font-size: 1rem; color: var(--text-secondary); line-height: 1.6; }
-        .dossier-card__full { font-size: 1rem; color: var(--text-secondary); line-height: 1.6; display: none; }
-        .dossier-card.expanded .dossier-card__full { display: block; }
-        .dossier-card__tags { display: flex; gap: 8px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
-        .dossier-card__status { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--text-muted); }
+        .dossier-card__summary {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .dossier-card__full {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: none;
+        }
+        .dossier-card.expanded .dossier-card__full {
+            display: block;
+        }
+        .dossier-card__tags {
+            display: flex;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .dossier-card__status {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
         .dossier-card__arrow {
-            position: absolute; top: 24px; right: 28px; width: 16px; height: 16px;
-            border-top: 2px solid var(--text-muted); border-right: 2px solid var(--text-muted);
-            transform: rotate(45deg); opacity: 0.5; transition: all var(--transition-smooth); pointer-events: none;
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            width: 16px;
+            height: 16px;
+            border-top: 2px solid var(--text-muted);
+            border-right: 2px solid var(--text-muted);
+            transform: rotate(45deg);
+            opacity: 0.5;
+            transition: all var(--transition-smooth);
+            pointer-events: none;
         }
-        .dossier-card:hover .dossier-card__arrow, .dossier-card:focus-visible .dossier-card__arrow { border-color: var(--accent-blue); opacity: 1; transform: rotate(45deg) translate(3px,-3px); }
-        .dossier-card__status-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+        .dossier-card:hover .dossier-card__arrow,
+        .dossier-card:focus-visible .dossier-card__arrow {
+            border-color: var(--accent-blue);
+            opacity: 1;
+            transform: rotate(45deg) translate(3px, -3px);
+        }
+        .dossier-card__status-live {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+        }
 
         /* Abilities */
-        .abilities__grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-        .ability-tag {
-            padding: 12px 22px; border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
-            font-family: var(--font-mono); font-size: 0.9rem; letter-spacing: 0.05em; color: var(--text-primary);
-            background: var(--bg-card); transition: all var(--transition-fast); cursor: default; will-change: transform;
+        .abilities__grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
         }
-        .ability-tag:hover { transform: translateY(-3px); border-color: var(--accent-blue); background: rgba(74,144,226,0.1); color: #fff; box-shadow: 0 6px 16px rgba(74,144,226,0.1); }
-        .ability-category { width: 100%; text-align: left; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-soft); letter-spacing: 0.1em; margin: 20px 0 8px; text-transform: uppercase; }
+        .ability-tag {
+            padding: 12px 22px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            color: var(--text-primary);
+            background: var(--bg-card);
+            transition: all var(--transition-fast);
+            cursor: default;
+            will-change: transform;
+        }
+        .ability-tag:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-blue);
+            background: rgba(74, 144, 226, 0.1);
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(74, 144, 226, 0.1);
+        }
+        .ability-category {
+            width: 100%;
+            text-align: left;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-soft);
+            letter-spacing: 0.1em;
+            margin: 20px 0 8px;
+            text-transform: uppercase;
+        }
 
         /* Journal */
-        .journal__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        @media (max-width: 768px) { .journal__grid { grid-template-columns: 1fr 1fr; } }
+        .journal__grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 768px) {
+            .journal__grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
         .journal-item {
-            aspect-ratio: 4/3; border-radius: var(--radius-md); position: relative; cursor: pointer;
-            background: #1a1a24; transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
-            opacity: 0; transform: translateY(20px); will-change: transform, opacity;
-            font-family: inherit; font-size: inherit; border: none; padding: 0; text-align: left; outline: none;
+            aspect-ratio: 4/3;
+            border-radius: var(--radius-md);
+            position: relative;
+            cursor: pointer;
+            background: #1a1a24;
+            transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(20px);
+            will-change: transform, opacity;
+            font-family: inherit;
+            font-size: inherit;
+            border: none;
+            padding: 0;
+            text-align: left;
+            outline: none;
             overflow: hidden;
         }
-        .journal-item.revealed { opacity: 1; transform: translateY(0); }
-        .journal-item:nth-child(1) { transition-delay: 0.02s; }
-        .journal-item:nth-child(2) { transition-delay: 0.07s; }
-        .journal-item:nth-child(3) { transition-delay: 0.12s; }
-        .journal-item:nth-child(4) { transition-delay: 0.17s; }
-        .journal-item:nth-child(5) { transition-delay: 0.22s; }
-        .journal-item:nth-child(6) { transition-delay: 0.27s; }
-        .journal-item:hover { transform: scale(1.03); box-shadow: 0 12px 28px rgba(0,0,0,0.5); }
-        .journal-item img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-smooth); }
-        .journal-item:hover img { transform: scale(1.08); }
+        .journal-item.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .journal-item:nth-child(1) {
+            transition-delay: 0.02s;
+        }
+        .journal-item:nth-child(2) {
+            transition-delay: 0.07s;
+        }
+        .journal-item:nth-child(3) {
+            transition-delay: 0.12s;
+        }
+        .journal-item:nth-child(4) {
+            transition-delay: 0.17s;
+        }
+        .journal-item:nth-child(5) {
+            transition-delay: 0.22s;
+        }
+        .journal-item:nth-child(6) {
+            transition-delay: 0.27s;
+        }
+        .journal-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+        }
+        .journal-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-smooth);
+        }
+        .journal-item:hover img {
+            transform: scale(1.08);
+        }
         .journal-item__meta {
-            position: absolute; bottom: 0; left: 0; right: 0; padding: 16px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: #fff; font-size: 0.85rem;
-            display: flex; flex-direction: column; gap: 4px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            color: #fff;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
             opacity: 1;
             transition: opacity var(--transition-fast);
         }
-        .journal-item__excerpt { font-style: italic; opacity: 0.8; display: block; }
-        .journal-item__full { display: none; }
-        .journal-item:hover .journal-item__full, .journal-item:focus-visible .journal-item__full { display: block; }
-        .journal-item:hover .journal-item__excerpt, .journal-item:focus-visible .journal-item__excerpt { display: none; }
-        .journal-item__icon {
-            position: absolute; top: 12px; right: 12px; width: 28px; height: 28px;
-            border-radius: 50%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity var(--transition-fast);
+        .journal-item__excerpt {
+            font-style: italic;
+            opacity: 0.8;
+            display: block;
         }
-        .journal-item:hover .journal-item__icon, .journal-item:focus-visible .journal-item__icon { opacity: 1; }
-        .journal-item__icon svg circle, .journal-item__icon svg line { stroke: #fff; transition: stroke 0.3s; }
+        .journal-item__full {
+            display: none;
+        }
+        .journal-item:hover .journal-item__full,
+        .journal-item:focus-visible .journal-item__full {
+            display: block;
+        }
+        .journal-item:hover .journal-item__excerpt,
+        .journal-item:focus-visible .journal-item__excerpt {
+            display: none;
+        }
+        .journal-item__icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+        .journal-item:hover .journal-item__icon,
+        .journal-item:focus-visible .journal-item__icon {
+            opacity: 1;
+        }
+        .journal-item__icon svg circle,
+        .journal-item__icon svg line {
+            stroke: #fff;
+            transition: stroke 0.3s;
+        }
         .journal-item:hover .journal-item__icon svg circle,
-        .journal-item:hover .journal-item__icon svg line { stroke: var(--accent-blue); }
+        .journal-item:hover .journal-item__icon svg line {
+            stroke: var(--accent-blue);
+        }
 
         /* Terminal */
-        .terminal__inner { text-align: center; max-width: 600px; margin: 0 auto; }
+        .terminal__inner {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
         .terminal__email {
-            display: inline-block; font-family: var(--font-mono); font-size: 1.6rem; color: var(--accent-blue);
-            text-decoration: none; border-bottom: 2px dashed var(--accent-blue); padding-bottom: 4px;
-            transition: all var(--transition-fast); margin-bottom: 20px; cursor: pointer;
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 1.6rem;
+            color: var(--accent-blue);
+            text-decoration: none;
+            border-bottom: 2px dashed var(--accent-blue);
+            padding-bottom: 4px;
+            transition: all var(--transition-fast);
+            margin-bottom: 20px;
+            cursor: pointer;
         }
-        .terminal__email:hover { color: #fff; border-bottom-color: #fff; }
-        .terminal__socials { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .terminal__email:hover {
+            color: #fff;
+            border-bottom-color: #fff;
+        }
+        .terminal__socials {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
         .terminal__social-link {
-            font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-secondary); text-decoration: none;
-            padding: 10px 20px; border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
             transition: all var(--transition-smooth);
+            cursor: pointer;
         }
-        .terminal__social-link:hover { transform: translateY(-2px); border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(74,144,226,0.06); box-shadow: 0 4px 16px rgba(74,144,226,0.10); }
+        .terminal__social-link:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            background: rgba(74, 144, 226, 0.06);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.10);
+        }
 
         /* Ending */
         .ending {
-            text-align: center; padding: 80px 32px 60px; border-top: 1px solid var(--border-subtle);
-            position: relative; z-index: var(--z-content);
-            opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease;
+            text-align: center;
+            padding: 80px 32px 60px;
+            border-top: 1px solid var(--border-subtle);
+            position: relative;
+            z-index: var(--z-content);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        .ending.revealed { opacity: 1; transform: translateY(0); }
-        .ending__divider { width: 60px; height: 2px; background: var(--accent-gradient); margin: 0 auto 32px; border-radius: 2px; }
-        .ending__title { font-family: var(--font-mono); font-size: 0.9rem; letter-spacing: 0.2em; color: var(--accent-blue); margin-bottom: 12px; }
-        .ending__message { font-family: var(--font-display); font-size: 2.2rem; font-weight: 400; color: #fff; margin-bottom: 8px; }
-        .ending__continue { font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted); margin-top: 16px; }
+        .ending.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .ending__divider {
+            width: 60px;
+            height: 2px;
+            background: var(--accent-gradient);
+            margin: 0 auto 32px;
+            border-radius: 2px;
+        }
+        .ending__title {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+        .ending__message {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .ending__continue {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 16px;
+        }
         .ending__continue-btn {
-            background: none; border: 1px solid var(--accent-blue); border-radius: var(--radius-sm);
-            color: var(--accent-blue); font-family: var(--font-mono); font-size: 0.9rem; padding: 4px 12px;
-            cursor: pointer; transition: all var(--transition-fast); margin: 0 4px;
+            background: none;
+            border: 1px solid var(--accent-blue);
+            border-radius: var(--radius-sm);
+            color: var(--accent-blue);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin: 0 4px;
         }
-        .ending__continue-btn:hover { background: var(--accent-gradient); color: #000; border-color: transparent; }
-        .ending__reflection { max-width: 500px; margin: 20px auto 0; font-size: 1rem; color: var(--text-secondary); line-height: 1.8; font-style: italic; }
-        .ending__signature { margin-top: 24px; font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-soft); letter-spacing: 0.1em; }
-        .copyright { margin-top: 32px; font-size: 0.9rem; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.03em; }
-        .copyright a { color: var(--accent-blue); text-decoration: none; border-bottom: 1px dotted var(--accent-blue); transition: color var(--transition-fast); }
-        .copyright a:hover { color: #fff; border-bottom-color: #fff; }
+        .ending__continue-btn:hover {
+            background: var(--accent-gradient);
+            color: #000;
+            border-color: transparent;
+        }
+        .ending__reflection {
+            max-width: 500px;
+            margin: 20px auto 0;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-style: italic;
+        }
+        .ending__signature {
+            margin-top: 24px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--accent-soft);
+            letter-spacing: 0.1em;
+        }
+        .copyright {
+            margin-top: 32px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            letter-spacing: 0.03em;
+        }
+        .copyright a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent-blue);
+            transition: color var(--transition-fast);
+        }
+        .copyright a:hover {
+            color: #fff;
+            border-bottom-color: #fff;
+        }
 
         /* Music Player */
         .music-player {
-            position: fixed; bottom: 24px; right: 24px; z-index: 2000; background: rgba(24,24,31,0.9);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl); padding: 8px 12px; display: flex; align-items: center; gap: 10px;
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 2000;
+            background: rgba(24, 24, 31, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             transition: all var(--transition-smooth);
         }
-        .music-player.hidden { display: none; }
-        .music-player:hover { border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(74,144,226,0.15); }
+        .music-player.hidden {
+            display: none;
+        }
+        .music-player:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.15);
+        }
         .music-player__btn {
-            background: none; border: none; color: var(--text-secondary); font-size: 1.2rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             transition: all var(--transition-fast);
         }
-        .music-player__btn:hover { color: #fff; transform: scale(1.05); }
-        .music-player__btn.playing { color: var(--accent-blue); }
-        .music-player__visualizer { display: flex; align-items: flex-end; gap: 3px; height: 24px; }
-        .visualizer-bar { width: 3px; background: var(--text-muted); border-radius: 2px; opacity: 0; transition: opacity 0.3s; }
-        .music-player.playing .visualizer-bar { background: var(--accent-gradient); opacity: 1; animation: visualizer 1.2s ease-in-out infinite alternate; }
-        .visualizer-bar:nth-child(2) { animation-delay: 0.2s; }
-        .visualizer-bar:nth-child(3) { animation-delay: 0.4s; }
-        .visualizer-bar:nth-child(4) { animation-delay: 0.6s; }
-        @keyframes visualizer { 0% { height: 6px; } 100% { height: 20px; } }
+        .music-player__btn:hover {
+            color: #fff;
+            transform: scale(1.05);
+        }
+        .music-player__btn.playing {
+            color: var(--accent-blue);
+        }
+        .music-player__visualizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 24px;
+        }
+        .visualizer-bar {
+            width: 3px;
+            background: var(--text-muted);
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .music-player.playing .visualizer-bar {
+            background: var(--accent-gradient);
+            opacity: 1;
+            animation: visualizer 1.2s ease-in-out infinite alternate;
+        }
+        .visualizer-bar:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .visualizer-bar:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        .visualizer-bar:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+        @keyframes visualizer {
+            0% {
+                height: 6px;
+            }
+            100% {
+                height: 20px;
+            }
+        }
 
         /* Toast */
         .toast {
-            position: fixed; bottom: 80px; right: 24px; background: var(--bg-card); border: 1px solid var(--accent-blue);
-            padding: 12px 20px; border-radius: var(--radius-md); color: #fff; font-family: var(--font-mono);
-            font-size: 0.9rem; z-index: 3000; opacity: 0; transform: translateY(10px);
-            transition: opacity 0.35s cubic-bezier(0.34,1.56,0.64,1), transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            position: fixed;
+            bottom: 80px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-blue);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            z-index: 3000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .toast.show { opacity: 1; transform: translateY(0); }
-
-        .reveal { opacity: 1; transform: none; }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
     <a href="#main-content" class="skip-link" data-i18n="skipLink">Skip to Content</a>
+
+    <div id="mouse-light" aria-hidden="true"></div>
+    <div class="parallax-orb orb-1" aria-hidden="true"></div>
+    <div class="parallax-orb orb-2" aria-hidden="true"></div>
+    <div class="parallax-orb orb-3" aria-hidden="true"></div>
+
     <div class="bg-lighting" id="bgLighting"></div>
 
     <header class="nav" id="nav" role="banner">
@@ -507,7 +1506,6 @@
     <div class="nav__overlay" id="navOverlay" aria-hidden="true"></div>
 
     <main id="main-content">
-        <!-- Hero -->
         <section class="hero" id="hero">
             <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
             <div class="hero__content">
@@ -787,7 +1785,6 @@
         </section>
     </main>
 
-    <!-- Ending -->
     <footer class="ending" id="ending" role="contentinfo">
         <div class="ending__divider"></div>
         <p class="ending__title" data-i18n="ending.title">Save Point</p>
@@ -801,7 +1798,6 @@
         <p class="copyright">&copy; <span id="footerYear"></span> <span style="color: var(--accent-blue); font-weight: 600;">Ross Nguyen</span>. Licensed under the <a href="LICENSE" style="color:var(--accent-blue);">MIT License</a>.</p>
     </footer>
 
-    <!-- Music Player -->
     <div class="music-player" id="musicPlayer" title="Ambient Soundtrack">
         <button class="music-player__btn" id="musicToggle" aria-label="Play ambient soundtrack">▶</button>
         <div class="music-player__visualizer" aria-hidden="true">
@@ -813,7 +1809,6 @@
     </div>
     <audio id="bgMusic" loop preload="auto"><source src="audio/ambient.mp3" type="audio/mpeg"></audio>
 
-    <!-- Toast -->
     <div class="toast" id="toast" role="alert" aria-live="polite" aria-atomic="true" data-i18n="toast.easterEgg">✦ Secret found: Curious explorer, confirmed</div>
 
     <noscript>
@@ -824,116 +1819,87 @@
     </noscript>
 
     <script>
-        // Translations – original wording fully preserved
         const translations = {
             en: {
                 skipLink: "Skip to Content",
-                hero: { subtitle: "Designer · Developer · Storyteller", tagline: "From Vietnam's rainy season to Tokyo's neon nights, I've been living between two worlds, trying to build something that connects them.", invite: "Welcome to my world. Every line of code, every photo, every story here is a little piece of me.", cta: "Begin Journey", caption: "Tokyo, 2023, a rare quiet moment", scroll: "scroll" },
-                nav: { profile: "Profile", chapters: "Chapters", missions: "Missions", abilities: "Abilities", journal: "Journal", terminal: "Terminal" },
-                profile: { label: "Player Profile", title: "Who is <span class='highlight'>Ross?</span>", quote: "\"I'm not just building websites. I'm trying to build places where people feel like they belong.\"", desc: "I grew up in a small town in Vietnam, the kind of place where it rained more often than not. At sixteen, I packed a bag and moved to Japan with a head full of dreams I couldn't even put into words yet.", desc2: "These days I'm a university student, a designer, and sometimes a storyteller too. I shoot film because I want to hold onto the small moments most people scroll right past. I write code because I want to make things that feel a little human. I design because I genuinely believe clarity is its own kind of kindness.", desc3: "This is my story. It's nowhere near finished.",
-                    stat: { codename: "Codename", location: "Location", origin: "Origin", path: "Path", pathValue: "University Student", essence: "Essence", essenceValue: "Curious, Empathetic, Philosopher", spec: "Specialization", specValue: "Tech × Design × Story", listening: "Currently listening to", listeningValue: "Lo-fi / Rain sounds", chapter: "Current chapter", chapterValue: "Trying to build bridges between cultures" }
+                hero: { subtitle: "Designer · Developer · Storyteller",
+                    tagline: "From Vietnam's rainy season to Tokyo's neon nights, I've been living between two worlds, trying to build something that connects them.",
+                    invite: "Welcome to my world. Every line of code, every photo, every story here is a little piece of me.",
+                    cta: "Begin Journey", caption: "Tokyo, 2023, a rare quiet moment", scroll: "scroll" },
+                nav: { profile: "Profile", chapters: "Chapters", missions: "Missions", abilities: "Abilities",
+                journal: "Journal", terminal: "Terminal" },
+                profile: { label: "Player Profile", title: "Who is <span class='highlight'>Ross?</span>",
+                    quote: "\"I'm not just building websites. I'm trying to build places where people feel like they belong.\"",
+                    desc: "I grew up in a small town in Vietnam, the kind of place where it rained more often than not. At sixteen, I packed a bag and moved to Japan with a head full of dreams I couldn't even put into words yet.",
+                    desc2: "These days I'm a university student, a designer, and sometimes a storyteller too. I shoot film because I want to hold onto the small moments most people scroll right past. I write code because I want to make things that feel a little human. I design because I genuinely believe clarity is its own kind of kindness.",
+                    desc3: "This is my story. It's nowhere near finished.",
+                    stat: { codename: "Codename", location: "Location", origin: "Origin", path: "Path",
+                        pathValue: "University Student", essence: "Essence",
+                        essenceValue: "Curious, Empathetic, Philosopher", spec: "Specialization",
+                        specValue: "Tech × Design × Story", listening: "Currently listening to",
+                        listeningValue: "Lo-fi / Rain sounds", chapter: "Current chapter",
+                        chapterValue: "Trying to build bridges between cultures" } },
+                chapters: { label: "Story Mode", title: "The <span class='highlight'>chapters</span>",
+                    theme: "From Vietnam to the world, six chapters of figuring things out",
+                    1: { number: "Chapter I", title: "Homeland · Vietnam",
+                        desc: "I grew up under a sky that cried a lot. The monsoon taught me early on that beauty and intensity usually show up together. I learned to spot stories in ordinary things, an old man's smile, the hum of a motorbike passing by. Creativity, for me, started as just wanting to hold onto moments before they slipped away." },
+                    2: { number: "Chapter II", title: "The Leap · Arrival in Japan",
+                        desc: "Sixteen years old, one backpack, and a head full of questions I couldn't have explained in any language. Loneliness felt like a blank page back then, and slowly I started filling it in, with new friends, new words, and this quiet realization that maybe I actually belonged somewhere I never expected to." },
+                    3: { number: "Chapter III", title: "Awakening · High School Years",
+                        desc: "High school was where I figured out I could hold two whole identities at once. Calculus by day, writing stories nobody would ever read by night. I shot my first roll of film, built my first website, tiny little universes, but they were mine." },
+                    4: { number: "Chapter IV", title: "Guardian · Cybersecurity Volunteer",
+                        desc: "For three years, I stood between everyday people and the ones trying to take advantage of them. Nobody made me do it. I just believed technology should protect people, not betray them. It taught me that engineering, at its core, is really just ethics you practice every day." },
+                    5: { number: "Chapter V", title: "Scholar · University",
+                        desc: "University taught me design isn't about making things pretty. It's about making someone feel seen. I still walk these campus halls, notebooks full of ideas somewhere between code and poetry." },
+                    6: { number: "Chapter VI", title: "Horizon · What's Next",
+                        desc: "I'm getting ready to take what I've learned out into the world, not as an expert, but as someone who still thinks curiosity is the most useful skill there is. New cultures, new people to work with, and a future where design doesn't really care about borders." }
                 },
-                chapters: { label: "Story Mode", title: "The <span class='highlight'>chapters</span>", theme: "From Vietnam to the world, six chapters of figuring things out",
-                    1: { number: "Chapter I", title: "Homeland · Vietnam", desc: "I grew up under a sky that cried a lot. The monsoon taught me early on that beauty and intensity usually show up together. I learned to spot stories in ordinary things, an old man's smile, the hum of a motorbike passing by. Creativity, for me, started as just wanting to hold onto moments before they slipped away." },
-                    2: { number: "Chapter II", title: "The Leap · Arrival in Japan", desc: "Sixteen years old, one backpack, and a head full of questions I couldn't have explained in any language. Loneliness felt like a blank page back then, and slowly I started filling it in, with new friends, new words, and this quiet realization that maybe I actually belonged somewhere I never expected to." },
-                    3: { number: "Chapter III", title: "Awakening · High School Years", desc: "High school was where I figured out I could hold two whole identities at once. Calculus by day, writing stories nobody would ever read by night. I shot my first roll of film, built my first website, tiny little universes, but they were mine." },
-                    4: { number: "Chapter IV", title: "Guardian · Cybersecurity Volunteer", desc: "For three years, I stood between everyday people and the ones trying to take advantage of them. Nobody made me do it. I just believed technology should protect people, not betray them. It taught me that engineering, at its core, is really just ethics you practice every day." },
-                    5: { number: "Chapter V", title: "Scholar · University", desc: "University taught me design isn't about making things pretty. It's about making someone feel seen. I still walk these campus halls, notebooks full of ideas somewhere between code and poetry." },
-                    6: { number: "Chapter VI", title: "Horizon · What's Next", desc: "I'm getting ready to take what I've learned out into the world, not as an expert, but as someone who still thinks curiosity is the most useful skill there is. New cultures, new people to work with, and a future where design doesn't really care about borders." }
-                },
-                missions: { label: "Mission Archive", title: "Classified <span class='highlight'>dossiers</span>", intro: "A few missions I've taken on along the way, each one part of my own origin story.",
-                    1: { stamp: "Top Secret", summary: "Helping over 50,000 people avoid getting scammed online.", title: "Operation: Think Fraud", brief: "I used to know how to scam people out of a decent amount of money. That past doesn't weigh on me though, if anything, it's exactly why I ended up helping over 50,000 people avoid getting scammed online. The best way to fight the darkness is to actually understand it, then become the light yourself.", tags: "Anti-Fraud · Community · Vietnam", status: "Status: Complete" },
-                    2: { stamp: "Classified", summary: "Three years handling the register and the books.", title: "Project: Restaurant Cashier", brief: "Three years handling the register and the books. Every shift taught me a little more about responsibility. Getting every single cent to match wasn't about being perfect, it was my way of showing I actually cared about doing it right.", tags: "Finance · Trust · Ramen House", status: "Status: Complete" },
-                    3: { stamp: "Confidential", summary: "Reaching the top through talent and relentless practice.", title: "Mission: Global Elite", brief: "Not everyone who picks up a mouse makes it to the top, and practice alone won't get you there either. It's a mix of a little raw talent and a lot of grinding. Reflexes plus stubborn practice is what got me here.", tags: "Tactics · CS2 · Faceit Lvl 10", status: "Status: Active" },
-                    4: { stamp: "Prototype", summary: "Four languages, endless connections.", title: "Codename: Polyglot", brief: "7+ years living abroad, three languages down, working on a fourth. To me, language isn't just vocabulary, it's basically a door into someone else's world.", tags: "Vietnamese · Japanese · English · German", status: "Status: Active" }
-                },
-                abilities: { label: "Abilities", title: "Unlocked <span class='highlight'>skills</span>", cat1: "The Craft", skill1: "Creative Thinking", skill2: "Storytelling", skill3: "UI/UX Design", skill4: "Photography", skill5: "Video Editing", cat2: "The Tools", skill6: "Web Development", skill7: "Research", skill8: "Cybersecurity Basics", cat3: "The Voice", lang: { vi: "Vietnamese (Native)", en: "English (Fluent)", ja: "Japanese (Conversational)" } },
+                missions: { label: "Mission Archive", title: "Classified <span class='highlight'>dossiers</span>",
+                    intro: "A few missions I've taken on along the way, each one part of my own origin story.",
+                    1: { stamp: "Top Secret", summary: "Helping over 50,000 people avoid getting scammed online.",
+                        title: "Operation: Think Fraud",
+                        brief: "I used to know how to scam people out of a decent amount of money. That past doesn't weigh on me though, if anything, it's exactly why I ended up helping over 50,000 people avoid getting scammed online. The best way to fight the darkness is to actually understand it, then become the light yourself.",
+                        tags: "Anti-Fraud · Community · Vietnam", status: "Status: Complete" },
+                    2: { stamp: "Classified", summary: "Three years handling the register and the books.",
+                        title: "Project: Restaurant Cashier",
+                        brief: "Three years handling the register and the books. Every shift taught me a little more about responsibility. Getting every single cent to match wasn't about being perfect, it was my way of showing I actually cared about doing it right.",
+                        tags: "Finance · Trust · Ramen House", status: "Status: Complete" },
+                    3: { stamp: "Confidential",
+                        summary: "Reaching the top through talent and relentless practice.",
+                        title: "Mission: Global Elite",
+                        brief: "Not everyone who picks up a mouse makes it to the top, and practice alone won't get you there either. It's a mix of a little raw talent and a lot of grinding. Reflexes plus stubborn practice is what got me here.",
+                        tags: "Tactics · CS2 · Faceit Lvl 10", status: "Status: Active" },
+                    4: { stamp: "Prototype", summary: "Four languages, endless connections.",
+                        title: "Codename: Polyglot",
+                        brief: "7+ years living abroad, three languages down, working on a fourth. To me, language isn't just vocabulary, it's basically a door into someone else's world.",
+                        tags: "Vietnamese · Japanese · English · German", status: "Status: Active" } },
+                abilities: { label: "Abilities", title: "Unlocked <span class='highlight'>skills</span>", cat1: "The Craft",
+                    skill1: "Creative Thinking", skill2: "Storytelling", skill3: "UI/UX Design",
+                    skill4: "Photography", skill5: "Video Editing", cat2: "The Tools", skill6: "Web Development",
+                    skill7: "Research", skill8: "Cybersecurity Basics", cat3: "The Voice",
+                    lang: { vi: "Vietnamese (Native)", en: "English (Fluent)", ja: "Japanese (Conversational)" } },
                 journal: { label: "Cinematic Journal", title: "Frames <span class='highlight'>of life</span>",
                     1: { desc: "2022 · The first time Tokyo turned white with snow, I realized I wasn't a stranger here anymore." },
                     2: { desc: "2024 · Late-night design work, when the world goes quiet and my head gets loud with ideas." },
                     3: { desc: "2023 · Neon rain, a city that never really stops dreaming." },
                     4: { desc: "2024 · That quiet hour when ideas start turning into something real." },
                     5: { desc: "2023 · A stranger's smile, just enough to remind me connection is everywhere if you look." },
-                    6: { desc: "2022 · A temple lit up at night, one still moment in a world that never slows down." }
-                },
-                terminal: { label: "Communication Terminal", title: "Open <span class='highlight'>channel</span>", invite: "Collabs, freelance work, or just a chat, I'm always up for it." },
-                ending: { title: "Save Point", message: "The story's still going.", continue: "Continue?", reflection: "Thanks for walking through these pages with me. If you saw a bit of your own journey somewhere in here, I'd genuinely love to hear about it. Let's write the next chapter together.", signature: "Take care, Ross" },
-                toast: { easterEgg: "✦ Secret found: Curious explorer, confirmed", gameOver: "💀 Game Over. Press Y to respawn.", respawn: "✦ Secret found: Curious explorer, confirmed", audioError: "⚠ Audio unavailable" }
-            },
-            vi: {
-                skipLink: "Bỏ qua đến Nội dung",
-                hero: { subtitle: "Designer · Developer · Người kể chuyện", tagline: "Từ những cơn mưa mùa ở Việt Nam đến những đêm neon ở Tokyo, mình đi giữa hai thế giới và cố gắng kết nối chúng lại.", invite: "Chào mừng bạn đến thế giới của mình. Mỗi dòng code, mỗi tấm hình, mỗi câu chuyện ở đây đều là một mảnh ghép của mình.", cta: "Bắt đầu hành trình", caption: "Tokyo, 2023, một khoảnh khắc yên tĩnh hiếm hoi", scroll: "cuộn xuống" },
-                nav: { profile: "Hồ sơ", chapters: "Các chương", missions: "Nhiệm vụ", abilities: "Kỹ năng", journal: "Nhật ký", terminal: "Liên hệ" },
-                profile: { label: "Hồ sơ nhân vật", title: "Ross là <span class='highlight'>ai?</span>", quote: "\"Mình không chỉ làm website. Mình muốn tạo ra những nơi khiến người ta thấy như đang ở nhà.\"", desc: "Mình sinh ra ở một thị trấn nhỏ tại Việt Nam, nơi mưa rơi đều đặn như một thói quen. Năm 16 tuổi, mình xách balo qua Nhật, trong đầu chất đầy những ước mơ mà lúc đó còn chẳng biết diễn tả sao cho đúng.", desc2: "Giờ thì mình là sinh viên đại học, cũng là một designer, và cũng là một người thích kể chuyện. Mình chụp phim để giữ lại những khoảnh khắc nhỏ mà người ta hay lướt qua. Mình viết code để tạo ra những thứ có \"hồn\" một chút. Mình làm thiết kế vì mình tin sự rõ ràng cũng là một cách để tử tế với người khác.", desc3: "Đây là câu chuyện của mình. Và nó vẫn chưa xong đâu.",
-                    stat: { codename: "Mật danh", location: "Vị trí", origin: "Xuất thân", path: "Con đường", pathValue: "Sinh viên đại học", essence: "Bản chất", essenceValue: "Tò mò, hay đồng cảm, và khá tỉ mỉ", spec: "Chuyên môn", specValue: "Công nghệ × Thiết kế × Kể chuyện", listening: "Đang nghe", listeningValue: "Lo-fi / Tiếng mưa", chapter: "Chương hiện tại", chapterValue: "Đang cố nối những nền văn hóa lại với nhau" }
-                },
-                chapters: { label: "Chế độ Cốt truyện", title: "Những <span class='highlight'>chương truyện</span>", theme: "Từ Việt Nam ra thế giới, 6 chương của một hành trình trưởng thành",
-                    1: { number: "Chương I", title: "Quê nhà · Việt Nam", desc: "Mình lớn lên dưới bầu trời hay mưa. Từ nhỏ, mấy trận mưa đó đã dạy mình rằng cái đẹp và cái dữ dội thường đi chung với nhau. Mình học được cách nhìn ra chuyện hay ho trong những thứ bình thường nhất, nụ cười của một ông cụ, tiếng xe máy chạy ngang. Sáng tạo với mình bắt đầu chỉ đơn giản là muốn giữ lại mấy khoảnh khắc thoáng qua đó thôi." },
-                    2: { number: "Chương II", title: "Cú nhảy · Đặt chân đến Nhật", desc: "16 tuổi, mình tới Nhật với một cái balo và cả đống câu hỏi trong đầu mà chẳng ngôn ngữ nào diễn tả nổi. Cô đơn lúc đó giống như một tờ giấy trắng, và mình dần tô lên đó bằng những người bạn mới, những từ mới học được, và cái cảm giác nhận ra: à, hóa ra mình cũng có thể thuộc về một nơi mà trước giờ chưa từng nghĩ tới." },
-                    3: { number: "Chương III", title: "Thức tỉnh · Những năm cấp ba", desc: "Cấp ba là lúc mình nhận ra mình có thể sống hai cuộc đời cùng lúc. Ban ngày học giải tích, ban đêm ngồi viết mấy câu chuyện chẳng ai đọc. Mình chụp cuộn phim đầu tiên, làm cái web đầu tiên, tuy nhỏ xíu nhưng đúng là của riêng mình." },
-                    4: { number: "Chương IV", title: "Người bảo vệ · Tình nguyện an ninh mạng", desc: "Ba năm mình đứng giữa những người bình thường và những kẻ chỉ chực lợi dụng họ. Không phải vì ai bắt mình làm, mà vì mình tin công nghệ nên là thứ để bảo vệ người ta, chứ không phải phản bội họ. Nó dạy mình rằng làm kỹ thuật, suy cho cùng, cũng là một dạng đạo đức được thực hành mỗi ngày." },
-                    5: { number: "Chương V", title: "Học giả · Đại học", desc: "Đại học dạy mình rằng thiết kế không phải là làm cho đẹp. Nó là làm sao để người ta cảm thấy được nhìn thấy, được hiểu. Giờ mình vẫn đi lại trong hành lang trường, sổ tay đầy những ý tưởng lưng chừng giữa code và thơ." },
-                    6: { number: "Chương VI", title: "Chân trời · Cột mốc tiếp theo", desc: "Mình đang chuẩn bị mang những gì học được ra ngoài kia, không phải với tư cách chuyên gia, mà như một đứa vẫn tin sự tò mò là kỹ năng đáng giá nhất. Văn hóa mới, hợp tác mới, và một tương lai mà thiết kế không cần biết đến biên giới." }
-                },
-                missions: { label: "Hồ sơ Nhiệm vụ", title: "Những <span class='highlight'>hồ sơ mật</span>", intro: "Vài nhiệm vụ mình từng trải qua, mỗi cái là một mảnh trong câu chuyện xuất thân của chính mình.",
-                    1: { stamp: "Tuyệt mật", summary: "Giúp hơn 50.000 người tránh được lừa đảo trực tuyến.", title: "Chiến dịch: Think Fraud", brief: "Mình từng lừa được kha khá tiền của người khác. Nhưng chuyện đó không đè mình xuống, ngược lại nó là lý do khiến mình muốn giúp hơn 50,000 người tránh được lừa đảo online. Cách để chống lại bóng tối là hiểu nó thật rõ, rồi tự mình trở thành ánh sáng.", tags: "Chống lừa đảo · Cộng đồng · Việt Nam", status: "Trạng thái: Hoàn thành" },
-                    2: { stamp: "Mật", summary: "3 năm ngồi ghi sổ sách, mỗi ca làm với mình giống như một bài học nhỏ về trách nhiệm.", title: "Dự án: Restaurant Cashier", brief: "3 năm ngồi ghi sổ sách, mỗi ca làm với mình giống như một bài học nhỏ về trách nhiệm. Khớp đúng từng đồng là cách mình chứng minh mình để tâm vào việc đang làm.", tags: "Tài chính · Niềm tin · Nhà hàng Ramen", status: "Trạng thái: Hoàn thành" },
-                    3: { stamp: "Tối mật", summary: "Không phải cứ cầm chuột là lên được đỉnh.", title: "Nhiệm vụ: Global Elite", brief: "Không phải cứ cầm chuột là lên được đỉnh, cũng không phải cứ luyện tập là giỏi ngay. Nó là sự kết hợp giữa một chút năng khiếu và rất nhiều giờ khổ luyện. Phản xạ với luyện tập bền bỉ là thứ đưa mình lên top.", tags: "Chiến thuật · CS2 · Faceit Lvl 10", status: "Trạng thái: Đang tiếp diễn" },
-                    4: { stamp: "Nguyên mẫu", summary: "Hơn 7 năm sống xa nhà, thành thạo 3 ngôn ngữ.", title: "Mật danh: Polyglot", brief: "Hơn 7 năm sống xa nhà, thành thạo 3 ngôn ngữ, và đang học thêm ngôn ngữ thứ 4. Với mình, ngôn ngữ không chỉ là từ vựng, nó là cách để mình bước vào thế giới của người khác.", tags: "Tiếng Việt · Tiếng Nhật · Tiếng Anh · Tiếng Đức", status: "Trạng thái: Đang tiếp diễn" }
-                },
-                abilities: { label: "Kỹ năng", title: "Những <span class='highlight'>kỹ năng đã mở khóa</span>", cat1: "Nghệ thuật", skill1: "Tư duy sáng tạo", skill2: "Kể chuyện", skill3: "Thiết kế UI/UX", skill4: "Nhiếp ảnh", skill5: "Dựng phim", cat2: "Công cụ", skill6: "Phát triển Web", skill7: "Nghiên cứu", skill8: "Kiến thức cơ bản về An ninh mạng", cat3: "Tiếng nói", lang: { vi: "Tiếng Việt (Bản ngữ)", en: "Tiếng Anh (Thành thạo)", ja: "Tiếng Nhật (Giao tiếp)" } },
-                journal: { label: "Nhật ký Điện ảnh", title: "Những <span class='highlight'>khung hình cuộc sống</span>",
-                    1: { desc: "2022 · Lần đầu Tokyo phủ tuyết trắng, mình chợt nhận ra mình không còn là người lạ ở đây nữa." },
-                    2: { desc: "2024 · Thiết kế lúc nửa đêm, lúc thế giới ngủ yên còn ý tưởng thì cứ ồn ào trong đầu." },
-                    3: { desc: "2023 · Mưa dưới ánh đèn neon, một thành phố chẳng bao giờ ngừng mơ mộng." },
-                    4: { desc: "2024 · Giờ khắc yên tĩnh, lúc ý tưởng bắt đầu thành hình." },
-                    5: { desc: "2023 · Nụ cười của một người lạ, đủ để nhắc mình rằng kết nối luôn ở quanh đây thôi." },
-                    6: { desc: "2022 · Ngôi đền ngập ánh sáng, một phút giây tĩnh lặng giữa cái thế giới cứ vội vã này." }
-                },
-                terminal: { label: "Kênh liên lạc", title: "Mở <span class='highlight'>kết nối</span>", invite: "Hợp tác, việc freelance, hay đơn giản chỉ muốn tám chuyện, lúc nào mình cũng sẵn lòng." },
-                ending: { title: "Điểm lưu", message: "Câu chuyện vẫn đang tiếp tục.", continue: "Tiếp tục?", reflection: "Cảm ơn bạn đã đi cùng mình qua từng trang này. Nếu bạn thấy đâu đó bóng dáng hành trình của chính mình, mình rất muốn nghe bạn kể. Cùng viết tiếp chương sau nhé.", signature: "Thân, Ross" },
-                toast: { easterEgg: "✦ Tìm thấy bí mật: Bản chất của một người thích khám phá", gameOver: "💀 Game Over. Nhấn Y để hồi sinh.", respawn: "✦ Tìm thấy bí mật: Bản chất của một người thích khám phá", audioError: "⚠ Âm thanh không khả dụng" }
-            },
-            ja: {
-                skipLink: "コンテンツへスキップ",
-                hero: { subtitle: "デザイナー · デベロッパー · ストーリーテラー", tagline: "ベトナムの雨季から東京のネオンの夜まで、二つの世界を行き来しながら、その間に橋を架けようとしている。", invite: "ようこそ、僕の世界へ。ここにあるコードも、写真も、物語も、全部僕の一部だ。", cta: "旅を始める", caption: "東京、2023年、めずらしく静かだった瞬間", scroll: "スクロール" },
-                nav: { profile: "プロフィール", chapters: "チャプター", missions: "ミッション", abilities: "スキル", journal: "ジャーナル", terminal: "ターミナル" },
-                profile: { label: "プレイヤープロフィール", title: "<span class='highlight'>Ross</span>って、どんな人?", quote: "\"僕はウェブサイトを作ってるだけじゃない。人が\"ここが居場所だ\"って思える場所を作りたいんだ。\"", desc: "ベトナムの小さな町で生まれた。雨がやたら降る町だった。16歳のとき、リュック一つ背負って日本に来た。頭の中は、まだ言葉にできない夢でいっぱいだった。", desc2: "今は大学生で、デザイナーで、たまに物語を書く人間でもある。フィルムで写真を撮るのは、みんなが見逃しがちな小さな瞬間を残しておきたいから。コードを書くのは、ちょっとでも\"人間らしさ\"のあるものを作りたいから。デザインをするのは、わかりやすさも優しさの一種だと信じているから。", desc3: "これが僕の物語。まだ全然終わってない。",
-                    stat: { codename: "コードネーム", location: "現在地", origin: "出身", path: "進む道", pathValue: "大学生", essence: "本質", essenceValue: "好奇心旺盛、共感力高め、わりと几帳面", spec: "専門分野", specValue: "テクノロジー × デザイン × ストーリーテリング", listening: "今聴いてるもの", listeningValue: "Lo-fi / 雨音", chapter: "今のチャプター", chapterValue: "文化と文化をつなごうとしてる最中" }
-                },
-                chapters: { label: "ストーリーモード", title: "<span class='highlight'>チャプター</span>たち", theme: "ベトナムから世界へ、成長していく6つの章",
-                    1: { number: "第一章", title: "故郷 · ベトナム", desc: "よく雨が降る空の下で育った。あの雨季が、早いうちに教えてくれた。美しさと激しさは、意外と隣り合わせにあるんだって。おじいさんの微笑みとか、バイクの音とか、ありふれたものの中に物語を見つけることを覚えた。創作って、そういう過ぎ去っていく瞬間を、ちょっとでも留めておきたいって気持ちから始まったんだと思う。" },
-                    2: { number: "第二章", title: "跳躍 · 来日", desc: "16歳、リュック一つとどの言語でも言い表せないくらいの疑問を抱えて日本に着いた。あのときの孤独は、真っ白な紙みたいなものだった。そこに新しい友達とか、新しく覚えた言葉とかを少しずつ塗っていった。そしてある日気づいた。あ、自分にもここに居場所があるんだって。" },
-                    3: { number: "第三章", title: "目覚め · 高校時代", desc: "高校では、自分の中に二つの顔があってもいいんだって気づいた。昼は微分積分、夜は誰にも読まれない物語を書く。初めてフィルムで写真を撮って、初めて自分のサイトを作った。小さいけど、確かに自分だけのものだった。" },
-                    4: { number: "第四章", title: "守護者 · サイバーセキュリティボランティア", desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切るものじゃなくて、守るためのものであるべきだと思ってたから。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。" },
-                    5: { number: "第五章", title: "学徒 · 大学生活", desc: "大学に来て、デザインって物を綺麗にすることじゃないんだって学んだ。それより、その人が「自分は見てもらえてるんだ」って感じられるようにすることなんだと思う。今も大学の廊下を歩いてて、ノートはコードと詩の間くらいの、なんとも言えないアイデアでいっぱいだ。" },
-                    6: { number: "第六章", title: "地平線 · 次の場所へ", desc: "今学んでることを、外の世界に持っていく準備をしてる。専門家としてじゃなくて、好奇心が一番の武器だってまだ信じてる一人の学生として。新しい文化、新しい人たちとの出会い、そしてデザインに国境なんて関係ない未来へ。" }
-                },
-                missions: { label: "ミッションアーカイブ", title: "機密<span class='highlight'>ファイル</span>", intro: "これまで経験してきたいくつかのミッション。どれも、僕という人間の原点を語る一章だ。",
-                    1: { stamp: "トップシークレット", summary: "5万人以上をネット詐欺から守る活動につながった。", title: "作戦:Think Fraud", brief: "昔、けっこうな額のお金を人から騙し取ったことがある。でもその過去が今の自分を苦しめてるわけじゃない。むしろそれがきっかけで、5万人以上をネット詐欺から守る活動につながった。闇と戦う一番の方法は、その正体をちゃんと理解して、自分自身が光になることだと思う。", tags: "詐欺対策 · コミュニティ · ベトナム", status: "ステータス:完了" },
-                    2: { stamp: "機密", summary: "3年間、レジと帳簿を任されてた。", title: "プロジェクト:Restaurant Cashier", brief: "3年間、レジと帳簿を任されてた。シフトに入るたびに、責任ってものを少しずつ学んでいった感じ。一円のズレもなく合わせることは、僕なりのちゃんとやってますっていう証明だった。", tags: "経理 · 信頼 · ラーメン店", status: "ステータス:完了" },
-                    3: { stamp: "極秘", summary: "マウスを握れば誰でも頂点にいけるわけじゃない。", title: "ミッション:Global Elite", brief: "マウスを握れば誰でも頂点にいけるわけじゃないし、練習すればすぐ上手くなるってものでもない。ちょっとした才能と、ものすごい量の練習、その両方が噛み合って初めて上に行ける。反射神経とひたすらの練習が、今の自分を作った。", tags: "戦術 · CS2 · Faceitレベル10", status: "ステータス:継続中" },
-                    4: { stamp: "プロトタイプ", summary: "海外生活7年以上、3ヶ国語をマスター。", title: "コードネーム:Polyglot", brief: "海外生活7年以上、3ヶ国語をマスターして、今4つ目に挑戦中。言語って、単なる単語の集まりじゃなくて、誰かの世界にお邪魔するための入り口みたいなものだと思う。", tags: "ベトナム語 · 日本語 · 英語 · ドイツ語", status: "ステータス:継続中" }
-                },
-                abilities: { label: "スキル", title: "解放された<span class='highlight'>能力</span>", cat1: "クラフト", skill1: "クリエイティブシンキング", skill2: "ストーリーテリング", skill3: "UI/UXデザイン", skill4: "写真", skill5: "映像編集", cat2: "ツール", skill6: "ウェブ開発", skill7: "リサーチ", skill8: "サイバーセキュリティ基礎", cat3: "声", lang: { vi: "ベトナム語 (ネイティブ)", en: "英語 (流暢)", ja: "日本語 (日常会話)" } },
-                journal: { label: "シネマティックジャーナル", title: "人生の<span class='highlight'>フレーム</span>",
-                    1: { desc: "2022年 · 東京で初めて雪景色を見た日。あ、自分もうよそ者じゃないんだなって、ふと思った。" },
-                    2: { desc: "2024年 · 深夜のデザイン作業。世界が静かになるほど、頭の中のアイデアはうるさくなる。" },
-                    3: { desc: "2023年 · ネオンの雨、夢を見るのをやめない街。" },
-                    4: { desc: "2024年 · 静かな時間。アイデアがだんだん形になっていく瞬間。" },
-                    5: { desc: "2023年 · 見知らぬ人の微笑み。それだけで、つながりってどこにでもあるんだなって思わされる。" },
-                    6: { desc: "2022年 · 光に包まれたお寺。忙しない世界の中で、ふと訪れる静止の瞬間。" }
-                },
-                terminal: { label: "通信ターミナル", title: "<span class='highlight'>チャンネル</span>を開く", invite: "コラボでも、フリーランスの仕事でも、ただの雑談でも、いつでも歓迎です。" },
-                ending: { title: "セーブポイント", message: "物語はまだ続いてる。", continue: "続ける?", reflection: "ここまで一緒に歩いてくれてありがとう。もしどこかに自分自身の旅の影を見つけてくれたなら、ぜひ聞かせてほしい。一緒に次の章を書いていこう。", signature: "Ross より" },
-                toast: { easterEgg: "✦ 秘密を発見:探検好きな性格", gameOver: "💀 ゲームオーバー。Yで復活。", respawn: "✦ 秘密を発見:探検好きな性格", audioError: "⚠ オーディオが利用できません" }
-            }
+                    6: { desc: "2022 · A temple lit up at night, one still moment in a world that never slows down." } },
+                terminal: { label: "Communication Terminal", title: "Open <span class='highlight'>channel</span>",
+                    invite: "Collabs, freelance work, or just a chat, I'm always up for it." },
+                ending: { title: "Save Point", message: "The story's still going.", continue: "Continue?",
+                    reflection: "Thanks for walking through these pages with me. If you saw a bit of your own journey somewhere in here, I'd genuinely love to hear about it. Let's write the next chapter together.",
+                    signature: "Take care, Ross" },
+                toast: { easterEgg: "✦ Secret found: Curious explorer, confirmed",
+                    gameOver: "💀 Game Over. Press Y to respawn.",
+                respawn: "✦ Secret found: Curious explorer, confirmed", audioError: "⚠ Audio unavailable" } }
         };
 
-        // ─── Helper functions ───
         function getNestedTranslation(lang, path) {
-            const keys = path.split('.'); let value = translations[lang];
-            for (const key of keys) { if (value === undefined) return undefined; value = value[key]; }
+            const keys = path.split('.');
+            let value = translations[lang] || translations.en;
+            for (const key of keys) { if (value === undefined) return undefined;
+                value = value[key]; }
             return value;
         }
         function applyLanguage(lang) {
@@ -950,177 +1916,301 @@
             document.getElementById('langSelect').value = lang;
         }
 
-        // ─── Initialization ───
         document.addEventListener('DOMContentLoaded', function() {
-            // Language
+            const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+            const mouseLight = document.getElementById('mouse-light');
+            const parallaxOrbs = document.querySelectorAll('.parallax-orb');
+
+            let mouseX = window.innerWidth / 2,
+                mouseY = window.innerHeight / 2,
+                lightCurrentX = mouseX,
+                lightCurrentY = mouseY,
+                scrollY = window.pageYOffset,
+                lastScrollY = scrollY,
+                scrollDirection = 'down',
+                animFrameId = null,
+                lastTime = 0,
+                frameCount = 0;
+
+            if (isTouchDevice) {
+                if (mouseLight) mouseLight.style.display = 'none';
+            }
+
+            if (!isTouchDevice) {
+                document.addEventListener('mousemove', e => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                });
+                document.addEventListener('mouseleave', () => {
+                    if (mouseLight) mouseLight.style.opacity = '0';
+                });
+                document.addEventListener('mouseenter', () => {
+                    if (mouseLight) mouseLight.style.opacity = '1';
+                });
+            }
+
+            const chapterItems = document.querySelectorAll('.chapter-item');
+            const chapterRevealedSet = new Set();
+
+            function checkChapterVisibility() {
+                const viewportHeight = window.innerHeight,
+                    triggerOffset = viewportHeight * 0.2;
+                chapterItems.forEach(entry => {
+                    const rect = entry.getBoundingClientRect(),
+                        entryMid = rect.top + rect.height / 2,
+                        isVisible = entryMid < viewportHeight - triggerOffset && entryMid > -triggerOffset;
+                    if (isVisible && !chapterRevealedSet.has(entry)) {
+                        chapterRevealedSet.add(entry);
+                        entry.classList.add('revealed');
+                        if (scrollDirection === 'down') {
+                            entry.classList.add('scroll-down-reveal');
+                            entry.classList.remove('scroll-up-reveal');
+                        } else {
+                            entry.classList.add('scroll-up-reveal');
+                            entry.classList.remove('scroll-down-reveal');
+                        }
+                        const title = entry.querySelector('.chapter-title');
+                        if (title) title.style.clipPath = '';
+                        const desc = entry.querySelector('.chapter-desc');
+                        if (desc) { desc.style.opacity = '';
+                            desc.style.transform = ''; }
+                    }
+                    if (rect.top > viewportHeight + 500 || rect.bottom < -500) {
+                        if (chapterRevealedSet.has(entry)) {
+                            chapterRevealedSet.delete(entry);
+                            entry.classList.remove('revealed', 'scroll-down-reveal', 'scroll-up-reveal');
+                            const title = entry.querySelector('.chapter-title');
+                            if (title) title.style.clipPath = 'inset(0 100% 0 0)';
+                            const desc = entry.querySelector('.chapter-desc');
+                            if (desc) { desc.style.opacity = '0';
+                                desc.style.transform = 'translateY(8px)'; }
+                        }
+                    }
+                });
+            }
+
+            function unifiedLoop(timestamp) {
+                animFrameId = requestAnimationFrame(unifiedLoop);
+                const dt = Math.min(timestamp - lastTime, 50);
+                lastTime = timestamp;
+                frameCount++;
+
+                scrollY = (typeof lenis !== 'undefined' && lenis && lenis.scroll !== undefined) ? lenis.scroll : window.pageYOffset;
+                if (scrollY > lastScrollY) scrollDirection = 'down';
+                else if (scrollY < lastScrollY) scrollDirection = 'up';
+                lastScrollY = scrollY;
+
+                if (frameCount % 5 === 0) checkChapterVisibility();
+
+                lightCurrentX += (mouseX - lightCurrentX) * 0.05;
+                lightCurrentY += (mouseY - lightCurrentY) * 0.05;
+
+                if (!isTouchDevice && mouseLight) {
+                    mouseLight.style.left = lightCurrentX + 'px';
+                    mouseLight.style.top = lightCurrentY + 'px';
+                    const edgeThreshold = 35;
+                    const nearEdge = mouseX < edgeThreshold || mouseX > window.innerWidth - edgeThreshold || mouseY < edgeThreshold || mouseY > window.innerHeight - edgeThreshold;
+                    mouseLight.style.opacity = nearEdge ? '0.25' : '1';
+                }
+
+                if (frameCount % 3 === 0 && parallaxOrbs.length) {
+                    const scrolled = scrollY,
+                        vh = window.innerHeight,
+                        maxScroll = Math.max(document.body.scrollHeight - vh, 1),
+                        scrollFrac = scrolled / maxScroll;
+                    if (parallaxOrbs[0]) parallaxOrbs[0].style.transform = `translate3d(${-30 + scrollFrac * 50}px, ${-20 + scrollFrac * 80}px, 0)`;
+                    if (parallaxOrbs[1]) parallaxOrbs[1].style.transform = `translate3d(${20 - scrollFrac * 40}px, ${-60 + scrollFrac * 120}px, 0)`;
+                    if (parallaxOrbs[2]) parallaxOrbs[2].style.transform = `translate3d(${-15 + scrollFrac * 30}px, ${40 - scrollFrac * 100}px, 0)`;
+                }
+            }
+
             const langSelect = document.getElementById('langSelect');
             langSelect.addEventListener('change', e => applyLanguage(e.target.value));
             applyLanguage(localStorage.getItem('lang') || 'en');
 
-            // Scroll reveals
-            const revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('revealed'); });
+            const revealObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('revealed'); });
             }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-            document.querySelectorAll('.section:not(.hero), .chapter-item, .dossier-card, .journal-item, .ending').forEach(el => revealObserver.observe(el));
+            document.querySelectorAll('.section:not(.hero), .dossier-card, .journal-item, .ending, .profile__stat').forEach(el => revealObserver.observe(el));
 
-            // Email obfuscation
-            (function(){
+            (function() {
                 const emailSpan = document.getElementById('emailLink');
-                if(!emailSpan) return;
-                const user='moonsicson', domain='gmail.com', full=user+'@'+domain;
-                const a = document.createElement('a'); a.href='mailto:'+full; a.textContent=full; a.style.cssText='color:inherit;text-decoration:none';
+                if (!emailSpan) return;
+                const user = 'moonsicson',
+                    domain = 'gmail.com',
+                    full = user + '@' + domain;
+                const a = document.createElement('a');
+                a.href = 'mailto:' + full;
+                a.textContent = full;
+                a.style.cssText = 'color:inherit;text-decoration:none;';
                 emailSpan.appendChild(a);
-                emailSpan.addEventListener('click', e => { e.preventDefault(); window.location.href='mailto:'+full; });
-                emailSpan.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') { e.preventDefault(); window.location.href='mailto:'+full; } });
+                emailSpan.addEventListener('click', e => { e.preventDefault();
+                    window.location.href = 'mailto:' + full; });
+                emailSpan.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e
+                        .preventDefault();
+                        window.location.href = 'mailto:' + full; } });
             })();
 
-            // Lenis smooth scroll
-            let lenis=null, lenisActive=false;
+            let lenis = null,
+                lenisActive = false;
             try {
-                if(typeof Lenis!=='undefined') {
-                    lenis = new Lenis({ duration:1.8, easing: t => Math.min(1,1.001-Math.pow(2,-10*t)), smoothWheel:true, wheelMultiplier:0.8, touchMultiplier:1.2, syncTouch:true });
-                    lenisActive=true;
-                    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+                if (typeof Lenis !== 'undefined') {
+                    lenis = new Lenis({ duration: 1.8, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                        smoothWheel: true, wheelMultiplier: 0.8, touchMultiplier: 1.2, syncTouch: true });
+                    lenisActive = true;
+                    function raf(time) { lenis.raf(time);
+                        requestAnimationFrame(raf); }
                     requestAnimationFrame(raf);
                 }
-            }catch(e){}
-            function scrollToTarget(target, offset=60){
-                if(lenisActive) lenis.scrollTo(target, {offset:-offset, duration:1.2});
-                else window.scrollTo({top: target.getBoundingClientRect().top+window.pageYOffset-offset, behavior:'smooth'});
+            } catch (e) {}
+
+            function scrollToTarget(target, offset = 60) {
+                if (lenisActive) lenis.scrollTo(target, { offset: -offset, duration: 1.2 });
+                else window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - offset,
+                    behavior: 'smooth' });
             }
 
-            // Navigation
-            const navToggle=document.getElementById('navToggle'), navLinks=document.getElementById('navLinks'), navOverlay=document.getElementById('navOverlay');
-            function setMenuOpen(open){
+            const navToggle = document.getElementById('navToggle'),
+                navLinks = document.getElementById('navLinks'),
+                navOverlay = document.getElementById('navOverlay');
+            function setMenuOpen(open) {
                 navLinks.classList.toggle('open', open);
                 navToggle.classList.toggle('active', open);
                 navToggle.setAttribute('aria-expanded', open);
                 navOverlay.classList.toggle('active', open);
-                if(open){ const focusable = navLinks.querySelectorAll('a, button, [tabindex]'); if(focusable.length) focusable[0].focus(); }
+                if (open) { const focusable = navLinks.querySelectorAll('a, button, [tabindex]'); if (focusable
+                        .length) focusable[0].focus(); }
             }
-            navToggle.addEventListener('click', ()=> setMenuOpen(!navLinks.classList.contains('open')));
-            navOverlay.addEventListener('click', ()=> setMenuOpen(false));
+            navToggle.addEventListener('click', () => setMenuOpen(!navLinks.classList.contains('open')));
+            navOverlay.addEventListener('click', () => setMenuOpen(false));
             document.querySelectorAll('.nav__links a[data-section]').forEach(link => {
                 link.addEventListener('click', e => {
-                    e.preventDefault(); const target = document.getElementById(link.getAttribute('data-section'));
-                    if(target){ scrollToTarget(target, 60); setMenuOpen(false); }
+                    e.preventDefault();
+                    const target = document.getElementById(link.getAttribute('data-section'));
+                    if (target) { scrollToTarget(target, 60);
+                        setMenuOpen(false); }
                 });
             });
-            navLinks.addEventListener('keydown', function(e){
-                if(e.key==='Escape'){ setMenuOpen(false); navToggle.focus(); }
-                if(e.key==='Tab'){
-                    const focusable = Array.from(navLinks.querySelectorAll('a, button, [tabindex]'));
-                    if(!focusable.length) return;
-                    const first=focusable[0], last=focusable[focusable.length-1];
-                    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-                    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-                }
-            });
 
-            const nav=document.getElementById('nav'), sections=document.querySelectorAll('section[id]');
-            function updateNav(){
+            const nav = document.getElementById('nav'),
+                sections = document.querySelectorAll('section[id]');
+            function updateNav() {
                 const y = lenisActive ? lenis.scroll : window.pageYOffset;
-                nav.classList.toggle('scrolled', y>60);
-                let current='';
-                sections.forEach(s=>{ if(y>=s.offsetTop-120 && y<s.offsetTop+s.offsetHeight) current=s.id; });
-                document.querySelectorAll('.nav__links a[data-section]').forEach(a=>{
-                    const active = a.getAttribute('data-section')===current;
+                nav.classList.toggle('scrolled', y > 60);
+                let current = '';
+                sections.forEach(s => { if (y >= s.offsetTop - 120 && y < s.offsetTop + s.offsetHeight)
+                        current = s.id; });
+                document.querySelectorAll('.nav__links a[data-section]').forEach(a => {
+                    const active = a.getAttribute('data-section') === current;
                     a.classList.toggle('active', active);
-                    if(active) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+                    if (active) a.setAttribute('aria-current', 'page');
+                    else a.removeAttribute('aria-current');
                 });
             }
-            if(lenisActive) lenis.on('scroll', updateNav);
-            window.addEventListener('scroll', updateNav, {passive:true}); updateNav();
+            if (lenisActive) lenis.on('scroll', updateNav);
+            window.addEventListener('scroll', updateNav, { passive: true });
+            updateNav();
 
-            // Canvas particles (performance aware)
-            let canvasAnim=true;
-            try{
-                const canvas=document.getElementById('heroCanvas'), ctx=canvas.getContext('2d');
-                let w,h,ps=[];
-                function resize(){ w=canvas.width=canvas.offsetWidth; h=canvas.height=canvas.offsetHeight; }
-                class Mote{
-                    constructor(){ this.reset(); }
-                    reset(){ this.x=Math.random()*w; this.y=Math.random()*h; this.r=Math.random()*1.5+0.5; this.vx=(Math.random()-0.5)*0.12; this.vy=-Math.random()*0.20-0.03; this.alpha=Math.random()*0.3+0.1; }
-                    update(){ this.x+=this.vx; this.y+=this.vy; if(this.y<-10){this.y=h+10; this.x=Math.random()*w;} if(this.x>w+10)this.x=-10; if(this.x<-10)this.x=w+10; }
-                    draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${this.alpha})`; ctx.fill(); }
+            let canvasAnim = true;
+            try {
+                const canvas = document.getElementById('heroCanvas'),
+                    ctx = canvas.getContext('2d');
+                let w, h, ps = [];
+                function resize() { w = canvas.width = canvas.offsetWidth;
+                    h = canvas.height = canvas.offsetHeight; }
+                class Mote {
+                    constructor() { this.reset(); }
+                    reset() { this.x = Math.random() * w;
+                        this.y = Math.random() * h;
+                        this.r = Math.random() * 1.5 + 0.5;
+                        this.vx = (Math.random() - 0.5) * 0.12;
+                        this.vy = -Math.random() * 0.20 - 0.03;
+                        this.alpha = Math.random() * 0.3 + 0.1; }
+                    update() { this.x += this.vx;
+                        this.y += this.vy; if (this.y < -10) { this.y = h + 10;
+                            this.x = Math.random() * w; } if (this.x > w + 10) this.x = -10; if (this.x < -
+                            10) this.x = w + 10; }
+                    draw() { ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
+                        ctx.fill(); }
                 }
-                function init(){
+                function init() {
                     resize();
-                    let count;
-                    if (window.innerWidth < 768) count = 40;
-                    else if (window.innerWidth < 1024) count = 30;
-                    else count = 70;
-                    ps = Array.from({length:count}, () => new Mote());
+                    let count = window.innerWidth < 768 ? 40 : window.innerWidth < 1024 ? 30 : 70;
+                    ps = Array.from({ length: count }, () => new Mote());
                 }
-                function anim(){ if(!canvasAnim){ requestAnimationFrame(anim); return; } ctx.clearRect(0,0,w,h); ps.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(anim); }
-                init(); anim();
+                function anim() { if (!canvasAnim) { requestAnimationFrame(anim); return; }
+                    ctx.clearRect(0, 0, w, h);
+                    ps.forEach(p => { p.update();
+                        p.draw(); });
+                    requestAnimationFrame(anim); }
+                init();
+                anim();
                 let resizeTimeout;
-                window.addEventListener('resize', ()=>{
+                window.addEventListener('resize', () => {
                     clearTimeout(resizeTimeout);
-                    resizeTimeout = setTimeout(()=>{
+                    resizeTimeout = setTimeout(() => {
                         resize();
-                        let count;
-                        if (window.innerWidth < 768) count = 40;
-                        else if (window.innerWidth < 1024) count = 30;
-                        else count = 70;
-                        if(ps.length !== count) init();
+                        let count = window.innerWidth < 768 ? 40 : window.innerWidth < 1024 ? 30 : 70;
+                        if (ps.length !== count) init();
                     }, 100);
                 });
-                new IntersectionObserver(entries=>{ canvasAnim=entries[0].isIntersecting; },{threshold:0.1}).observe(document.getElementById('hero'));
-            }catch(e){ document.getElementById('heroCanvas').style.display='none'; }
+                new IntersectionObserver(entries => { canvasAnim = entries[0].isIntersecting; }, { threshold: 0.1 })
+                    .observe(document.getElementById('hero'));
+            } catch (e) { document.getElementById('heroCanvas').style.display = 'none'; }
 
-            // Audio player
-            (function(){
-                const btn=document.getElementById('musicToggle'), player=document.getElementById('musicPlayer'), audio=document.getElementById('bgMusic');
-                let playing=false, err=false;
-                function hide(){ player.classList.add('hidden'); }
-                function showErr(){
-                    const t=document.getElementById('toast'); const lang=localStorage.getItem('lang')||'en';
-                    t.textContent=getNestedTranslation(lang,'toast.audioError')||'⚠ Audio unavailable';
-                    t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500);
+            (function() {
+                const btn = document.getElementById('musicToggle'),
+                    player = document.getElementById('musicPlayer'),
+                    audio = document.getElementById('bgMusic');
+                let playing = false,
+                    err = false;
+                function hide() { player.classList.add('hidden'); }
+                function showErr() {
+                    const t = document.getElementById('toast');
+                    const lang = localStorage.getItem('lang') || 'en';
+                    t.textContent = getNestedTranslation(lang, 'toast.audioError') || '⚠ Audio unavailable';
+                    t.classList.add('show');
+                    setTimeout(() => t.classList.remove('show'), 2500);
                 }
-                audio.addEventListener('error',()=>{ err=true; hide(); showErr(); });
-                btn.addEventListener('click',()=>{
-                    if(err) return;
-                    if(!playing){
-                        audio.play().then(()=>{ playing=true; btn.textContent='❚❚'; btn.classList.add('playing'); player.classList.add('playing'); })
-                        .catch(()=>{ err=true; hide(); showErr(); });
-                    }else{
-                        audio.pause(); playing=false; btn.textContent='▶'; btn.classList.remove('playing'); player.classList.remove('playing');
+                audio.addEventListener('error', () => { err = true;
+                    hide();
+                    showErr(); });
+                btn.addEventListener('click', () => {
+                    if (err) return;
+                    if (!playing) {
+                        audio.play().then(() => { playing = true;
+                            btn.textContent = '❚❚';
+                            btn.classList.add('playing');
+                            player.classList.add('playing'); }).catch(() => { err = true;
+                            hide();
+                            showErr(); });
+                    } else {
+                        audio.pause();
+                        playing = false;
+                        btn.textContent = '▶';
+                        btn.classList.remove('playing');
+                        player.classList.remove('playing');
                     }
                 });
             })();
 
-            // Dossier cards & journal toggles
-            document.querySelectorAll('.dossier-card').forEach(card=>{
-                card.addEventListener('click', function(){
-                    const expanded=this.classList.toggle('expanded'); this.setAttribute('aria-expanded', expanded);
-                    const live=this.querySelector('.dossier-card__status-live'); if(live) live.textContent = expanded ? 'Details expanded' : 'Collapsed';
+            document.querySelectorAll('.dossier-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const expanded = this.classList.toggle('expanded');
+                    this.setAttribute('aria-expanded', expanded);
+                    const live = this.querySelector('.dossier-card__status-live');
+                    if (live) live.textContent = expanded ? 'Details expanded' : 'Collapsed';
                 });
             });
-            document.querySelectorAll('.journal-item').forEach(item=>{
-                item.addEventListener('click', function(){ const shown=this.classList.toggle('show-meta'); this.setAttribute('aria-expanded', shown); });
+            document.querySelectorAll('.journal-item').forEach(item => {
+                item.addEventListener('click', function() { const shown = this.classList.toggle('show-meta');
+                    this.setAttribute('aria-expanded', shown); });
             });
 
-            // Parallax & visual effects
-            const heroPortrait = document.getElementById('heroPortrait');
-            const journalImages = document.querySelectorAll('.journal-item img');
-            function updateParallax() {
-                const y = lenisActive ? lenis.scroll : window.pageYOffset;
-                if (heroPortrait) heroPortrait.style.transform = `translateY(${y * 0.03}px)`;
-                journalImages.forEach(img => {
-                    const rect = img.getBoundingClientRect();
-                    if (rect.top < window.innerHeight && rect.bottom > 0) {
-                        img.style.transform = `translateY(${(window.innerHeight - rect.top) * 0.02}px)`;
-                    }
-                });
-            }
-            if (lenisActive) lenis.on('scroll', updateParallax);
-            else window.addEventListener('scroll', updateParallax, {passive: true});
-
-            // Timeline drawing
-            const chaptersPath = document.getElementById('chaptersPath');
-            const chaptersContainer = document.getElementById('chaptersContainer');
+            const chaptersPath = document.getElementById('chaptersPath'),
+                chaptersContainer = document.getElementById('chaptersContainer');
             if (chaptersPath && chaptersContainer) {
                 const svg = document.getElementById('chaptersSVG');
                 function updateTimelineSVG() {
@@ -1146,37 +2236,55 @@
                     }
                 }
                 if (lenisActive) lenis.on('scroll', drawTimeline);
-                else window.addEventListener('scroll', drawTimeline, {passive: true});
+                else window.addEventListener('scroll', drawTimeline, { passive: true });
             }
 
-            // Dynamic lighting
             const bgLighting = document.getElementById('bgLighting');
             function updateLighting() {
                 const y = lenisActive ? lenis.scroll : window.pageYOffset;
-                const maxScroll = document.body.scrollHeight - window.innerHeight;
+                const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
                 const progress = Math.min(y / maxScroll, 1);
                 bgLighting.style.opacity = 0.5 + progress * 0.3;
                 bgLighting.style.background = `radial-gradient(ellipse at ${30 + progress * 20}% ${20 - progress * 10}%, rgba(74,144,226,${0.08 + progress * 0.06}), transparent 60%)`;
             }
             if (lenisActive) lenis.on('scroll', updateLighting);
-            else window.addEventListener('scroll', updateLighting, {passive: true});
+            else window.addEventListener('scroll', updateLighting, { passive: true });
 
-            // Footer continue button
-            document.getElementById('continueBtn').addEventListener('click', ()=>{ scrollToTarget(document.getElementById('hero'), 60); });
+            document.getElementById('continueBtn').addEventListener('click', () => scrollToTarget(document.getElementById(
+                'hero'), 60));
 
-            // Easter egg
-            const toast=document.getElementById('toast');
-            function showToast(key){
-                const lang=localStorage.getItem('lang')||'en'; toast.textContent=getNestedTranslation(lang,'toast.'+key)||translations['en'].toast[key];
-                toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2000);
+            const toast = document.getElementById('toast');
+            function showToast(key) {
+                const lang = localStorage.getItem('lang') || 'en';
+                toast.textContent = getNestedTranslation(lang, 'toast.' + key) || translations.en.toast[key];
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
             }
-            document.addEventListener('keydown', e=>{
-                if(e.key==='e'||e.key==='E') showToast('easterEgg');
-                else if(e.key==='n'||e.key==='N'){ showToast('gameOver'); const f=document.querySelector('.ending'); if(f) scrollToTarget(f,60); }
-                else if(e.key==='y'||e.key==='Y'){ scrollToTarget(document.getElementById('hero'),60); showToast('respawn'); }
+            document.addEventListener('keydown', e => {
+                if (e.key === 'e' || e.key === 'E') showToast('easterEgg');
+                else if (e.key === 'n' || e.key === 'N') { showToast('gameOver');
+                    const f = document.querySelector('.ending'); if (f) scrollToTarget(f, 60); } else if (e
+                    .key === 'y' || e.key === 'Y') { scrollToTarget(document.getElementById('hero'), 60);
+                    showToast('respawn'); }
             });
 
             document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+            checkChapterVisibility();
+            lastTime = performance.now();
+            animFrameId = requestAnimationFrame(unifiedLoop);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    if (animFrameId) { cancelAnimationFrame(animFrameId);
+                        animFrameId = null; }
+                } else {
+                    if (!animFrameId) {
+                        lastTime = performance.now();
+                        animFrameId = requestAnimationFrame(unifiedLoop);
+                    }
+                }
+            });
         });
     </script>
 </body>
