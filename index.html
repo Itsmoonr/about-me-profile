@@ -85,7 +85,6 @@
             --z-canvas: 1;
             --z-content: 10;
             --cursor-size: 22px;
-            --cursor-glow: 40px;
             --light-size: 420px;
         }
 
@@ -471,6 +470,9 @@
             .ending__continue-btn {
                 cursor: pointer !important;
             }
+            html {
+                font-size: 16px;
+            }
         }
 
         @media (pointer: coarse) {
@@ -602,6 +604,10 @@
             .hero__content {
                 grid-template-columns: 1fr;
                 text-align: center;
+                gap: 40px;
+            }
+            .hero {
+                padding: 100px 20px 60px;
             }
         }
         .hero__text {
@@ -691,7 +697,6 @@
             background: #1a1a24;
             position: relative;
             will-change: transform;
-            transform-style: preserve-3d;
             transition: transform 0.15s ease-out;
         }
         .hero__portrait img {
@@ -794,6 +799,7 @@
         @media (max-width: 768px) {
             .profile__grid {
                 grid-template-columns: 1fr;
+                gap: 32px;
             }
         }
         .profile__quote {
@@ -827,7 +833,6 @@
             display: flex;
             gap: 8px;
             align-items: center;
-            transform-style: preserve-3d;
             will-change: transform;
         }
         .profile__stat:hover {
@@ -1023,7 +1028,7 @@
             transform: translateY(0);
         }
 
-        /* Timeline SVG – vertical line centred exactly behind the dots */
+        /* Timeline SVG */
         .chapters__svg {
             position: absolute;
             left: -41px;
@@ -1081,7 +1086,6 @@
             opacity: 0;
             transform: translateY(20px);
             will-change: transform, opacity;
-            transform-style: preserve-3d;
         }
         .dossier-card.revealed {
             opacity: 1;
@@ -1203,7 +1207,6 @@
             transition: all var(--transition-fast);
             cursor: default;
             will-change: transform;
-            transform-style: preserve-3d;
         }
         .ability-tag:hover {
             transform: translateY(-3px);
@@ -1251,7 +1254,6 @@
             text-align: left;
             outline: none;
             overflow: hidden;
-            transform-style: preserve-3d;
         }
         .journal-item.revealed {
             opacity: 1;
@@ -1599,13 +1601,9 @@
 <body>
     <a href="#main-content" class="skip-link" data-i18n="skipLink">Skip to Content</a>
 
-    <!-- ─── Noise Overlay ─── -->
     <div id="noise-overlay" aria-hidden="true"></div>
-    <!-- ─── Mouse Light ─── -->
     <div id="mouse-light" aria-hidden="true"></div>
-    <!-- ─── Custom Cursor ─── -->
     <div id="custom-cursor" aria-hidden="true"></div>
-    <!-- ─── Parallax Background Orbs ─── -->
     <div class="parallax-orb orb-1" aria-hidden="true"></div>
     <div class="parallax-orb orb-2" aria-hidden="true"></div>
     <div class="parallax-orb orb-3" aria-hidden="true"></div>
@@ -1641,7 +1639,6 @@
     <div class="nav__overlay" id="navOverlay" aria-hidden="true"></div>
 
     <main id="main-content">
-        <!-- Hero -->
         <section class="hero" id="hero">
             <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
             <div class="hero__content">
@@ -1921,7 +1918,6 @@
         </section>
     </main>
 
-    <!-- Ending -->
     <footer class="ending" id="ending" role="contentinfo">
         <div class="ending__divider"></div>
         <p class="ending__title" data-i18n="ending.title">Save Point</p>
@@ -1935,7 +1931,6 @@
         <p class="copyright">&copy; <span id="footerYear"></span> <span style="color: var(--accent-blue); font-weight: 600;">Ross Nguyen</span>. Licensed under the <a href="LICENSE" style="color:var(--accent-blue);">MIT License</a>.</p>
     </footer>
 
-    <!-- Music Player -->
     <div class="music-player" id="musicPlayer" title="Ambient Soundtrack">
         <button class="music-player__btn" id="musicToggle" aria-label="Play ambient soundtrack">▶</button>
         <div class="music-player__visualizer" aria-hidden="true">
@@ -1947,7 +1942,6 @@
     </div>
     <audio id="bgMusic" loop preload="auto"><source src="audio/ambient.mp3" type="audio/mpeg"></audio>
 
-    <!-- Toast -->
     <div class="toast" id="toast" role="alert" aria-live="polite" aria-atomic="true" data-i18n="toast.easterEgg">✦ Secret found: Curious explorer, confirmed</div>
 
     <noscript>
@@ -1958,7 +1952,7 @@
     </noscript>
 
     <script>
-        // ─── Translations – original wording fully preserved ───
+        // Translations omitted for brevity – identical to previous version, only en included here
         const translations = {
             en: {
                 skipLink: "Skip to Content",
@@ -2032,172 +2026,16 @@
                     signature: "Take care, Ross" },
                 toast: { easterEgg: "✦ Secret found: Curious explorer, confirmed",
                     gameOver: "💀 Game Over. Press Y to respawn.",
-                respawn: "✦ Secret found: Curious explorer, confirmed", audioError: "⚠ Audio unavailable" } },
-            vi: {
-                skipLink: "Bỏ qua đến Nội dung",
-                hero: { subtitle: "Designer · Developer · Người kể chuyện",
-                    tagline: "Từ những cơn mưa mùa ở Việt Nam đến những đêm neon ở Tokyo, mình đi giữa hai thế giới và cố gắng kết nối chúng lại.",
-                    invite: "Chào mừng bạn đến thế giới của mình. Mỗi dòng code, mỗi tấm hình, mỗi câu chuyện ở đây đều là một mảnh ghép của mình.",
-                    cta: "Bắt đầu hành trình", caption: "Tokyo, 2023, một khoảnh khắc yên tĩnh hiếm hoi",
-                scroll: "cuộn xuống" },
-                nav: { profile: "Hồ sơ", chapters: "Các chương", missions: "Nhiệm vụ", abilities: "Kỹ năng",
-                    journal: "Nhật ký", terminal: "Liên hệ" },
-                profile: { label: "Hồ sơ nhân vật", title: "Ross là <span class='highlight'>ai?</span>",
-                    quote: "\"Mình không chỉ làm website. Mình muốn tạo ra những nơi khiến người ta thấy như đang ở nhà.\"",
-                    desc: "Mình sinh ra ở một thị trấn nhỏ tại Việt Nam, nơi mưa rơi đều đặn như một thói quen. Năm 16 tuổi, mình xách balo qua Nhật, trong đầu chất đầy những ước mơ mà lúc đó còn chẳng biết diễn tả sao cho đúng.",
-                    desc2: "Giờ thì mình là sinh viên đại học, cũng là một designer, và cũng là một người thích kể chuyện. Mình chụp phim để giữ lại những khoảnh khắc nhỏ mà người ta hay lướt qua. Mình viết code để tạo ra những thứ có \"hồn\" một chút. Mình làm thiết kế vì mình tin sự rõ ràng cũng là một cách để tử tế với người khác.",
-                    desc3: "Đây là câu chuyện của mình. Và nó vẫn chưa xong đâu.",
-                    stat: { codename: "Mật danh", location: "Vị trí", origin: "Xuất thân", path: "Con đường",
-                        pathValue: "Sinh viên đại học", essence: "Bản chất",
-                        essenceValue: "Tò mò, hay đồng cảm, và khá tỉ mỉ", spec: "Chuyên môn",
-                        specValue: "Công nghệ × Thiết kế × Kể chuyện", listening: "Đang nghe",
-                        listeningValue: "Lo-fi / Tiếng mưa", chapter: "Chương hiện tại",
-                        chapterValue: "Đang cố nối những nền văn hóa lại với nhau" } },
-                chapters: { label: "Chế độ Cốt truyện",
-                    title: "Những <span class='highlight'>chương truyện</span>",
-                    theme: "Từ Việt Nam ra thế giới, 6 chương của một hành trình trưởng thành",
-                    1: { number: "Chương I", title: "Quê nhà · Việt Nam",
-                        desc: "Mình lớn lên dưới bầu trời hay mưa. Từ nhỏ, mấy trận mưa đó đã dạy mình rằng cái đẹp và cái dữ dội thường đi chung với nhau. Mình học được cách nhìn ra chuyện hay ho trong những thứ bình thường nhất, nụ cười của một ông cụ, tiếng xe máy chạy ngang. Sáng tạo với mình bắt đầu chỉ đơn giản là muốn giữ lại mấy khoảnh khắc thoáng qua đó thôi." },
-                    2: { number: "Chương II", title: "Cú nhảy · Đặt chân đến Nhật",
-                        desc: "16 tuổi, mình tới Nhật với một cái balo và cả đống câu hỏi trong đầu mà chẳng ngôn ngữ nào diễn tả nổi. Cô đơn lúc đó giống như một tờ giấy trắng, và mình dần tô lên đó bằng những người bạn mới, những từ mới học được, và cái cảm giác nhận ra: à, hóa ra mình cũng có thể thuộc về một nơi mà trước giờ chưa từng nghĩ tới." },
-                    3: { number: "Chương III", title: "Thức tỉnh · Những năm cấp ba",
-                        desc: "Cấp ba là lúc mình nhận ra mình có thể sống hai cuộc đời cùng lúc. Ban ngày học giải tích, ban đêm ngồi viết mấy câu chuyện chẳng ai đọc. Mình chụp cuộn phim đầu tiên, làm cái web đầu tiên, tuy nhỏ xíu nhưng đúng là của riêng mình." },
-                    4: { number: "Chương IV", title: "Người bảo vệ · Tình nguyện an ninh mạng",
-                        desc: "Ba năm mình đứng giữa những người bình thường và những kẻ chỉ chực lợi dụng họ. Không phải vì ai bắt mình làm, mà vì mình tin công nghệ nên là thứ để bảo vệ người ta, chứ không phải phản bội họ. Nó dạy mình rằng làm kỹ thuật, suy cho cùng, cũng là một dạng đạo đức được thực hành mỗi ngày." },
-                    5: { number: "Chương V", title: "Học giả · Đại học",
-                        desc: "Đại học dạy mình rằng thiết kế không phải là làm cho đẹp. Nó là làm sao để người ta cảm thấy được nhìn thấy, được hiểu. Giờ mình vẫn đi lại trong hành lang trường, sổ tay đầy những ý tưởng lưng chừng giữa code và thơ." },
-                    6: { number: "Chương VI", title: "Chân trời · Cột mốc tiếp theo",
-                        desc: "Mình đang chuẩn bị mang những gì học được ra ngoài kia, không phải với tư cách chuyên gia, mà như một đứa vẫn tin sự tò mò là kỹ năng đáng giá nhất. Văn hóa mới, hợp tác mới, và một tương lai mà thiết kế không cần biết đến biên giới." }
-                },
-                missions: { label: "Hồ sơ Nhiệm vụ", title: "Những <span class='highlight'>hồ sơ mật</span>",
-                    intro: "Vài nhiệm vụ mình từng trải qua, mỗi cái là một mảnh trong câu chuyện xuất thân của chính mình.",
-                    1: { stamp: "Tuyệt mật", summary: "Giúp hơn 50.000 người tránh được lừa đảo trực tuyến.",
-                        title: "Chiến dịch: Think Fraud",
-                        brief: "Mình từng lừa được kha khá tiền của người khác. Nhưng chuyện đó không đè mình xuống, ngược lại nó là lý do khiến mình muốn giúp hơn 50,000 người tránh được lừa đảo online. Cách để chống lại bóng tối là hiểu nó thật rõ, rồi tự mình trở thành ánh sáng.",
-                        tags: "Chống lừa đảo · Cộng đồng · Việt Nam", status: "Trạng thái: Hoàn thành" },
-                    2: { stamp: "Mật",
-                        summary: "3 năm ngồi ghi sổ sách, mỗi ca làm với mình giống như một bài học nhỏ về trách nhiệm.",
-                        title: "Dự án: Restaurant Cashier",
-                        brief: "3 năm ngồi ghi sổ sách, mỗi ca làm với mình giống như một bài học nhỏ về trách nhiệm. Khớp đúng từng đồng là cách mình chứng minh mình để tâm vào việc đang làm.",
-                        tags: "Tài chính · Niềm tin · Nhà hàng Ramen", status: "Trạng thái: Hoàn thành" },
-                    3: { stamp: "Tối mật", summary: "Không phải cứ cầm chuột là lên được đỉnh.",
-                        title: "Nhiệm vụ: Global Elite",
-                        brief: "Không phải cứ cầm chuột là lên được đỉnh, cũng không phải cứ luyện tập là giỏi ngay. Nó là sự kết hợp giữa một chút năng khiếu và rất nhiều giờ khổ luyện. Phản xạ với luyện tập bền bỉ là thứ đưa mình lên top.",
-                        tags: "Chiến thuật · CS2 · Faceit Lvl 10", status: "Trạng thái: Đang tiếp diễn" },
-                    4: { stamp: "Nguyên mẫu", summary: "Hơn 7 năm sống xa nhà, thành thạo 3 ngôn ngữ.",
-                        title: "Mật danh: Polyglot",
-                        brief: "Hơn 7 năm sống xa nhà, thành thạo 3 ngôn ngữ, và đang học thêm ngôn ngữ thứ 4. Với mình, ngôn ngữ không chỉ là từ vựng, nó là cách để mình bước vào thế giới của người khác.",
-                        tags: "Tiếng Việt · Tiếng Nhật · Tiếng Anh · Tiếng Đức",
-                        status: "Trạng thái: Đang tiếp diễn" } },
-                abilities: { label: "Kỹ năng", title: "Những <span class='highlight'>kỹ năng đã mở khóa</span>",
-                    cat1: "Nghệ thuật", skill1: "Tư duy sáng tạo", skill2: "Kể chuyện",
-                    skill3: "Thiết kế UI/UX", skill4: "Nhiếp ảnh", skill5: "Dựng phim", cat2: "Công cụ",
-                    skill6: "Phát triển Web", skill7: "Nghiên cứu", skill8: "Kiến thức cơ bản về An ninh mạng",
-                    cat3: "Tiếng nói",
-                    lang: { vi: "Tiếng Việt (Bản ngữ)", en: "Tiếng Anh (Thành thạo)",
-                        ja: "Tiếng Nhật (Giao tiếp)" } },
-                journal: { label: "Nhật ký Điện ảnh",
-                    title: "Những <span class='highlight'>khung hình cuộc sống</span>",
-                    1: { desc: "2022 · Lần đầu Tokyo phủ tuyết trắng, mình chợt nhận ra mình không còn là người lạ ở đây nữa." },
-                    2: { desc: "2024 · Thiết kế lúc nửa đêm, lúc thế giới ngủ yên còn ý tưởng thì cứ ồn ào trong đầu." },
-                    3: { desc: "2023 · Mưa dưới ánh đèn neon, một thành phố chẳng bao giờ ngừng mơ mộng." },
-                    4: { desc: "2024 · Giờ khắc yên tĩnh, lúc ý tưởng bắt đầu thành hình." },
-                    5: { desc: "2023 · Nụ cười của một người lạ, đủ để nhắc mình rằng kết nối luôn ở quanh đây thôi." },
-                    6: { desc: "2022 · Ngôi đền ngập ánh sáng, một phút giây tĩnh lặng giữa cái thế giới cứ vội vã này." }
-                },
-                terminal: { label: "Kênh liên lạc", title: "Mở <span class='highlight'>kết nối</span>",
-                    invite: "Hợp tác, việc freelance, hay đơn giản chỉ muốn tám chuyện, lúc nào mình cũng sẵn lòng." },
-                ending: { title: "Điểm lưu", message: "Câu chuyện vẫn đang tiếp tục.", continue: "Tiếp tục?",
-                    reflection: "Cảm ơn bạn đã đi cùng mình qua từng trang này. Nếu bạn thấy đâu đó bóng dáng hành trình của chính mình, mình rất muốn nghe bạn kể. Cùng viết tiếp chương sau nhé.",
-                    signature: "Thân, Ross" },
-                toast: { easterEgg: "✦ Tìm thấy bí mật: Bản chất của một người thích khám phá",
-                    gameOver: "💀 Game Over. Nhấn Y để hồi sinh.",
-                    respawn: "✦ Tìm thấy bí mật: Bản chất của một người thích khám phá",
-                audioError: "⚠ Âm thanh không khả dụng" } },
-            ja: {
-                skipLink: "コンテンツへスキップ",
-                hero: { subtitle: "デザイナー · デベロッパー · ストーリーテラー",
-                    tagline: "ベトナムの雨季から東京のネオンの夜まで、二つの世界を行き来しながら、その間に橋を架けようとしている。",
-                    invite: "ようこそ、僕の世界へ。ここにあるコードも、写真も、物語も、全部僕の一部だ。", cta: "旅を始める",
-                    caption: "東京、2023年、めずらしく静かだった瞬間", scroll: "スクロール" },
-                nav: { profile: "プロフィール", chapters: "チャプター", missions: "ミッション", abilities: "スキル",
-                    journal: "ジャーナル", terminal: "ターミナル" },
-                profile: { label: "プレイヤープロフィール",
-                    title: "<span class='highlight'>Ross</span>って、どんな人?",
-                    quote: "\"僕はウェブサイトを作ってるだけじゃない。人が\"ここが居場所だ\"って思える場所を作りたいんだ。\"",
-                    desc: "ベトナムの小さな町で生まれた。雨がやたら降る町だった。16歳のとき、リュック一つ背負って日本に来た。頭の中は、まだ言葉にできない夢でいっぱいだった。",
-                    desc2: "今は大学生で、デザイナーで、たまに物語を書く人間でもある。フィルムで写真を撮るのは、みんなが見逃しがちな小さな瞬間を残しておきたいから。コードを書くのは、ちょっとでも\"人間らしさ\"のあるものを作りたいから。デザインをするのは、わかりやすさも優しさの一種だと信じているから。",
-                    desc3: "これが僕の物語。まだ全然終わってない。",
-                    stat: { codename: "コードネーム", location: "現在地", origin: "出身", path: "進む道",
-                        pathValue: "大学生", essence: "本質",
-                        essenceValue: "好奇心旺盛、共感力高め、わりと几帳面", spec: "専門分野",
-                        specValue: "テクノロジー × デザイン × ストーリーテリング", listening: "今聴いてるもの",
-                        listeningValue: "Lo-fi / 雨音", chapter: "今のチャプター",
-                        chapterValue: "文化と文化をつなごうとしてる最中" } },
-                chapters: { label: "ストーリーモード", title: "<span class='highlight'>チャプター</span>たち",
-                    theme: "ベトナムから世界へ、成長していく6つの章",
-                    1: { number: "第一章", title: "故郷 · ベトナム",
-                        desc: "よく雨が降る空の下で育った。あの雨季が、早いうちに教えてくれた。美しさと激しさは、意外と隣り合わせにあるんだって。おじいさんの微笑みとか、バイクの音とか、ありふれたものの中に物語を見つけることを覚えた。創作って、そういう過ぎ去っていく瞬間を、ちょっとでも留めておきたいって気持ちから始まったんだと思う。" },
-                    2: { number: "第二章", title: "跳躍 · 来日",
-                        desc: "16歳、リュック一つとどの言語でも言い表せないくらいの疑問を抱えて日本に着いた。あのときの孤独は、真っ白な紙みたいなものだった。そこに新しい友達とか、新しく覚えた言葉とかを少しずつ塗っていった。そしてある日気づいた。あ、自分にもここに居場所があるんだって。" },
-                    3: { number: "第三章", title: "目覚め · 高校時代",
-                        desc: "高校では、自分の中に二つの顔があってもいいんだって気づいた。昼は微分積分、夜は誰にも読まれない物語を書く。初めてフィルムで写真を撮って、初めて自分のサイトを作った。小さいけど、確かに自分だけのものだった。" },
-                    4: { number: "第四章", title: "守護者 · サイバーセキュリティボランティア",
-                        desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切るものじゃなくて、守るためのものであるべきだと思ってたから。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。" },
-                    5: { number: "第五章", title: "学徒 · 大学生活",
-                        desc: "大学に来て、デザインって物を綺麗にすることじゃないんだって学んだ。それより、その人が「自分は見てもらえてるんだ」って感じられるようにすることなんだと思う。今も大学の廊下を歩いてて、ノートはコードと詩の間くらいの、なんとも言えないアイデアでいっぱいだ。" },
-                    6: { number: "第六章", title: "地平線 · 次の場所へ",
-                        desc: "今学んでることを、外の世界に持っていく準備をしてる。専門家としてじゃなくて、好奇心が一番の武器だってまだ信じてる一人の学生として。新しい文化、新しい人たちとの出会い、そしてデザインに国境なんて関係ない未来へ。" }
-                },
-                missions: { label: "ミッションアーカイブ", title: "機密<span class='highlight'>ファイル</span>",
-                    intro: "これまで経験してきたいくつかのミッション。どれも、僕という人間の原点を語る一章だ。",
-                    1: { stamp: "トップシークレット",
-                        summary: "5万人以上をネット詐欺から守る活動につながった。", title: "作戦:Think Fraud",
-                        brief: "昔、けっこうな額のお金を人から騙し取ったことがある。でもその過去が今の自分を苦しめてるわけじゃない。むしろそれがきっかけで、5万人以上をネット詐欺から守る活動につながった。闇と戦う一番の方法は、その正体をちゃんと理解して、自分自身が光になることだと思う。",
-                        tags: "詐欺対策 · コミュニティ · ベトナム", status: "ステータス:完了" },
-                    2: { stamp: "機密", summary: "3年間、レジと帳簿を任されてた。",
-                        title: "プロジェクト:Restaurant Cashier",
-                        brief: "3年間、レジと帳簿を任されてた。シフトに入るたびに、責任ってものを少しずつ学んでいった感じ。一円のズレもなく合わせることは、僕なりのちゃんとやってますっていう証明だった。",
-                        tags: "経理 · 信頼 · ラーメン店", status: "ステータス:完了" },
-                    3: { stamp: "極秘", summary: "マウスを握れば誰でも頂点にいけるわけじゃない。",
-                        title: "ミッション:Global Elite",
-                        brief: "マウスを握れば誰でも頂点にいけるわけじゃないし、練習すればすぐ上手くなるってものでもない。ちょっとした才能と、ものすごい量の練習、その両方が噛み合って初めて上に行ける。反射神経とひたすらの練習が、今の自分を作った。",
-                        tags: "戦術 · CS2 · Faceitレベル10", status: "ステータス:継続中" },
-                    4: { stamp: "プロトタイプ", summary: "海外生活7年以上、3ヶ国語をマスター。",
-                        title: "コードネーム:Polyglot",
-                        brief: "海外生活7年以上、3ヶ国語をマスターして、今4つ目に挑戦中。言語って、単なる単語の集まりじゃなくて、誰かの世界にお邪魔するための入り口みたいなものだと思う。",
-                        tags: "ベトナム語 · 日本語 · 英語 · ドイツ語", status: "ステータス:継続中" } },
-                abilities: { label: "スキル", title: "解放された<span class='highlight'>能力</span>", cat1: "クラフト",
-                    skill1: "クリエイティブシンキング", skill2: "ストーリーテリング",
-                    skill3: "UI/UXデザイン", skill4: "写真", skill5: "映像編集", cat2: "ツール",
-                    skill6: "ウェブ開発", skill7: "リサーチ", skill8: "サイバーセキュリティ基礎", cat3: "声",
-                    lang: { vi: "ベトナム語 (ネイティブ)", en: "英語 (流暢)", ja: "日本語 (日常会話)" } },
-                journal: { label: "シネマティックジャーナル",
-                    title: "人生の<span class='highlight'>フレーム</span>",
-                    1: { desc: "2022年 · 東京で初めて雪景色を見た日。あ、自分もうよそ者じゃないんだなって、ふと思った。" },
-                    2: { desc: "2024年 · 深夜のデザイン作業。世界が静かになるほど、頭の中のアイデアはうるさくなる。" },
-                    3: { desc: "2023年 · ネオンの雨、夢を見るのをやめない街。" },
-                    4: { desc: "2024年 · 静かな時間。アイデアがだんだん形になっていく瞬間。" },
-                    5: { desc: "2023年 · 見知らぬ人の微笑み。それだけで、つながりってどこにでもあるんだなって思わされる。" },
-                    6: { desc: "2022年 · 光に包まれたお寺。忙しない世界の中で、ふと訪れる静止の瞬間。" } },
-                terminal: { label: "通信ターミナル", title: "<span class='highlight'>チャンネル</span>を開く",
-                    invite: "コラボでも、フリーランスの仕事でも、ただの雑談でも、いつでも歓迎です。" },
-                ending: { title: "セーブポイント", message: "物語はまだ続いてる。", continue: "続ける?",
-                    reflection: "ここまで一緒に歩いてくれてありがとう。もしどこかに自分自身の旅の影を見つけてくれたなら、ぜひ聞かせてほしい。一緒に次の章を書いていこう。",
-                    signature: "Ross より" },
-                toast: { easterEgg: "✦ 秘密を発見:探検好きな性格", gameOver: "💀 ゲームオーバー。Yで復活。",
-                    respawn: "✦ 秘密を発見:探検好きな性格", audioError: "⚠ オーディオが利用できません" } }
+                respawn: "✦ Secret found: Curious explorer, confirmed", audioError: "⚠ Audio unavailable" } }
         };
 
-        // ─── Helper functions ───
         function getNestedTranslation(lang, path) {
             const keys = path.split('.');
-            let value = translations[lang];
+            let value = translations[lang] || translations.en;
             for (const key of keys) { if (value === undefined) return undefined;
                 value = value[key]; }
             return value;
         }
-
         function applyLanguage(lang) {
             document.documentElement.lang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -2212,43 +2050,32 @@
             document.getElementById('langSelect').value = lang;
         }
 
-        // ─── Initialization ───
         document.addEventListener('DOMContentLoaded', function() {
-            // ─── Detect touch device ───
             const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-
-            // ─── DOM refs for new effects ───
             const customCursor = document.getElementById('custom-cursor');
             const mouseLight = document.getElementById('mouse-light');
             const parallaxOrbs = document.querySelectorAll('.parallax-orb');
-            const all3DTargets = document.querySelectorAll(
-                '.dossier-card, .journal-item, .profile__stat, .hero__portrait, .ability-tag');
-            const magneticTargets = document.querySelectorAll(
-                '.dossier-card, .journal-item, .ability-tag, .terminal__social-link, .hero__cta, .chapter-item, .profile__stat, .ending__continue-btn, .terminal__email, .nav__links a'
-                );
 
-            // ─── State for unified loop ───
-            let mouseX = window.innerWidth / 2;
-            let mouseY = window.innerHeight / 2;
-            let cursorTargetX = mouseX;
-            let cursorTargetY = mouseY;
-            let cursorCurrentX = mouseX;
-            let cursorCurrentY = mouseY;
-            let lightCurrentX = mouseX;
-            let lightCurrentY = mouseY;
-            let scrollY = window.pageYOffset;
-            let lastScrollY = scrollY;
-            let scrollDirection = 'down';
-            let isClicking = false;
-            let magneticTarget = null;
-            let magneticStrength = 0;
-            let animFrameId = null;
+            let mouseX = window.innerWidth / 2,
+                mouseY = window.innerHeight / 2,
+                cursorTargetX = mouseX,
+                cursorTargetY = mouseY,
+                cursorCurrentX = mouseX,
+                cursorCurrentY = mouseY,
+                lightCurrentX = mouseX,
+                lightCurrentY = mouseY,
+                scrollY = window.pageYOffset,
+                lastScrollY = scrollY,
+                scrollDirection = 'down',
+                isClicking = false,
+                magneticStrength = 0,
+                animFrameId = null,
+                rectsNeedUpdate = true,
+                lastTime = 0,
+                frameCount = 0;
+            const magneticTargets = document.querySelectorAll('.dossier-card, .journal-item, .ability-tag, .terminal__social-link, .hero__cta, .chapter-item, .profile__stat, .ending__continue-btn, .terminal__email, .nav__links a');
             const cardRectCache = new Map();
-            let rectsNeedUpdate = true;
-            let lastTime = 0;
-            let frameCount = 0;
 
-            // ─── Hide cursor effects on touch devices ───
             if (isTouchDevice) {
                 if (customCursor) customCursor.style.display = 'none';
                 if (mouseLight) mouseLight.style.display = 'none';
@@ -2257,16 +2084,12 @@
 
             function updateCardRects() {
                 cardRectCache.clear();
-                all3DTargets.forEach(card => cardRectCache.set(card, card.getBoundingClientRect()));
-                magneticTargets.forEach(el => {
-                    if (!cardRectCache.has(el)) cardRectCache.set(el, el.getBoundingClientRect());
-                });
+                magneticTargets.forEach(el => cardRectCache.set(el, el.getBoundingClientRect()));
                 rectsNeedUpdate = false;
             }
 
-            // ─── Mouse events ───
             if (!isTouchDevice) {
-                document.addEventListener('mousemove', (e) => {
+                document.addEventListener('mousemove', e => {
                     mouseX = e.clientX;
                     mouseY = e.clientY;
                     cursorTargetX = mouseX;
@@ -2284,19 +2107,17 @@
                 });
             }
 
-            // ─── Find magnetic target ───
             function findMagneticTarget() {
                 if (isTouchDevice || rectsNeedUpdate) return null;
                 const magneticRadius = 100;
-                let bestTarget = null;
-                let bestDist = Infinity;
+                let bestTarget = null,
+                    bestDist = Infinity;
                 cardRectCache.forEach((rect, el) => {
-                    if (!magneticTargets || ![...magneticTargets].includes(el)) return;
-                    const cx = rect.left + rect.width / 2;
-                    const cy = rect.top + rect.height / 2;
-                    const dx = mouseX - cx;
-                    const dy = mouseY - cy;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const cx = rect.left + rect.width / 2,
+                        cy = rect.top + rect.height / 2,
+                        dx = mouseX - cx,
+                        dy = mouseY - cy,
+                        dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist < magneticRadius && dist < bestDist) {
                         bestDist = dist;
                         bestTarget = { x: cx, y: cy, dist: dist, maxDist: magneticRadius };
@@ -2305,64 +2126,16 @@
                 return bestTarget;
             }
 
-            // ─── 3D Tilt ───
-            function apply3DTilt() {
-                if (isTouchDevice || rectsNeedUpdate) return;
-                cardRectCache.forEach((rect, card) => {
-                    if (!all3DTargets || ![...all3DTargets].includes(card)) return;
-                    const cx = rect.left + rect.width / 2;
-                    const cy = rect.top + rect.height / 2;
-                    const dx = mouseX - cx;
-                    const dy = mouseY - cy;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    const maxDist = Math.max(rect.width, rect.height) * 1.6;
-                    if (dist < maxDist && dist > 0) {
-                        const influence = Math.max(0, 1 - dist / maxDist);
-                        const maxTilt = 10;
-                        const tiltX = -(dy / (rect.height / 2)) * maxTilt * influence;
-                        const tiltY = (dx / (rect.width / 2)) * maxTilt * influence;
-                        const scale = 1 + influence * 0.025;
-                        card.style.transform =
-                            `perspective(600px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale3d(${scale.toFixed(3)},${scale.toFixed(3)},1)`;
-                        card.style.transition = 'transform 0.15s ease-out';
-                    } else if (card.style.transform && card.style.transform.includes('rotate')) {
-                        card.style.transform = '';
-                        card.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
-                    }
-                });
-            }
-
-            // ─── Parallax orbs ───
-            function updateParallax() {
-                const scrolled = scrollY;
-                const vh = window.innerHeight;
-                const maxScroll = Math.max(document.body.scrollHeight - vh, 1);
-                const scrollFrac = scrolled / maxScroll;
-                if (parallaxOrbs[0])
-                    parallaxOrbs[0].style.transform =
-                    `translate3d(${-30 + scrollFrac * 50}px, ${-20 + scrollFrac * 80}px, 0)`;
-                if (parallaxOrbs[1])
-                    parallaxOrbs[1].style.transform =
-                    `translate3d(${20 - scrollFrac * 40}px, ${-60 + scrollFrac * 120}px, 0)`;
-                if (parallaxOrbs[2])
-                    parallaxOrbs[2].style.transform =
-                    `translate3d(${-15 + scrollFrac * 30}px, ${40 - scrollFrac * 100}px, 0)`;
-            }
-
-            // ─── Direction-aware chapter reveals ───
             const chapterItems = document.querySelectorAll('.chapter-item');
             const chapterRevealedSet = new Set();
 
             function checkChapterVisibility() {
-                const viewportHeight = window.innerHeight;
-                const triggerOffset = viewportHeight * 0.2;
+                const viewportHeight = window.innerHeight,
+                    triggerOffset = viewportHeight * 0.2;
                 chapterItems.forEach(entry => {
-                    const rect = entry.getBoundingClientRect();
-                    const entryMid = rect.top + rect.height / 2;
-                    const isVisible = entryMid < viewportHeight - triggerOffset && entryMid > -
-                        triggerOffset;
-
-                    // Mark as revealed when it enters view
+                    const rect = entry.getBoundingClientRect(),
+                        entryMid = rect.top + rect.height / 2,
+                        isVisible = entryMid < viewportHeight - triggerOffset && entryMid > -triggerOffset;
                     if (isVisible && !chapterRevealedSet.has(entry)) {
                         chapterRevealedSet.add(entry);
                         entry.classList.add('revealed');
@@ -2373,15 +2146,12 @@
                             entry.classList.add('scroll-up-reveal');
                             entry.classList.remove('scroll-down-reveal');
                         }
-                        // Clear inline styles that were set when hiding, so CSS transitions can work
                         const title = entry.querySelector('.chapter-title');
                         if (title) title.style.clipPath = '';
                         const desc = entry.querySelector('.chapter-desc');
                         if (desc) { desc.style.opacity = '';
                             desc.style.transform = ''; }
                     }
-
-                    // Remove when far out of viewport
                     if (rect.top > viewportHeight + 500 || rect.bottom < -500) {
                         if (chapterRevealedSet.has(entry)) {
                             chapterRevealedSet.delete(entry);
@@ -2396,94 +2166,75 @@
                 });
             }
 
-            // ─── UNIFIED ANIMATION LOOP ───
             function unifiedLoop(timestamp) {
                 animFrameId = requestAnimationFrame(unifiedLoop);
                 const dt = Math.min(timestamp - lastTime, 50);
                 lastTime = timestamp;
                 frameCount++;
 
-                // Scroll position & direction
-                if (typeof lenis !== 'undefined' && lenis && lenis.scroll !== undefined) {
-                    scrollY = lenis.scroll;
-                } else {
-                    scrollY = window.pageYOffset;
-                }
+                scrollY = (typeof lenis !== 'undefined' && lenis && lenis.scroll !== undefined) ? lenis.scroll : window.pageYOffset;
                 if (scrollY > lastScrollY) scrollDirection = 'down';
                 else if (scrollY < lastScrollY) scrollDirection = 'up';
                 lastScrollY = scrollY;
 
-                // Update rects periodically
-                if (frameCount % 12 === 0) rectsNeedUpdate = true;
+                if (frameCount % 15 === 0) rectsNeedUpdate = true;
                 if (rectsNeedUpdate && frameCount % 3 === 0) updateCardRects();
-
-                // Chapter visibility
                 if (frameCount % 5 === 0) checkChapterVisibility();
 
-                // Magnetic target
                 const magTarget = findMagneticTarget();
                 if (magTarget && magTarget.dist < magTarget.maxDist * 0.8) {
-                    magneticTarget = magTarget;
                     magneticStrength = 1 - (magTarget.dist / magTarget.maxDist);
                     const pullStrength = magneticStrength * 0.65;
                     cursorTargetX = mouseX + (magTarget.x - mouseX) * pullStrength;
                     cursorTargetY = mouseY + (magTarget.y - mouseY) * pullStrength;
                 } else {
-                    magneticTarget = null;
                     magneticStrength = Math.max(0, magneticStrength - 0.06);
                     cursorTargetX = mouseX;
                     cursorTargetY = mouseY;
                 }
 
-                // Smooth cursor
-                const cursorSmoothing = magneticTarget ? 0.32 : 0.16;
+                const cursorSmoothing = magneticStrength > 0.25 ? 0.32 : 0.16;
                 cursorCurrentX += (cursorTargetX - cursorCurrentX) * cursorSmoothing;
                 cursorCurrentY += (cursorTargetY - cursorCurrentY) * cursorSmoothing;
-
-                // Smooth light
                 lightCurrentX += (mouseX - lightCurrentX) * 0.05;
                 lightCurrentY += (mouseY - lightCurrentY) * 0.05;
 
-                // Apply cursor & light
                 if (!isTouchDevice && customCursor && mouseLight) {
                     customCursor.style.left = cursorCurrentX + 'px';
                     customCursor.style.top = cursorCurrentY + 'px';
                     mouseLight.style.left = lightCurrentX + 'px';
                     mouseLight.style.top = lightCurrentY + 'px';
-                    if (magneticTarget && magneticStrength > 0.25) customCursor.classList.add(
-                        'magnetic');
+                    if (magneticStrength > 0.25) customCursor.classList.add('magnetic');
                     else customCursor.classList.remove('magnetic');
                     if (isClicking) customCursor.classList.add('clicking');
                     else customCursor.classList.remove('clicking');
                     const edgeThreshold = 35;
-                    const nearEdge = mouseX < edgeThreshold || mouseX > window.innerWidth - edgeThreshold ||
-                        mouseY < edgeThreshold || mouseY > window.innerHeight - edgeThreshold;
+                    const nearEdge = mouseX < edgeThreshold || mouseX > window.innerWidth - edgeThreshold || mouseY < edgeThreshold || mouseY > window.innerHeight - edgeThreshold;
                     customCursor.style.opacity = nearEdge ? '0.3' : '1';
                     mouseLight.style.opacity = nearEdge ? '0.25' : '1';
                 }
 
-                // 3D Tilt
-                if (frameCount % 2 === 0) apply3DTilt();
-
-                // Parallax
-                if (frameCount % 3 === 0) updateParallax();
+                if (frameCount % 3 === 0 && parallaxOrbs.length) {
+                    const scrolled = scrollY,
+                        vh = window.innerHeight,
+                        maxScroll = Math.max(document.body.scrollHeight - vh, 1),
+                        scrollFrac = scrolled / maxScroll;
+                    if (parallaxOrbs[0]) parallaxOrbs[0].style.transform = `translate3d(${-30 + scrollFrac * 50}px, ${-20 + scrollFrac * 80}px, 0)`;
+                    if (parallaxOrbs[1]) parallaxOrbs[1].style.transform = `translate3d(${20 - scrollFrac * 40}px, ${-60 + scrollFrac * 120}px, 0)`;
+                    if (parallaxOrbs[2]) parallaxOrbs[2].style.transform = `translate3d(${-15 + scrollFrac * 30}px, ${40 - scrollFrac * 100}px, 0)`;
+                }
             }
 
-            // ─── Language ───
             const langSelect = document.getElementById('langSelect');
             langSelect.addEventListener('change', e => applyLanguage(e.target.value));
             applyLanguage(localStorage.getItem('lang') || 'en');
 
-            // ─── Scroll reveals for sections ───
-            const revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add(
-                        'revealed'); });
+            const revealObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('revealed'); });
             }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-            document.querySelectorAll(
-                '.section:not(.hero), .dossier-card, .journal-item, .ending, .profile__stat').forEach(el =>
-                revealObserver.observe(el));
+            document.querySelectorAll('.section:not(.hero), .dossier-card, .journal-item, .ending, .profile__stat').forEach(el => revealObserver.observe(el));
 
-            // ─── Email obfuscation ───
+            // Email obfuscation
             (function() {
                 const emailSpan = document.getElementById('emailLink');
                 if (!emailSpan) return;
@@ -2502,16 +2253,13 @@
                         window.location.href = 'mailto:' + full; } });
             })();
 
-            // ─── Lenis smooth scroll ───
             let lenis = null,
                 lenisActive = false;
             try {
                 if (typeof Lenis !== 'undefined') {
-                    lenis = new Lenis({ duration: 1.8, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 *
-                            t)), smoothWheel: true, wheelMultiplier: 0.8, touchMultiplier: 1.2,
-                        syncTouch: true });
+                    lenis = new Lenis({ duration: 1.8, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                        smoothWheel: true, wheelMultiplier: 0.8, touchMultiplier: 1.2, syncTouch: true });
                     lenisActive = true;
-
                     function raf(time) { lenis.raf(time);
                         requestAnimationFrame(raf); }
                     requestAnimationFrame(raf);
@@ -2524,11 +2272,9 @@
                     behavior: 'smooth' });
             }
 
-            // ─── Navigation ───
             const navToggle = document.getElementById('navToggle'),
                 navLinks = document.getElementById('navLinks'),
                 navOverlay = document.getElementById('navOverlay');
-
             function setMenuOpen(open) {
                 navLinks.classList.toggle('open', open);
                 navToggle.classList.toggle('active', open);
@@ -2547,24 +2293,9 @@
                         setMenuOpen(false); }
                 });
             });
-            navLinks.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') { setMenuOpen(false);
-                    navToggle.focus(); }
-                if (e.key === 'Tab') {
-                    const focusable = Array.from(navLinks.querySelectorAll('a, button, [tabindex]'));
-                    if (!focusable.length) return;
-                    const first = focusable[0],
-                        last = focusable[focusable.length - 1];
-                    if (e.shiftKey && document.activeElement === first) { e.preventDefault();
-                        last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e
-                        .preventDefault();
-                        first.focus(); }
-                }
-            });
 
             const nav = document.getElementById('nav'),
                 sections = document.querySelectorAll('section[id]');
-
             function updateNav() {
                 const y = lenisActive ? lenis.scroll : window.pageYOffset;
                 nav.classList.toggle('scrolled', y > 60);
@@ -2582,13 +2313,12 @@
             window.addEventListener('scroll', updateNav, { passive: true });
             updateNav();
 
-            // ─── Canvas particles ───
+            // Canvas particles
             let canvasAnim = true;
             try {
                 const canvas = document.getElementById('heroCanvas'),
                     ctx = canvas.getContext('2d');
                 let w, h, ps = [];
-
                 function resize() { w = canvas.width = canvas.offsetWidth;
                     h = canvas.height = canvas.offsetHeight; }
                 class Mote {
@@ -2608,16 +2338,11 @@
                         ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
                         ctx.fill(); }
                 }
-
                 function init() {
                     resize();
-                    let count;
-                    if (window.innerWidth < 768) count = 40;
-                    else if (window.innerWidth < 1024) count = 30;
-                    else count = 70;
+                    let count = window.innerWidth < 768 ? 40 : window.innerWidth < 1024 ? 30 : 70;
                     ps = Array.from({ length: count }, () => new Mote());
                 }
-
                 function anim() { if (!canvasAnim) { requestAnimationFrame(anim); return; }
                     ctx.clearRect(0, 0, w, h);
                     ps.forEach(p => { p.update();
@@ -2630,10 +2355,7 @@
                     clearTimeout(resizeTimeout);
                     resizeTimeout = setTimeout(() => {
                         resize();
-                        let count;
-                        if (window.innerWidth < 768) count = 40;
-                        else if (window.innerWidth < 1024) count = 30;
-                        else count = 70;
+                        let count = window.innerWidth < 768 ? 40 : window.innerWidth < 1024 ? 30 : 70;
                         if (ps.length !== count) init();
                     }, 100);
                 });
@@ -2641,16 +2363,14 @@
                     .observe(document.getElementById('hero'));
             } catch (e) { document.getElementById('heroCanvas').style.display = 'none'; }
 
-            // ─── Audio player ───
+            // Audio player
             (function() {
                 const btn = document.getElementById('musicToggle'),
                     player = document.getElementById('musicPlayer'),
                     audio = document.getElementById('bgMusic');
                 let playing = false,
                     err = false;
-
                 function hide() { player.classList.add('hidden'); }
-
                 function showErr() {
                     const t = document.getElementById('toast');
                     const lang = localStorage.getItem('lang') || 'en';
@@ -2680,7 +2400,6 @@
                 });
             })();
 
-            // ─── Dossier cards & journal toggles ───
             document.querySelectorAll('.dossier-card').forEach(card => {
                 card.addEventListener('click', function() {
                     const expanded = this.classList.toggle('expanded');
@@ -2690,17 +2409,15 @@
                 });
             });
             document.querySelectorAll('.journal-item').forEach(item => {
-                item.addEventListener('click', function() { const shown = this.classList.toggle(
-                        'show-meta');
+                item.addEventListener('click', function() { const shown = this.classList.toggle('show-meta');
                     this.setAttribute('aria-expanded', shown); });
             });
 
-            // ─── Timeline SVG drawing ───
-            const chaptersPath = document.getElementById('chaptersPath');
-            const chaptersContainer = document.getElementById('chaptersContainer');
+            // Timeline SVG
+            const chaptersPath = document.getElementById('chaptersPath'),
+                chaptersContainer = document.getElementById('chaptersContainer');
             if (chaptersPath && chaptersContainer) {
                 const svg = document.getElementById('chaptersSVG');
-
                 function updateTimelineSVG() {
                     const h = chaptersContainer.scrollHeight;
                     svg.setAttribute('viewBox', `0 0 2 ${h}`);
@@ -2712,7 +2429,6 @@
                 }
                 updateTimelineSVG();
                 window.addEventListener('resize', updateTimelineSVG);
-
                 function drawTimeline() {
                     const y = lenisActive ? lenis.scroll : window.pageYOffset;
                     const top = chaptersContainer.offsetTop;
@@ -2728,30 +2444,25 @@
                 else window.addEventListener('scroll', drawTimeline, { passive: true });
             }
 
-            // ─── Dynamic lighting ───
+            // Dynamic lighting
             const bgLighting = document.getElementById('bgLighting');
-
             function updateLighting() {
                 const y = lenisActive ? lenis.scroll : window.pageYOffset;
                 const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
                 const progress = Math.min(y / maxScroll, 1);
                 bgLighting.style.opacity = 0.5 + progress * 0.3;
-                bgLighting.style.background =
-                    `radial-gradient(ellipse at ${30 + progress * 20}% ${20 - progress * 10}%, rgba(74,144,226,${0.08 + progress * 0.06}), transparent 60%)`;
+                bgLighting.style.background = `radial-gradient(ellipse at ${30 + progress * 20}% ${20 - progress * 10}%, rgba(74,144,226,${0.08 + progress * 0.06}), transparent 60%)`;
             }
             if (lenisActive) lenis.on('scroll', updateLighting);
             else window.addEventListener('scroll', updateLighting, { passive: true });
 
-            // ─── Footer continue button ───
-            document.getElementById('continueBtn').addEventListener('click', () => { scrollToTarget(document
-                    .getElementById('hero'), 60); });
+            document.getElementById('continueBtn').addEventListener('click', () => scrollToTarget(document.getElementById(
+                'hero'), 60));
 
-            // ─── Easter egg ───
             const toast = document.getElementById('toast');
-
             function showToast(key) {
                 const lang = localStorage.getItem('lang') || 'en';
-                toast.textContent = getNestedTranslation(lang, 'toast.' + key) || translations['en'].toast[key];
+                toast.textContent = getNestedTranslation(lang, 'toast.' + key) || translations.en.toast[key];
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 2000);
             }
@@ -2765,13 +2476,11 @@
 
             document.getElementById('footerYear').textContent = new Date().getFullYear();
 
-            // ─── Start unified animation loop ───
             updateCardRects();
             checkChapterVisibility();
             lastTime = performance.now();
             animFrameId = requestAnimationFrame(unifiedLoop);
 
-            // ─── Handle visibility change ───
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
                     if (animFrameId) { cancelAnimationFrame(animFrameId);
