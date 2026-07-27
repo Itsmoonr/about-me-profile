@@ -11,7 +11,12 @@
     <meta name="theme-color" content="#0b0b0f">
     <title>Ross | Enter the World</title>
 
-    <!-- Open Graph / Social Sharing -->
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Open Graph -->
     <meta property="og:title" content="Ross | Enter the World">
     <meta property="og:description" content="Designer, developer, storyteller. From Vietnam to Japan, building bridges between worlds.">
     <meta property="og:image" content="https://moondareal.github.io/about-me-profile/images/ross-portrait.jpg">
@@ -21,7 +26,7 @@
     <meta name="twitter:title" content="Ross | Enter the World">
     <meta name="twitter:description" content="Designer, developer, storyteller. From Vietnam to Japan, building bridges between worlds.">
 
-    <!-- Structured Data (Person schema) -->
+    <!-- Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -42,34 +47,14 @@
     }
     </script>
 
-    <!-- Custom Favicon (with inline fallback) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/favicon.png">
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAHklEQVQ4T2Nk+M9AA0xIGIMFGAkNEg0SDYwaMGoAIwYA6TIBvzvLc6AAAAAASUVORK5CYII=">
 
-    <!-- Preconnect to CDN -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-
-    <!-- Lenis Smooth Scroll (deferred) -->
+    <!-- Lenis Smooth Scroll -->
     <script defer src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
     <style>
-        /* Copyright (c) 2026 Ross Nguyen - MIT License */
-
-        /* ─── prefers-reduced-motion ─── */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            .hero__scroll-dot { animation: none !important; }
-            .visualizer-bar { animation: none !important; }
-            .music-player.playing .visualizer-bar { animation: none !important; }
-            .reveal { opacity: 1 !important; transform: none !important; }
-            .chapter-item, .dossier-card, .journal-item { transition-delay: 0s !important; }
-        }
-
-        /* ─── Reset & Variables ─── */
+        /* ─── Custom Properties ─── */
         :root {
             --bg-deep: #0b0b0f;
             --bg-surface: #111118;
@@ -83,7 +68,8 @@
             --text-muted: #8B8B9A;
             --border-subtle: #202028;
             --border-glow: #2a2a35;
-            --font-display: 'Segoe UI', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+            --font-display: 'Crimson Text', 'Georgia', serif;
+            --font-body: 'Inter', 'Helvetica Neue', system-ui, sans-serif;
             --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
             --radius-sm: 6px;
             --radius-md: 12px;
@@ -101,12 +87,25 @@
             --z-content: 10;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .hero__scroll-dot { animation: none !important; }
+            .visualizer-bar { animation: none !important; }
+            .music-player.playing .visualizer-bar { animation: none !important; }
+            .reveal { opacity: 1 !important; transform: none !important; }
+            .chapter-item, .dossier-card, .journal-item { transition-delay: 0s !important; }
+        }
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: auto; font-size: 17px; -webkit-font-smoothing: antialiased; }
         html.lenis, html.lenis body { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto; }
         body {
-            font-family: var(--font-display);
+            font-family: var(--font-body);
             background-color: var(--bg-deep);
             color: var(--text-primary);
             line-height: 1.8;
@@ -114,33 +113,20 @@
             min-height: 100vh;
             cursor: default;
             -webkit-tap-highlight-color: transparent;
-            font-size: 1rem;
         }
 
-        /* ─── Custom scrollbar ─── */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 3px; }
 
-        /* ─── Focus-visible ─── */
         *:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-blue), 0 0 0 6px rgba(74,144,226,0.2); outline-offset: 2px; }
 
-        /* ─── Grid & Glow ─── */
-        .grid-overlay {
-            position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.08;
-            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
-            background-size: 48px 48px;
-            mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 70%);
+        .bg-lighting {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background: radial-gradient(ellipse at 30% 20%, rgba(74,144,226,0.08), transparent 60%);
+            transition: opacity 0.8s;
         }
-        .cursor-glow {
-            position: fixed; pointer-events: none; z-index: 5; width: 160px; height: 160px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(74,144,226,0.06) 0%, rgba(74,144,226,0.01) 50%, transparent 70%);
-            transform: translate(-50%, -50%); transition: opacity 0.5s; will-change: left, top, transform; opacity: 0;
-        }
-        .cursor-glow.active { opacity: 1; }
-        @media (max-width: 768px) { .cursor-glow { display: none; } }
 
-        /* ─── Skip Link ─── */
         .skip-link {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--accent-blue); color: #000;
             padding: 10px 24px; border-radius: 0 0 var(--radius-md) var(--radius-md); z-index: 1100; font-weight: 700;
@@ -148,7 +134,7 @@
         }
         .skip-link:focus { top: 0; outline: 3px solid #fff; }
 
-        /* ─── Navigation ─── */
+        /* Navigation */
         .nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-nav); display: flex; align-items: center;
             justify-content: space-between; padding: 16px 32px; background: rgba(11,11,15,0.85);
@@ -195,7 +181,6 @@
             .nav { padding: 12px 20px; }
         }
 
-        /* ─── Language Switcher (native select, styled) ─── */
         .lang-custom { position: relative; margin-left: 24px; display: flex; align-items: center; }
         .lang-select {
             appearance: none; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
@@ -214,7 +199,7 @@
         @media (max-width: 768px) { .lang-custom { margin-left: auto; margin-right: 16px; } }
         .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
-        /* ─── Sections ─── */
+        /* Sections */
         .section {
             position: relative; z-index: var(--z-content); padding: var(--space-section-y) var(--space-section-x);
             max-width: 1100px; margin: 0 auto; opacity: 0; transform: translateY(30px);
@@ -223,44 +208,36 @@
         }
         .section.revealed { opacity: 1; transform: translateY(0); }
 
-        /* ─── Hero ─── */
+        /* Hero */
         .hero {
             position: relative; z-index: var(--z-content); min-height: 100vh; display: flex; align-items: center;
             justify-content: flex-start; padding: 120px var(--space-section-x) 80px; opacity: 1; transform: none;
         }
-        .hero__canvas { position: absolute; inset: 0; z-index: var(--z-canvas); pointer-events: none; width: 100%; height: 100%; }
+        .hero__canvas { position: absolute; inset: 0; z-index: var(--z-canvas); pointer-events: none; }
         .hero__content { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 60px; width: 100%; }
         @media (max-width: 768px) { .hero__content { grid-template-columns: 1fr; text-align: center; } }
         .hero__text { max-width: 500px; }
         .hero__name {
-            font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1;
-            background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px;
+            font-family: var(--font-display); font-size: clamp(5rem, 12vw, 8rem); font-weight: 700; line-height: 1;
+            background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 8px; letter-spacing: -0.02em;
         }
         .hero__subtitle { font-size: 1.1rem; font-weight: 400; color: var(--accent-soft); letter-spacing: 0.08em; margin-bottom: 16px; }
         .hero__tagline { font-size: 1.6rem; font-weight: 300; color: var(--text-secondary); letter-spacing: 0.03em; margin-bottom: 12px; line-height: 1.6; }
         .hero__invite { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 28px; line-height: 1.8; font-style: italic; }
         .hero__cta {
-            display: inline-block; padding: 14px 36px;
-            background: var(--accent-gradient);
-            color: #000;
+            display: inline-block; padding: 14px 36px; background: var(--accent-gradient); color: #000;
             text-decoration: none; font-family: var(--font-mono); font-size: 0.95rem; letter-spacing: 0.1em;
-            border-radius: var(--radius-xl); border: none;
-            transition: all var(--transition-smooth); will-change: transform;
+            border-radius: var(--radius-xl); border: none; transition: all var(--transition-smooth); will-change: transform;
             box-shadow: 0 0 12px rgba(74,144,226,0.25);
         }
-        .hero__cta:hover {
-            box-shadow: 0 0 24px rgba(74,144,226,0.4);
-            transform: scale(1.02);
-        }
+        .hero__cta:hover { box-shadow: 0 0 24px rgba(74,144,226,0.4); transform: scale(1.02); }
         .hero__portrait {
             width: 100%; max-width: 500px; aspect-ratio: 3/4; margin: 0 auto; border-radius: var(--radius-lg);
             overflow: hidden; box-shadow: var(--shadow-elevation); background: #1a1a24; position: relative;
+            will-change: transform;
         }
-        .hero__portrait img {
-            width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) contrast(1.05);
-            transition: transform var(--transition-smooth);
-        }
-        .hero__portrait:hover img { transform: scale(1.02); }
+        .hero__portrait img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) contrast(1.05); }
         .hero__portrait-caption {
             position: absolute; bottom: 16px; left: 16px; font-size: 0.8rem; color: rgba(255,255,255,0.6);
             letter-spacing: 0.05em; background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: var(--radius-sm); backdrop-filter: blur(4px);
@@ -269,36 +246,39 @@
             position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column;
             align-items: center; gap: 8px; color: var(--accent-soft); font-size: 0.8rem; letter-spacing: 0.2em; text-transform: lowercase;
         }
-        .hero__scroll-dot {
-            width: 8px; height: 8px; border-radius: 50%; background: var(--accent-gradient);
-            animation: scrollPulse 4.5s ease-in-out infinite;
-        }
+        .hero__scroll-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-gradient); animation: scrollPulse 4.5s ease-in-out infinite; }
         .hero__scroll-line { width: 1px; height: 28px; background: linear-gradient(to bottom, var(--accent-blue), transparent); }
         @keyframes scrollPulse { 0%,100% { transform: translateY(0); opacity:1; } 50% { transform: translateY(12px); opacity:0.35; } }
 
-        /* ─── Section Headers ─── */
+        /* Section Headers */
         .section__header { margin-bottom: 56px; position: relative; }
         .section__label { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.2em; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 8px; }
-        .section__title { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -0.01em; color: #fff; line-height: 1.15; }
+        .section__title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.01em; color: #fff; line-height: 1.15; }
         .section__title .highlight { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .section__divider { width: 60px; height: 3px; background: var(--accent-gradient); border-radius: 2px; margin-top: 16px; }
 
-        /* ─── Profile ─── */
+        /* Profile */
         .profile__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
         @media (max-width: 768px) { .profile__grid { grid-template-columns: 1fr; } }
-        .profile__quote { font-size: 1.7rem; font-weight: 300; color: var(--accent-soft); line-height: 1.6; margin-bottom: 24px; font-style: italic; border-left: 3px solid var(--accent-gradient); padding-left: 20px; }
+        .profile__quote { font-family: var(--font-display); font-style: italic; font-size: 1.8rem; font-weight: 400; color: var(--accent-soft); line-height: 1.6; margin-bottom: 24px; border-left: 3px solid var(--accent-gradient); padding-left: 20px; }
         .profile__info p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; margin-bottom: 16px; }
         .profile__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .profile__stat { background: var(--bg-card); border-radius: var(--radius-md); padding: 16px; border: 1px solid var(--border-subtle); transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast); }
+        .profile__stat {
+            background: var(--bg-card); border-radius: var(--radius-md); padding: 16px; border: 1px solid var(--border-subtle);
+            transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+            display: flex; gap: 8px; align-items: center;
+        }
         .profile__stat:hover { background: var(--bg-card-hover); border-color: var(--accent-blue); box-shadow: 0 4px 12px rgba(74,144,226,0.08); }
-        .profile__stat-label { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em; color: var(--accent-blue); text-transform: uppercase; display: block; }
-        .profile__stat-value { font-size: 1.1rem; font-weight: 600; color: #fff; margin-top: 4px; display: block; }
+        .profile__stat-icon { flex-shrink: 0; width: 24px; height: 24px; opacity: 0.8; }
+        .profile__stat-label { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em; color: var(--accent-blue); text-transform: uppercase; }
+        .profile__stat-sep { color: var(--text-muted); margin: 0 4px; font-family: var(--font-mono); font-size: 0.8rem; }
+        .profile__stat-value { font-size: 1.1rem; font-weight: 600; color: #fff; }
 
-        /* ─── Chapters ─── */
-        .chapters { position: relative; padding-left: 32px; border-left: 2px solid var(--border-subtle); border-image: linear-gradient(to bottom, var(--accent-blue), transparent) 1; }
+        /* Chapters */
+        .chapters { position: relative; padding-left: 48px; }
         .chapters__theme { font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-soft); letter-spacing: 0.1em; margin-bottom: 40px; text-transform: uppercase; }
         .chapter-item {
-            position: relative; margin-bottom: 56px; padding-left: 28px; opacity: 0; transform: translateY(20px);
+            position: relative; margin-bottom: 64px; padding-left: 24px; opacity: 0; transform: translateY(20px);
             transition: opacity 0.6s ease, transform 0.6s ease; will-change: transform, opacity;
         }
         .chapter-item.revealed { opacity: 1; transform: translateY(0); }
@@ -308,40 +288,42 @@
         .chapter-item:nth-child(5) { transition-delay: 0.28s; }
         .chapter-item:nth-child(6) { transition-delay: 0.35s; }
         .chapter-item::before {
-            content: ''; position: absolute; left: -39px; top: 6px; width: 12px; height: 12px; border-radius: 50%;
-            background: var(--accent-gradient); box-shadow: 0 0 10px rgba(74,144,226,0.3); border: 2px solid var(--bg-deep);
+            content: ''; position: absolute; left: -48px; top: 8px; width: 14px; height: 14px; border-radius: 50%;
+            background: var(--accent-gradient); box-shadow: 0 0 12px rgba(74,144,226,0.4); border: 2px solid var(--bg-deep);
             z-index: 2; transition: transform var(--transition-fast);
         }
-        .chapter-item:hover::before { transform: scale(1.2); }
-        .chapter-item--climax {
-            position: relative;
-            border-left: 3px solid var(--accent-gradient);
-            padding-left: 20px;
-            background: none;
-        }
+        .chapter-item:hover::before { transform: scale(1.3); }
+        .chapter-item--climax::before { width: 18px; height: 18px; left: -50px; }
         .chapter-item--climax::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 0% 20%, rgba(74,144,226,0.18), transparent 60%);
-            pointer-events: none;
-            filter: blur(12px);
+            content: ''; position: absolute; top: 0; left: -20px; width: 200px; height: 100%;
+            background: radial-gradient(circle at left center, rgba(74,144,226,0.2), transparent 70%);
+            pointer-events: none; filter: blur(12px);
         }
-        .chapter-item--climax::before { width: 16px; height: 16px; left: -41px; }
         .chapter-number { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.2em; color: var(--accent-blue); text-transform: uppercase; margin-bottom: 4px; }
-        .chapter-title { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .chapter-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
         .chapter-desc { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; }
 
-        /* ─── Missions ─── */
+        /* Timeline SVG – vertical line centred exactly behind the dots */
+        .chapters__svg {
+            position: absolute;
+            left: -41px;   /* centre of the 14px dot at left:-48px is -41px */
+            top: 0;
+            width: 2px;
+            height: 100%;
+            z-index: 0;
+        }
+        .chapters__path { fill: none; stroke: var(--accent-blue); stroke-width: 2; stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 0.1s linear; }
+
+        /* Missions */
         .missions__intro { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 40px; max-width: 600px; line-height: 1.8; }
         .missions__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; contain: layout; }
         @media (max-width: 768px) { .missions__grid { grid-template-columns: 1fr; } }
         .dossier-card {
             position: relative; border-radius: var(--radius-lg); background: var(--bg-card); border: 1px solid var(--border-subtle);
-            padding: 28px; transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; overflow: hidden;
-            display: flex; flex-direction: column; justify-content: space-between; text-decoration: none; color: inherit;
-            outline: none; opacity: 0; transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s, box-shadow 0.4s;
-            font-family: inherit; font-size: inherit; text-align: left; width: 100%; line-height: inherit;
-            overflow: visible; will-change: transform, opacity;
+            padding: 28px; cursor: pointer; display: flex; flex-direction: column; gap: 12px;
+            text-decoration: none; color: inherit; outline: none; font-family: inherit; font-size: inherit; width: 100%;
+            transition: all 0.5s cubic-bezier(0.23,1,0.32,1); overflow: visible;
+            opacity: 0; transform: translateY(20px); will-change: transform, opacity;
         }
         .dossier-card.revealed { opacity: 1; transform: translateY(0); }
         .dossier-card:nth-child(1) { transition-delay: 0.02s; }
@@ -349,34 +331,26 @@
         .dossier-card:nth-child(3) { transition-delay: 0.18s; }
         .dossier-card:nth-child(4) { transition-delay: 0.26s; }
         .dossier-card:hover, .dossier-card:focus-visible { border-color: var(--accent-blue); box-shadow: 0 8px 32px rgba(74,144,226,0.12); transform: translateY(-6px); }
-        .dossier-card::after {
-            content: ''; position: absolute; inset: 0; border-radius: var(--radius-lg);
-            background: radial-gradient(circle at 30% 30%, rgba(74,144,226,0.03), transparent 60%);
-            pointer-events: none; opacity: 0; transition: opacity 0.4s;
-        }
-        .dossier-card:hover::after { opacity: 1; }
         .dossier-card__stamp {
             font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; color: var(--accent-blue);
             border: 1px solid var(--accent-blue); display: inline-block; padding: 2px 10px; border-radius: var(--radius-sm);
-            margin-bottom: 16px; text-transform: uppercase; align-self: flex-start;
+            text-transform: uppercase; align-self: flex-start;
         }
-        .dossier-card__status { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--text-muted); margin-top: 8px; }
-        .dossier-card__title { font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
-        .dossier-card__brief { font-size: 1rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; display: none; }
-        .dossier-card:hover .dossier-card__brief, .dossier-card.expanded .dossier-card__brief { display: block; }
-        .dossier-card.expanded { border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(74,144,226,0.2); }
+        .dossier-card__title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: #fff; }
+        .dossier-card__summary { font-size: 1rem; color: var(--text-secondary); line-height: 1.6; }
+        .dossier-card__full { font-size: 1rem; color: var(--text-secondary); line-height: 1.6; display: none; }
+        .dossier-card.expanded .dossier-card__full { display: block; }
         .dossier-card__tags { display: flex; gap: 8px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+        .dossier-card__status { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--text-muted); }
         .dossier-card__arrow {
             position: absolute; top: 24px; right: 28px; width: 16px; height: 16px;
             border-top: 2px solid var(--text-muted); border-right: 2px solid var(--text-muted);
             transform: rotate(45deg); opacity: 0.5; transition: all var(--transition-smooth); pointer-events: none;
         }
-        .dossier-card:hover .dossier-card__arrow, .dossier-card:focus-visible .dossier-card__arrow {
-            border-color: var(--accent-blue); opacity: 1; transform: rotate(45deg) translate(3px, -3px);
-        }
+        .dossier-card:hover .dossier-card__arrow, .dossier-card:focus-visible .dossier-card__arrow { border-color: var(--accent-blue); opacity: 1; transform: rotate(45deg) translate(3px,-3px); }
         .dossier-card__status-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
 
-        /* ─── Abilities ─── */
+        /* Abilities */
         .abilities__grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
         .ability-tag {
             padding: 12px 22px; border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
@@ -386,16 +360,16 @@
         .ability-tag:hover { transform: translateY(-3px); border-color: var(--accent-blue); background: rgba(74,144,226,0.1); color: #fff; box-shadow: 0 6px 16px rgba(74,144,226,0.1); }
         .ability-category { width: 100%; text-align: left; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-soft); letter-spacing: 0.1em; margin: 20px 0 8px; text-transform: uppercase; }
 
-        /* ─── Journal ─── */
+        /* Journal */
         .journal__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         @media (max-width: 768px) { .journal__grid { grid-template-columns: 1fr 1fr; } }
         .journal-item {
-            aspect-ratio: 4/3; border-radius: var(--radius-md); overflow: visible; position: relative; cursor: pointer;
+            aspect-ratio: 4/3; border-radius: var(--radius-md); position: relative; cursor: pointer;
             background: #1a1a24; transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
             opacity: 0; transform: translateY(20px); will-change: transform, opacity;
             font-family: inherit; font-size: inherit; border: none; padding: 0; text-align: left; outline: none;
+            overflow: hidden;
         }
-        .journal-item__frame { border-radius: var(--radius-md); overflow: hidden; width: 100%; height: 100%; position: relative; }
         .journal-item.revealed { opacity: 1; transform: translateY(0); }
         .journal-item:nth-child(1) { transition-delay: 0.02s; }
         .journal-item:nth-child(2) { transition-delay: 0.07s; }
@@ -404,43 +378,31 @@
         .journal-item:nth-child(5) { transition-delay: 0.22s; }
         .journal-item:nth-child(6) { transition-delay: 0.27s; }
         .journal-item:hover { transform: scale(1.03); box-shadow: 0 12px 28px rgba(0,0,0,0.5); }
-        .journal-item img {
-            width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-smooth);
-        }
+        .journal-item img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-smooth); }
         .journal-item:hover img { transform: scale(1.08); }
         .journal-item__meta {
             position: absolute; bottom: 0; left: 0; right: 0; padding: 16px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.85)); color: #fff; font-size: 0.85rem;
-            opacity: 0; transition: opacity var(--transition-fast); display: flex; justify-content: space-between; align-items: flex-end;
-        }
-        .journal-item:hover .journal-item__meta, .journal-item.show-meta .journal-item__meta, .journal-item:focus-visible .journal-item__meta { opacity: 1; }
-
-        /* Journal custom SVG icon (with accent hover) */
-        .journal-item::after {
-            content: ''; position: absolute; top: 12px; right: 12px; width: 28px; height: 28px;
-            background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); border-radius: 50%;
-            opacity: 0; transition: opacity var(--transition-fast);
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='12' fill='none' stroke='%23fff' stroke-width='2'%3E%3C/circle%3E%3Cline x1='14' y1='8' x2='14' y2='20' stroke='%23fff' stroke-width='2'%3E%3C/line%3E%3Cline x1='8' y1='14' x2='20' y2='14' stroke='%23fff' stroke-width='2'%3E%3C/line%3E%3C/svg%3E");
-            background-size: contain;
-        }
-        .journal-item:hover::after,
-        .journal-item:focus-visible::after {
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: #fff; font-size: 0.85rem;
+            display: flex; flex-direction: column; gap: 4px;
             opacity: 1;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='12' fill='none' stroke='%234A90E2' stroke-width='2'%3E%3C/circle%3E%3Cline x1='14' y1='8' x2='14' y2='20' stroke='%234A90E2' stroke-width='2'%3E%3C/line%3E%3Cline x1='8' y1='14' x2='20' y2='14' stroke='%234A90E2' stroke-width='2'%3E%3C/line%3E%3C/svg%3E");
+            transition: opacity var(--transition-fast);
         }
-
-        /* Image broken fallback */
-        .journal-item img.broken-image { display: none; }
-        .journal-item img.broken-image + .journal-item__meta { opacity: 1; }
-        .journal-item__frame:has(img.broken-image)::before {
-            content: '🖼'; display: flex; align-items: center; justify-content: center;
-            width: 100%; height: 100%; background: linear-gradient(135deg, #1a1a24, #242430);
-            color: var(--text-muted); font-size: 2rem; position: absolute; top: 0; left: 0;
-            border-radius: var(--radius-md);
+        .journal-item__excerpt { font-style: italic; opacity: 0.8; display: block; }
+        .journal-item__full { display: none; }
+        .journal-item:hover .journal-item__full, .journal-item:focus-visible .journal-item__full { display: block; }
+        .journal-item:hover .journal-item__excerpt, .journal-item:focus-visible .journal-item__excerpt { display: none; }
+        .journal-item__icon {
+            position: absolute; top: 12px; right: 12px; width: 28px; height: 28px;
+            border-radius: 50%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity var(--transition-fast);
         }
+        .journal-item:hover .journal-item__icon, .journal-item:focus-visible .journal-item__icon { opacity: 1; }
+        .journal-item__icon svg circle, .journal-item__icon svg line { stroke: #fff; transition: stroke 0.3s; }
+        .journal-item:hover .journal-item__icon svg circle,
+        .journal-item:hover .journal-item__icon svg line { stroke: var(--accent-blue); }
 
-        /* ─── Terminal ─── */
+        /* Terminal */
         .terminal__inner { text-align: center; max-width: 600px; margin: 0 auto; }
         .terminal__email {
             display: inline-block; font-family: var(--font-mono); font-size: 1.6rem; color: var(--accent-blue);
@@ -456,17 +418,16 @@
         }
         .terminal__social-link:hover { transform: translateY(-2px); border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(74,144,226,0.06); box-shadow: 0 4px 16px rgba(74,144,226,0.10); }
 
-        /* ─── Ending ─── */
+        /* Ending */
         .ending {
             text-align: center; padding: 80px 32px 60px; border-top: 1px solid var(--border-subtle);
             position: relative; z-index: var(--z-content);
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease;
         }
         .ending.revealed { opacity: 1; transform: translateY(0); }
         .ending__divider { width: 60px; height: 2px; background: var(--accent-gradient); margin: 0 auto 32px; border-radius: 2px; }
         .ending__title { font-family: var(--font-mono); font-size: 0.9rem; letter-spacing: 0.2em; color: var(--accent-blue); margin-bottom: 12px; }
-        .ending__message { font-size: 2rem; font-weight: 300; color: #fff; margin-bottom: 8px; }
+        .ending__message { font-family: var(--font-display); font-size: 2.2rem; font-weight: 400; color: #fff; margin-bottom: 8px; }
         .ending__continue { font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted); margin-top: 16px; }
         .ending__continue-btn {
             background: none; border: 1px solid var(--accent-blue); border-radius: var(--radius-sm);
@@ -480,7 +441,7 @@
         .copyright a { color: var(--accent-blue); text-decoration: none; border-bottom: 1px dotted var(--accent-blue); transition: color var(--transition-fast); }
         .copyright a:hover { color: #fff; border-bottom-color: #fff; }
 
-        /* ─── Music Player ─── */
+        /* Music Player */
         .music-player {
             position: fixed; bottom: 24px; right: 24px; z-index: 2000; background: rgba(24,24,31,0.9);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-subtle);
@@ -504,26 +465,23 @@
         .visualizer-bar:nth-child(4) { animation-delay: 0.6s; }
         @keyframes visualizer { 0% { height: 6px; } 100% { height: 20px; } }
 
-        /* ─── Toast ─── */
+        /* Toast */
         .toast {
             position: fixed; bottom: 80px; right: 24px; background: var(--bg-card); border: 1px solid var(--accent-blue);
             padding: 12px 20px; border-radius: var(--radius-md); color: #fff; font-family: var(--font-mono);
             font-size: 0.9rem; z-index: 3000; opacity: 0; transform: translateY(10px);
-            transition: opacity 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: opacity 0.35s cubic-bezier(0.34,1.56,0.64,1), transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
         }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        /* ─── Utilities ─── */
         .reveal { opacity: 1; transform: none; }
-        @media (prefers-reduced-motion: reduce) { .hero__canvas, .cursor-glow { display: none; } }
     </style>
 </head>
 <body>
     <a href="#main-content" class="skip-link" data-i18n="skipLink">Skip to Content</a>
-    <div class="grid-overlay" aria-hidden="true"></div>
-    <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+    <div class="bg-lighting" id="bgLighting"></div>
 
-    <header class="nav" id="nav" role="banner" aria-label="Main navigation">
+    <header class="nav" id="nav" role="banner">
         <a href="#hero" class="nav__logo" aria-label="Ross Home">R</a>
         <div style="display: flex; align-items: center;">
             <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
@@ -553,18 +511,18 @@
 
     <main id="main-content">
         <!-- Hero -->
-        <section class="hero" id="hero" aria-labelledby="hero-heading">
+        <section class="hero" id="hero">
             <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
             <div class="hero__content">
                 <div class="hero__text">
-                    <h1 class="hero__name" id="hero-heading">ROSS</h1>
+                    <h1 class="hero__name">ROSS</h1>
                     <p class="hero__subtitle" data-i18n="hero.subtitle">Designer · Developer · Storyteller</p>
                     <p class="hero__tagline" data-i18n="hero.tagline">From Vietnam's rainy season to Tokyo's neon nights, I've been living between two worlds, trying to build something that connects them.</p>
                     <p class="hero__invite" data-i18n="hero.invite">Welcome to my world. Every line of code, every photo, every story here is a little piece of me.</p>
                     <a href="#profile" class="hero__cta" data-i18n="hero.cta">Begin Journey</a>
                 </div>
-                <div class="hero__portrait">
-                    <img src="images/ross-portrait.jpg" alt="Ross Nguyen, a young man standing in Tokyo at dusk, looking thoughtfully into the distance" fetchpriority="high" width="500" height="667" onerror="this.style.display='none'">
+                <div class="hero__portrait" id="heroPortrait">
+                    <img src="images/ross-portrait.jpg" alt="Ross, a Vietnamese student in Japan" fetchpriority="high" width="500" height="667" onerror="this.style.display='none'">
                     <span class="hero__portrait-caption" data-i18n="hero.caption">Tokyo, 2023, a rare quiet moment</span>
                 </div>
             </div>
@@ -576,10 +534,10 @@
         </section>
 
         <!-- Profile -->
-        <section class="section" id="profile" aria-labelledby="profile-heading">
+        <section class="section" id="profile">
             <div class="section__header">
                 <p class="section__label" data-i18n="profile.label">Player Profile</p>
-                <h2 class="section__title" id="profile-heading"><span data-i18n="profile.title">Who is <span class="highlight">Ross?</span></span></h2>
+                <h2 class="section__title" data-i18n="profile.title">Who is <span class="highlight">Ross?</span></h2>
                 <div class="section__divider"></div>
             </div>
             <div class="profile__grid">
@@ -592,26 +550,51 @@
                     </div>
                 </div>
                 <div class="profile__stats">
-                    <div class="profile__stat"><span class="profile__stat-label" data-i18n="profile.stat.codename">Codename</span><span class="profile__stat-value">Ross</span></div>
-                    <div class="profile__stat"><span class="profile__stat-label" data-i18n="profile.stat.location">Location</span><span class="profile__stat-value">Japan</span></div>
-                    <div class="profile__stat"><span class="profile__stat-label" data-i18n="profile.stat.origin">Origin</span><span class="profile__stat-value">Vietnam</span></div>
-                    <div class="profile__stat"><span class="profile__stat-label" data-i18n="profile.stat.path">Path</span><span class="profile__stat-value" data-i18n="profile.stat.pathValue">University Student</span></div>
-                    <div class="profile__stat"><span class="profile__stat-label" data-i18n="profile.stat.essence">Essence</span><span class="profile__stat-value" data-i18n="profile.stat.essenceValue">Curious, deeply empathetic, meticulous about details</span></div>
-                    <div class="profile__stat"><span class="profile__stat-label" data-i18n="profile.stat.spec">Specialization</span><span class="profile__stat-value" data-i18n="profile.stat.specValue">Tech × Design × Story</span></div>
-                    <div class="profile__stat"><span class="profile__stat-label" data-i18n="profile.stat.listening">Currently listening to</span><span class="profile__stat-value" data-i18n="profile.stat.listeningValue">Lo-fi / Rain sounds</span></div>
-                    <div class="profile__stat"><span class="profile__stat-label" data-i18n="profile.stat.chapter">Current chapter</span><span class="profile__stat-value" data-i18n="profile.stat.chapterValue">Trying to build bridges between cultures</span></div>
+                    <div class="profile__stat">
+                        <div class="profile__stat-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7"/></svg></div>
+                        <div><span class="profile__stat-label" data-i18n="profile.stat.codename">Codename</span><span class="profile__stat-sep">·</span><span class="profile__stat-value">Ross</span></div>
+                    </div>
+                    <div class="profile__stat">
+                        <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7-7h4m12 0h-4"/></svg></div>
+                        <div><span class="profile__stat-label" data-i18n="profile.stat.location">Location</span><span class="profile__stat-sep">·</span><span class="profile__stat-value">Japan</span></div>
+                    </div>
+                    <div class="profile__stat">
+                        <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M5 9l7-5 7 5v12H5V9z"/></svg></div>
+                        <div><span class="profile__stat-label" data-i18n="profile.stat.origin">Origin</span><span class="profile__stat-sep">·</span><span class="profile__stat-value">Vietnam</span></div>
+                    </div>
+                    <div class="profile__stat">
+                        <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20v-7H6.5A2.5 2.5 0 014 7.5v12z"/></svg></div>
+                        <div><span class="profile__stat-label" data-i18n="profile.stat.path">Path</span><span class="profile__stat-sep">·</span><span class="profile__stat-value" data-i18n="profile.stat.pathValue">University Student</span></div>
+                    </div>
+                    <div class="profile__stat">
+                        <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M12 2l3 6 6 1-4 4 1 6-5-3-5 3 1-6-4-4 6-1 3-6z"/></svg></div>
+                        <div><span class="profile__stat-label" data-i18n="profile.stat.essence">Essence</span><span class="profile__stat-sep">·</span><span class="profile__stat-value" data-i18n="profile.stat.essenceValue">Curious, Empathetic, Perfectionist</span></div>
+                    </div>
+                    <div class="profile__stat">
+                        <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
+                        <div><span class="profile__stat-label" data-i18n="profile.stat.spec">Specialization</span><span class="profile__stat-sep">·</span><span class="profile__stat-value" data-i18n="profile.stat.specValue">Tech × Design × Story</span></div>
+                    </div>
+                    <div class="profile__stat">
+                        <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+                        <div><span class="profile__stat-label" data-i18n="profile.stat.listening">Currently listening to</span><span class="profile__stat-sep">·</span><span class="profile__stat-value" data-i18n="profile.stat.listeningValue">Lo-fi / Rain sounds</span></div>
+                    </div>
+                    <div class="profile__stat">
+                        <div class="profile__stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+                        <div><span class="profile__stat-label" data-i18n="profile.stat.chapter">Current chapter</span><span class="profile__stat-sep">·</span><span class="profile__stat-value" data-i18n="profile.stat.chapterValue">Trying to build bridges between cultures</span></div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Chapters -->
-        <section class="section" id="chapters" aria-labelledby="chapters-heading">
+        <section class="section" id="chapters">
             <div class="section__header">
                 <p class="section__label" data-i18n="chapters.label">Story Mode</p>
-                <h2 class="section__title" id="chapters-heading"><span data-i18n="chapters.title">The <span class="highlight">chapters</span></span></h2>
+                <h2 class="section__title" data-i18n="chapters.title">The <span class="highlight">chapters</span></h2>
                 <div class="section__divider"></div>
             </div>
-            <div class="chapters">
+            <div class="chapters" id="chaptersContainer">
+                <svg class="chapters__svg" id="chaptersSVG" preserveAspectRatio="none"><path class="chapters__path" id="chaptersPath"/></svg>
                 <p class="chapters__theme" data-i18n="chapters.theme">From Vietnam to the world, six chapters of figuring things out</p>
                 <div class="chapter-item">
                     <p class="chapter-number" data-i18n="chapters.1.number">Chapter I</p>
@@ -647,10 +630,10 @@
         </section>
 
         <!-- Missions -->
-        <section class="section" id="missions" aria-labelledby="missions-heading">
+        <section class="section" id="missions">
             <div class="section__header">
                 <p class="section__label" data-i18n="missions.label">Mission Archive</p>
-                <h2 class="section__title" id="missions-heading"><span data-i18n="missions.title">Classified <span class="highlight">dossiers</span></span></h2>
+                <h2 class="section__title" data-i18n="missions.title">Classified <span class="highlight">dossiers</span></h2>
                 <div class="section__divider"></div>
             </div>
             <p class="missions__intro" data-i18n="missions.intro">A few missions I've taken on along the way, each one part of my own origin story.</p>
@@ -659,7 +642,8 @@
                     <span class="dossier-card__stamp" data-i18n="missions.1.stamp">Top Secret</span>
                     <span class="dossier-card__arrow" aria-hidden="true"></span>
                     <h3 class="dossier-card__title" data-i18n="missions.1.title">Operation: Think Fraud</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.1.brief">I've seen how online scams work from the inside — that insight now fuels my mission to protect others. I've helped 50,000+ people recognise and avoid digital fraud.</p>
+                    <p class="dossier-card__summary" data-i18n="missions.1.summary">Helping over 50,000 people avoid getting scammed online.</p>
+                    <p class="dossier-card__full" data-i18n="missions.1.brief">I used to know how to scam people out of a decent amount of money. That past doesn't weigh on me though, if anything, it's exactly why I ended up helping over 50,000 people avoid getting scammed online. The best way to fight the darkness is to actually understand it, then become the light yourself.</p>
                     <div class="dossier-card__tags" data-i18n="missions.1.tags">Anti-Fraud · Community · Vietnam</div>
                     <span class="dossier-card__status" data-i18n="missions.1.status">Status: Complete</span>
                     <span class="dossier-card__status-live" aria-live="polite"></span>
@@ -668,7 +652,8 @@
                     <span class="dossier-card__stamp" data-i18n="missions.2.stamp">Classified</span>
                     <span class="dossier-card__arrow" aria-hidden="true"></span>
                     <h3 class="dossier-card__title" data-i18n="missions.2.title">Project: Restaurant Cashier</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.2.brief">Three years handling the register and the books. Every shift taught me a little more about responsibility. Getting every single cent to match wasn't about being perfect, it was my way of showing I actually cared about doing it right.</p>
+                    <p class="dossier-card__summary" data-i18n="missions.2.summary">Three years handling the register and the books.</p>
+                    <p class="dossier-card__full" data-i18n="missions.2.brief">Three years handling the register and the books. Every shift taught me a little more about responsibility. Getting every single cent to match wasn't about being perfect, it was my way of showing I actually cared about doing it right.</p>
                     <div class="dossier-card__tags" data-i18n="missions.2.tags">Finance · Trust · Ramen House</div>
                     <span class="dossier-card__status" data-i18n="missions.2.status">Status: Complete</span>
                     <span class="dossier-card__status-live" aria-live="polite"></span>
@@ -677,7 +662,8 @@
                     <span class="dossier-card__stamp" data-i18n="missions.3.stamp">Confidential</span>
                     <span class="dossier-card__arrow" aria-hidden="true"></span>
                     <h3 class="dossier-card__title" data-i18n="missions.3.title">Mission: Global Elite</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.3.brief">Not everyone who picks up a mouse makes it to the top, and practice alone won't get you there either. It's a mix of a little raw talent and a lot of grinding. Reflexes plus stubborn practice is what got me here.</p>
+                    <p class="dossier-card__summary" data-i18n="missions.3.summary">Reaching the top through talent and relentless practice.</p>
+                    <p class="dossier-card__full" data-i18n="missions.3.brief">Not everyone who picks up a mouse makes it to the top, and practice alone won't get you there either. It's a mix of a little raw talent and a lot of grinding. Reflexes plus stubborn practice is what got me here.</p>
                     <div class="dossier-card__tags" data-i18n="missions.3.tags">Tactics · CS2 · Faceit Lvl 10</div>
                     <span class="dossier-card__status" data-i18n="missions.3.status">Status: Active</span>
                     <span class="dossier-card__status-live" aria-live="polite"></span>
@@ -686,7 +672,8 @@
                     <span class="dossier-card__stamp" data-i18n="missions.4.stamp">Prototype</span>
                     <span class="dossier-card__arrow" aria-hidden="true"></span>
                     <h3 class="dossier-card__title" data-i18n="missions.4.title">Codename: Polyglot</h3>
-                    <p class="dossier-card__brief" data-i18n="missions.4.brief">7+ years living abroad, three languages down, working on a fourth. To me, language isn't just vocabulary, it's basically a door into someone else's world.</p>
+                    <p class="dossier-card__summary" data-i18n="missions.4.summary">Four languages, endless connections.</p>
+                    <p class="dossier-card__full" data-i18n="missions.4.brief">7+ years living abroad, three languages down, working on a fourth. To me, language isn't just vocabulary, it's basically a door into someone else's world.</p>
                     <div class="dossier-card__tags" data-i18n="missions.4.tags">Vietnamese · Japanese · English · German</div>
                     <span class="dossier-card__status" data-i18n="missions.4.status">Status: Active</span>
                     <span class="dossier-card__status-live" aria-live="polite"></span>
@@ -695,10 +682,10 @@
         </section>
 
         <!-- Abilities -->
-        <section class="section" id="abilities" aria-labelledby="abilities-heading">
+        <section class="section" id="abilities">
             <div class="section__header">
                 <p class="section__label" data-i18n="abilities.label">Abilities</p>
-                <h2 class="section__title" id="abilities-heading"><span data-i18n="abilities.title">Unlocked <span class="highlight">skills</span></span></h2>
+                <h2 class="section__title" data-i18n="abilities.title">Unlocked <span class="highlight">skills</span></h2>
                 <div class="section__divider"></div>
             </div>
             <div class="abilities__grid">
@@ -720,57 +707,75 @@
         </section>
 
         <!-- Journal -->
-        <section class="section" id="journal" aria-labelledby="journal-heading">
+        <section class="section" id="journal">
             <div class="section__header">
                 <p class="section__label" data-i18n="journal.label">Cinematic Journal</p>
-                <h2 class="section__title" id="journal-heading"><span data-i18n="journal.title">Frames <span class="highlight">of life</span></span></h2>
+                <h2 class="section__title" data-i18n="journal.title">Frames <span class="highlight">of life</span></h2>
                 <div class="section__divider"></div>
             </div>
             <div class="journal__grid">
-                <button class="journal-item" aria-expanded="false" aria-label="Tokyo, 2022. First snowfall. Click to show caption">
-                    <div class="journal-item__frame">
-                        <img src="images/gallery-1.jpg" alt="Tokyo first snowfall" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
-                        <div class="journal-item__meta"><span>Tokyo</span><span data-i18n="journal.1.desc">2022 · The first time Tokyo turned white with snow, I realized I wasn't a stranger here anymore.</span></div>
+                <button class="journal-item" aria-expanded="false" aria-label="Tokyo, 2022. First snowfall.">
+                    <img src="images/gallery-1.jpg" alt="Tokyo first snowfall" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
+                    <div class="journal-item__meta">
+                        <span>Tokyo</span>
+                        <span class="journal-item__excerpt">2022 · The first time Tokyo turned white with snow...</span>
+                        <span class="journal-item__full" data-i18n="journal.1.desc">2022 · The first time Tokyo turned white with snow, I realized I wasn't a stranger here anymore.</span>
                     </div>
+                    <div class="journal-item__icon"><svg width="20" height="20" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="none" stroke-width="2"/><line x1="14" y1="8" x2="14" y2="20" stroke-width="2"/><line x1="8" y1="14" x2="20" y2="14" stroke-width="2"/></svg></div>
                 </button>
-                <button class="journal-item" aria-expanded="false" aria-label="University, 2024. Late-night design work. Click to show caption">
-                    <div class="journal-item__frame">
-                        <img src="images/gallery-2.jpg" alt="Late night design" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
-                        <div class="journal-item__meta"><span>University</span><span data-i18n="journal.2.desc">2024 · Late-night design work, when the world goes quiet and my head gets loud with ideas.</span></div>
+                <button class="journal-item" aria-expanded="false" aria-label="University, 2024. Late-night design work.">
+                    <img src="images/gallery-2.jpg" alt="Late night design" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
+                    <div class="journal-item__meta">
+                        <span>University</span>
+                        <span class="journal-item__excerpt">2024 · Late-night design work, when the world goes quiet...</span>
+                        <span class="journal-item__full" data-i18n="journal.2.desc">2024 · Late-night design work, when the world goes quiet and my head gets loud with ideas.</span>
                     </div>
+                    <div class="journal-item__icon"><svg width="20" height="20" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="none" stroke-width="2"/><line x1="14" y1="8" x2="14" y2="20" stroke-width="2"/><line x1="8" y1="14" x2="20" y2="14" stroke-width="2"/></svg></div>
                 </button>
-                <button class="journal-item" aria-expanded="false" aria-label="Osaka, 2023. Neon rain. Click to show caption">
-                    <div class="journal-item__frame">
-                        <img src="images/gallery-3.jpg" alt="Osaka neon rain" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
-                        <div class="journal-item__meta"><span>Osaka</span><span data-i18n="journal.3.desc">2023 · Neon rain, a city that never really stops dreaming.</span></div>
+                <button class="journal-item" aria-expanded="false" aria-label="Osaka, 2023. Neon rain.">
+                    <img src="images/gallery-3.jpg" alt="Osaka neon rain" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
+                    <div class="journal-item__meta">
+                        <span>Osaka</span>
+                        <span class="journal-item__excerpt">2023 · Neon rain, a city that never really stops dreaming...</span>
+                        <span class="journal-item__full" data-i18n="journal.3.desc">2023 · Neon rain, a city that never really stops dreaming.</span>
                     </div>
+                    <div class="journal-item__icon"><svg width="20" height="20" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="none" stroke-width="2"/><line x1="14" y1="8" x2="14" y2="20" stroke-width="2"/><line x1="8" y1="14" x2="20" y2="14" stroke-width="2"/></svg></div>
                 </button>
-                <button class="journal-item" aria-expanded="false" aria-label="Studio, 2024. Quiet hour. Click to show caption">
-                    <div class="journal-item__frame">
-                        <img src="images/gallery-4.jpg" alt="Quiet hour in the studio" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
-                        <div class="journal-item__meta"><span>Studio</span><span data-i18n="journal.4.desc">2024 · That quiet hour when ideas start turning into something real.</span></div>
+                <button class="journal-item" aria-expanded="false" aria-label="Studio, 2024. Quiet hour.">
+                    <img src="images/gallery-4.jpg" alt="Quiet hour in the studio" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
+                    <div class="journal-item__meta">
+                        <span>Studio</span>
+                        <span class="journal-item__excerpt">2024 · That quiet hour when ideas start turning into something real...</span>
+                        <span class="journal-item__full" data-i18n="journal.4.desc">2024 · That quiet hour when ideas start turning into something real.</span>
                     </div>
+                    <div class="journal-item__icon"><svg width="20" height="20" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="none" stroke-width="2"/><line x1="14" y1="8" x2="14" y2="20" stroke-width="2"/><line x1="8" y1="14" x2="20" y2="14" stroke-width="2"/></svg></div>
                 </button>
-                <button class="journal-item" aria-expanded="false" aria-label="People, 2023. A stranger's smile. Click to show caption">
-                    <div class="journal-item__frame">
-                        <img src="images/gallery-5.jpg" alt="Stranger's smile" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
-                        <div class="journal-item__meta"><span>People</span><span data-i18n="journal.5.desc">2023 · A stranger's smile, just enough to remind me connection is everywhere if you look.</span></div>
+                <button class="journal-item" aria-expanded="false" aria-label="People, 2023. A stranger's smile.">
+                    <img src="images/gallery-5.jpg" alt="Stranger's smile" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
+                    <div class="journal-item__meta">
+                        <span>People</span>
+                        <span class="journal-item__excerpt">2023 · A stranger's smile, just enough to remind me...</span>
+                        <span class="journal-item__full" data-i18n="journal.5.desc">2023 · A stranger's smile, just enough to remind me connection is everywhere if you look.</span>
                     </div>
+                    <div class="journal-item__icon"><svg width="20" height="20" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="none" stroke-width="2"/><line x1="14" y1="8" x2="14" y2="20" stroke-width="2"/><line x1="8" y1="14" x2="20" y2="14" stroke-width="2"/></svg></div>
                 </button>
-                <button class="journal-item" aria-expanded="false" aria-label="Kyoto, 2022. Temple of light. Click to show caption">
-                    <div class="journal-item__frame">
-                        <img src="images/gallery-6.jpg" alt="Kyoto temple of light" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
-                        <div class="journal-item__meta"><span>Kyoto</span><span data-i18n="journal.6.desc">2022 · A temple lit up at night, one still moment in a world that never slows down.</span></div>
+                <button class="journal-item" aria-expanded="false" aria-label="Kyoto, 2022. Temple of light.">
+                    <img src="images/gallery-6.jpg" alt="Kyoto temple of light" loading="lazy" width="400" height="300" onerror="this.classList.add('broken-image')">
+                    <div class="journal-item__meta">
+                        <span>Kyoto</span>
+                        <span class="journal-item__excerpt">2022 · A temple lit up at night, one still moment...</span>
+                        <span class="journal-item__full" data-i18n="journal.6.desc">2022 · A temple lit up at night, one still moment in a world that never slows down.</span>
                     </div>
+                    <div class="journal-item__icon"><svg width="20" height="20" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="none" stroke-width="2"/><line x1="14" y1="8" x2="14" y2="20" stroke-width="2"/><line x1="8" y1="14" x2="20" y2="14" stroke-width="2"/></svg></div>
                 </button>
             </div>
         </section>
 
         <!-- Terminal -->
-        <section class="section" id="terminal" aria-labelledby="terminal-heading">
+        <section class="section" id="terminal">
             <div class="section__header">
                 <p class="section__label" data-i18n="terminal.label">Communication Terminal</p>
-                <h2 class="section__title" id="terminal-heading"><span data-i18n="terminal.title">Open <span class="highlight">channel</span></span></h2>
+                <h2 class="section__title" data-i18n="terminal.title">Open <span class="highlight">channel</span></h2>
                 <div class="section__divider"></div>
             </div>
             <div class="terminal__inner">
@@ -796,16 +801,12 @@
         </p>
         <p class="ending__reflection" data-i18n="ending.reflection">Thanks for walking through these pages with me. If you saw a bit of your own journey somewhere in here, I'd genuinely love to hear about it. Let's write the next chapter together.</p>
         <p class="ending__signature" data-i18n="ending.signature">Take care, Ross</p>
-        <p class="copyright">
-            &copy; <span id="footerYear"></span> 
-            <span style="color: var(--accent-blue); font-weight: 600; letter-spacing: 0.02em;">Ross Nguyen</span>. 
-            Licensed under the <a href="LICENSE" style="color:var(--accent-blue); text-decoration:underline; text-underline-offset: 2px;">MIT License</a>.
-        </p>
+        <p class="copyright">&copy; <span id="footerYear"></span> <span style="color: var(--accent-blue); font-weight: 600;">Ross Nguyen</span>. Licensed under the <a href="LICENSE" style="color:var(--accent-blue);">MIT License</a>.</p>
     </footer>
 
     <!-- Music Player -->
     <div class="music-player" id="musicPlayer" title="Ambient Soundtrack">
-        <button class="music-player__btn" id="musicToggle" aria-label="Play ambient soundtrack" title="Play ambient soundtrack">▶</button>
+        <button class="music-player__btn" id="musicToggle" aria-label="Play ambient soundtrack">▶</button>
         <div class="music-player__visualizer" aria-hidden="true">
             <div class="visualizer-bar" style="height:8px;"></div>
             <div class="visualizer-bar" style="height:14px;"></div>
@@ -813,103 +814,159 @@
             <div class="visualizer-bar" style="height:12px;"></div>
         </div>
     </div>
-    <audio id="bgMusic" loop preload="auto">
-        <source src="audio/ambient.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bgMusic" loop preload="auto"><source src="audio/ambient.mp3" type="audio/mpeg"></audio>
 
     <!-- Toast -->
     <div class="toast" id="toast" role="alert" aria-live="polite" aria-atomic="true" data-i18n="toast.easterEgg">✦ Secret found: Curious explorer, confirmed</div>
 
-    <!-- Noscript fallback -->
     <noscript>
-        <div style="background:var(--bg-surface); color:var(--text-primary); padding:2rem; text-align:center; font-family:var(--font-display);">
+        <div style="background:var(--bg-surface); color:var(--text-primary); padding:2rem; text-align:center;">
             <p>JavaScript is required for the full experience. You can still contact me:</p>
             <p>Email: <a href="mailto:moonsicson&#64;gmail.com" style="color:var(--accent-blue);">moonsicson&#64;gmail.com</a></p>
         </div>
     </noscript>
 
     <script>
-        // Copyright (c) 2026 Ross Nguyen - MIT License
-        document.addEventListener('DOMContentLoaded', function() {
-            // Full translations (English, Vietnamese, Japanese)
-            const translations = {
-                en: {
-                    skipLink: "Skip to Content",
-                    hero: { subtitle: "Designer · Developer · Storyteller", tagline: "From Vietnam's rainy season to Tokyo's neon nights, I've been living between two worlds, trying to build something that connects them.", invite: "Welcome to my world. Every line of code, every photo, every story here is a little piece of me.", cta: "Begin Journey", caption: "Tokyo, 2023, a rare quiet moment", scroll: "scroll" },
-                    nav: { profile: "Profile", chapters: "Chapters", missions: "Missions", abilities: "Abilities", journal: "Journal", terminal: "Terminal" },
-                    profile: { label: "Player Profile", title: "Who is <span class='highlight'>Ross?</span>", quote: "\"I'm not just building websites. I'm trying to build places where people feel like they belong.\"", desc: "I grew up in a small town in Vietnam, the kind of place where it rained more often than not. At sixteen, I packed a bag and moved to Japan with a head full of dreams I couldn't even put into words yet.", desc2: "These days I'm a university student, a designer, and sometimes a storyteller too. I shoot film because I want to hold onto the small moments most people scroll right past. I write code because I want to make things that feel a little human. I design because I genuinely believe clarity is its own kind of kindness.", desc3: "This is my story. It's nowhere near finished.",
-                        stat: { codename: "Codename", location: "Location", origin: "Origin", path: "Path", pathValue: "University Student", essence: "Essence", essenceValue: "Curious, deeply empathetic, meticulous about details", spec: "Specialization", specValue: "Tech × Design × Story", listening: "Currently listening to", listeningValue: "Lo-fi / Rain sounds", chapter: "Current chapter", chapterValue: "Trying to build bridges between cultures" }
-                    },
-                    chapters: { label: "Story Mode", title: "The <span class='highlight'>chapters</span>", theme: "From Vietnam to the world, six chapters of figuring things out", 1:{number:"Chapter I",title:"Homeland · Vietnam",desc:"I grew up under a sky that cried a lot. The monsoon taught me early on that beauty and intensity usually show up together. I learned to spot stories in ordinary things, an old man's smile, the hum of a motorbike passing by. Creativity, for me, started as just wanting to hold onto moments before they slipped away."}, 2:{number:"Chapter II",title:"The Leap · Arrival in Japan",desc:"Sixteen years old, one backpack, and a head full of questions I couldn't have explained in any language. Loneliness felt like a blank page back then, and slowly I started filling it in, with new friends, new words, and this quiet realization that maybe I actually belonged somewhere I never expected to."}, 3:{number:"Chapter III",title:"Awakening · High School Years",desc:"High school was where I figured out I could hold two whole identities at once. Calculus by day, writing stories nobody would ever read by night. I shot my first roll of film, built my first website, tiny little universes, but they were mine."}, 4:{number:"Chapter IV",title:"Guardian · Cybersecurity Volunteer",desc:"For three years, I stood between everyday people and the ones trying to take advantage of them. Nobody made me do it. I just believed technology should protect people, not betray them. It taught me that engineering, at its core, is really just ethics you practice every day."}, 5:{number:"Chapter V",title:"Scholar · University",desc:"University taught me design isn't about making things pretty. It's about making someone feel seen. I still walk these campus halls, notebooks full of ideas somewhere between code and poetry."}, 6:{number:"Chapter VI",title:"Horizon · What's Next",desc:"I'm getting ready to take what I've learned out into the world, not as an expert, but as someone who still thinks curiosity is the most useful skill there is. New cultures, new people to work with, and a future where design doesn't really care about borders."} },
-                    missions: { label: "Mission Archive", title: "Classified <span class='highlight'>dossiers</span>", intro: "A few missions I've taken on along the way, each one part of my own origin story.", 1:{stamp:"Top Secret",title:"Operation: Think Fraud",brief:"I've seen how online scams work from the inside — that insight now fuels my mission to protect others. I've helped 50,000+ people recognise and avoid digital fraud.",tags:"Anti-Fraud · Community · Vietnam",status:"Status: Complete"}, 2:{stamp:"Classified",title:"Project: Restaurant Cashier",brief:"Three years handling the register and the books. Every shift taught me a little more about responsibility. Getting every single cent to match wasn't about being perfect, it was my way of showing I actually cared about doing it right.",tags:"Finance · Trust · Ramen House",status:"Status: Complete"}, 3:{stamp:"Confidential",title:"Mission: Global Elite",brief:"Not everyone who picks up a mouse makes it to the top, and practice alone won't get you there either. It's a mix of a little raw talent and a lot of grinding. Reflexes plus stubborn practice is what got me here.",tags:"Tactics · CS2 · Faceit Lvl 10",status:"Status: Active"}, 4:{stamp:"Prototype",title:"Codename: Polyglot",brief:"7+ years living abroad, three languages down, working on a fourth. To me, language isn't just vocabulary, it's basically a door into someone else's world.",tags:"Vietnamese · Japanese · English · German",status:"Status: Active"} },
-                    abilities: { label: "Abilities", title: "Unlocked <span class='highlight'>skills</span>", cat1:"The Craft", skill1:"Creative Thinking", skill2:"Storytelling", skill3:"UI/UX Design", skill4:"Photography", skill5:"Video Editing", cat2:"The Tools", skill6:"Web Development", skill7:"Research", skill8:"Cybersecurity Basics", cat3:"The Voice", lang:{vi:"Vietnamese (Native)",en:"English (Fluent)",ja:"Japanese (Conversational)"} },
-                    journal: { label: "Cinematic Journal", title: "Frames <span class='highlight'>of life</span>", 1:{desc:"2022 · The first time Tokyo turned white with snow, I realized I wasn't a stranger here anymore."}, 2:{desc:"2024 · Late-night design work, when the world goes quiet and my head gets loud with ideas."}, 3:{desc:"2023 · Neon rain, a city that never really stops dreaming."}, 4:{desc:"2024 · That quiet hour when ideas start turning into something real."}, 5:{desc:"2023 · A stranger's smile, just enough to remind me connection is everywhere if you look."}, 6:{desc:"2022 · A temple lit up at night, one still moment in a world that never slows down."} },
-                    terminal: { label: "Communication Terminal", title: "Open <span class='highlight'>channel</span>", invite: "Collabs, freelance work, or just a chat, I'm always up for it." },
-                    ending: { title: "Save Point", message: "The story's still going.", continue: "Continue?", reflection: "Thanks for walking through these pages with me. If you saw a bit of your own journey somewhere in here, I'd genuinely love to hear about it. Let's write the next chapter together.", signature: "Take care, Ross" },
-                    toast: { easterEgg: "✦ Secret found: Curious explorer, confirmed", gameOver: "💀 Game Over. Press Y to respawn.", respawn: "✦ Secret found: Curious explorer, confirmed", audioError: "⚠ Audio unavailable" }
+        // Translations – original wording fully preserved
+        const translations = {
+            en: {
+                skipLink: "Skip to Content",
+                hero: { subtitle: "Designer · Developer · Storyteller", tagline: "From Vietnam's rainy season to Tokyo's neon nights, I've been living between two worlds, trying to build something that connects them.", invite: "Welcome to my world. Every line of code, every photo, every story here is a little piece of me.", cta: "Begin Journey", caption: "Tokyo, 2023, a rare quiet moment", scroll: "scroll" },
+                nav: { profile: "Profile", chapters: "Chapters", missions: "Missions", abilities: "Abilities", journal: "Journal", terminal: "Terminal" },
+                profile: { label: "Player Profile", title: "Who is <span class='highlight'>Ross?</span>", quote: "\"I'm not just building websites. I'm trying to build places where people feel like they belong.\"", desc: "I grew up in a small town in Vietnam, the kind of place where it rained more often than not. At sixteen, I packed a bag and moved to Japan with a head full of dreams I couldn't even put into words yet.", desc2: "These days I'm a university student, a designer, and sometimes a storyteller too. I shoot film because I want to hold onto the small moments most people scroll right past. I write code because I want to make things that feel a little human. I design because I genuinely believe clarity is its own kind of kindness.", desc3: "This is my story. It's nowhere near finished.",
+                    stat: { codename: "Codename", location: "Location", origin: "Origin", path: "Path", pathValue: "University Student", essence: "Essence", essenceValue: "Curious, Empathetic, Perfectionist", spec: "Specialization", specValue: "Tech × Design × Story", listening: "Currently listening to", listeningValue: "Lo-fi / Rain sounds", chapter: "Current chapter", chapterValue: "Trying to build bridges between cultures" }
                 },
-                vi: {
-                    skipLink: "Bỏ qua đến Nội dung",
-                    hero: { subtitle: "Designer · Developer · Người kể chuyện", tagline: "Từ những cơn mưa mùa ở Việt Nam đến những đêm neon ở Tokyo, mình đi giữa hai thế giới và cố gắng kết nối chúng lại.", invite: "Chào mừng bạn đến thế giới của mình. Mỗi dòng code, mỗi tấm hình, mỗi câu chuyện ở đây đều là một mảnh ghép của mình.", cta: "Bắt đầu hành trình", caption: "Tokyo, 2023, một khoảnh khắc yên tĩnh hiếm hoi", scroll: "cuộn xuống" },
-                    nav: { profile: "Hồ sơ", chapters: "Các chương", missions: "Nhiệm vụ", abilities: "Kỹ năng", journal: "Nhật ký", terminal: "Liên hệ" },
-                    profile: { label: "Hồ sơ nhân vật", title: "Ross là <span class='highlight'>ai?</span>", quote: "\"Mình không chỉ làm website. Mình muốn tạo ra những nơi khiến người ta thấy như đang ở nhà.\"", desc: "Mình sinh ra ở một thị trấn nhỏ tại Việt Nam, nơi mưa rơi đều đặn như một thói quen. Năm 16 tuổi, mình xách balo qua Nhật, trong đầu chất đầy những ước mơ mà lúc đó còn chẳng biết diễn tả sao cho đúng.", desc2: "Giờ thì mình là sinh viên đại học, cũng là một designer, và cũng là một người thích kể chuyện. Mình chụp phim để giữ lại những khoảnh khắc nhỏ mà người ta hay lướt qua. Mình viết code để tạo ra những thứ có \"hồn\" một chút. Mình làm thiết kế vì mình tin sự rõ ràng cũng là một cách để tử tế với người khác.", desc3: "Đây là câu chuyện của mình. Và nó vẫn chưa xong đâu.",
-                        stat: { codename: "Mật danh", location: "Vị trí", origin: "Xuất thân", path: "Con đường", pathValue: "Sinh viên đại học", essence: "Bản chất", essenceValue: "Tò mò, hay đồng cảm, và khá tỉ mỉ", spec: "Chuyên môn", specValue: "Công nghệ × Thiết kế × Kể chuyện", listening: "Đang nghe", listeningValue: "Lo-fi / Tiếng mưa", chapter: "Chương hiện tại", chapterValue: "Đang cố nối những nền văn hóa lại với nhau" }
-                    },
-                    chapters: { label: "Chế độ Cốt truyện", title: "Những <span class='highlight'>chương truyện</span>", theme: "Từ Việt Nam ra thế giới, 6 chương của một hành trình trưởng thành", 1:{number:"Chương I",title:"Quê nhà · Việt Nam",desc:"Mình lớn lên dưới bầu trời hay mưa. Từ nhỏ, mấy trận mưa đó đã dạy mình rằng cái đẹp và cái dữ dội thường đi chung với nhau. Mình học được cách nhìn ra chuyện hay ho trong những thứ bình thường nhất, nụ cười của một ông cụ, tiếng xe máy chạy ngang. Sáng tạo với mình bắt đầu chỉ đơn giản là muốn giữ lại mấy khoảnh khắc thoáng qua đó thôi."}, 2:{number:"Chương II",title:"Cú nhảy · Đặt chân đến Nhật",desc:"16 tuổi, mình tới Nhật với một cái balo và cả đống câu hỏi trong đầu mà chẳng ngôn ngữ nào diễn tả nổi. Cô đơn lúc đó giống như một tờ giấy trắng, và mình dần tô lên đó bằng những người bạn mới, những từ mới học được, và cái cảm giác nhận ra: à, hóa ra mình cũng có thể thuộc về một nơi mà trước giờ chưa từng nghĩ tới."}, 3:{number:"Chương III",title:"Thức tỉnh · Những năm cấp ba",desc:"Cấp ba là lúc mình nhận ra mình có thể sống hai cuộc đời cùng lúc. Ban ngày học giải tích, ban đêm ngồi viết mấy câu chuyện chẳng ai đọc. Mình chụp cuộn phim đầu tiên, làm cái web đầu tiên, tuy nhỏ xíu nhưng đúng là của riêng mình."}, 4:{number:"Chương IV",title:"Người bảo vệ · Tình nguyện an ninh mạng",desc:"Ba năm mình đứng giữa những người bình thường và những kẻ chỉ chực lợi dụng họ. Không phải vì ai bắt mình làm, mà vì mình tin công nghệ nên là thứ để bảo vệ người ta, chứ không phải phản bội họ. Nó dạy mình rằng làm kỹ thuật, suy cho cùng, cũng là một dạng đạo đức được thực hành mỗi ngày."}, 5:{number:"Chương V",title:"Học giả · Đại học",desc:"Đại học dạy mình rằng thiết kế không phải là làm cho đẹp. Nó là làm sao để người ta cảm thấy được nhìn thấy, được hiểu. Giờ mình vẫn đi lại trong hành lang trường, sổ tay đầy những ý tưởng lưng chừng giữa code và thơ."}, 6:{number:"Chương VI",title:"Chân trời · Cột mốc tiếp theo",desc:"Mình đang chuẩn bị mang những gì học được ra ngoài kia, không phải với tư cách chuyên gia, mà như một đứa vẫn tin sự tò mò là kỹ năng đáng giá nhất. Văn hóa mới, hợp tác mới, và một tương lai mà thiết kế không cần biết đến biên giới."} },
-                    missions: { label: "Hồ sơ Nhiệm vụ", title: "Những <span class='highlight'>hồ sơ mật</span>", intro: "Vài nhiệm vụ mình từng trải qua, mỗi cái là một mảnh trong câu chuyện xuất thân của chính mình.", 1:{stamp:"Tuyệt mật",title:"Chiến dịch: Think Fraud",brief:"Mình đã nhìn thấy cách lừa đảo online hoạt động từ bên trong – kiến thức ấy giờ trở thành động lực để mình bảo vệ người khác. Mình đã giúp 50,000+ người nhận biết và tránh được lừa đảo.",tags:"Chống lừa đảo · Cộng đồng · Việt Nam",status:"Trạng thái: Hoàn thành"}, 2:{stamp:"Mật",title:"Dự án: Restaurant Cashier",brief:"3 năm ngồi ghi sổ sách, mỗi ca làm với mình giống như một bài học nhỏ về trách nhiệm. Khớp đúng từng đồng là cách mình chứng minh mình để tâm vào việc đang làm.",tags:"Tài chính · Niềm tin · Nhà hàng Ramen",status:"Trạng thái: Hoàn thành"}, 3:{stamp:"Tối mật",title:"Nhiệm vụ: Global Elite",brief:"Không phải cứ cầm chuột là lên được đỉnh, cũng không phải cứ luyện tập là giỏi ngay. Nó là sự kết hợp giữa một chút năng khiếu và rất nhiều giờ khổ luyện. Phản xạ với luyện tập bền bỉ là thứ đưa mình lên top.",tags:"Chiến thuật · CS2 · Faceit Lvl 10",status:"Trạng thái: Đang tiếp diễn"}, 4:{stamp:"Nguyên mẫu",title:"Mật danh: Polyglot",brief:"Hơn 7 năm sống xa nhà, thành thạo 3 ngôn ngữ, và đang học thêm ngôn ngữ thứ 4. Với mình, ngôn ngữ không chỉ là từ vựng, nó là cách để mình bước vào thế giới của người khác.",tags:"Tiếng Việt · Tiếng Nhật · Tiếng Anh · Tiếng Đức",status:"Trạng thái: Đang tiếp diễn"} },
-                    abilities: { label: "Kỹ năng", title: "Những <span class='highlight'>kỹ năng đã mở khóa</span>", cat1:"Nghệ thuật", skill1:"Tư duy sáng tạo", skill2:"Kể chuyện", skill3:"Thiết kế UI/UX", skill4:"Nhiếp ảnh", skill5:"Dựng phim", cat2:"Công cụ", skill6:"Phát triển Web", skill7:"Nghiên cứu", skill8:"Kiến thức cơ bản về An ninh mạng", cat3:"Tiếng nói", lang:{vi:"Tiếng Việt (Bản ngữ)",en:"Tiếng Anh (Thành thạo)",ja:"Tiếng Nhật (Giao tiếp)"} },
-                    journal: { label: "Nhật ký Điện ảnh", title: "Những <span class='highlight'>khung hình cuộc sống</span>", 1:{desc:"2022 · Lần đầu Tokyo phủ tuyết trắng, mình chợt nhận ra mình không còn là người lạ ở đây nữa."}, 2:{desc:"2024 · Thiết kế lúc nửa đêm, lúc thế giới ngủ yên còn ý tưởng thì cứ ồn ào trong đầu."}, 3:{desc:"2023 · Mưa dưới ánh đèn neon, một thành phố chẳng bao giờ ngừng mơ mộng."}, 4:{desc:"2024 · Giờ khắc yên tĩnh, lúc ý tưởng bắt đầu thành hình."}, 5:{desc:"2023 · Nụ cười của một người lạ, đủ để nhắc mình rằng kết nối luôn ở quanh đây thôi."}, 6:{desc:"2022 · Ngôi đền ngập ánh sáng, một phút giây tĩnh lặng giữa cái thế giới cứ vội vã này."} },
-                    terminal: { label: "Kênh liên lạc", title: "Mở <span class='highlight'>kết nối</span>", invite: "Hợp tác, việc freelance, hay đơn giản chỉ muốn tám chuyện, lúc nào mình cũng sẵn lòng." },
-                    ending: { title: "Điểm lưu", message: "Câu chuyện vẫn đang tiếp tục.", continue: "Tiếp tục?", reflection: "Cảm ơn bạn đã đi cùng mình qua từng trang này. Nếu bạn thấy đâu đó bóng dáng hành trình của chính mình, mình rất muốn nghe bạn kể. Cùng viết tiếp chương sau nhé.", signature: "Thân, Ross" },
-                    toast: { easterEgg: "✦ Tìm thấy bí mật: Bản chất của một người thích khám phá", gameOver: "💀 Game Over. Nhấn Y để hồi sinh.", respawn: "✦ Tìm thấy bí mật: Bản chất của một người thích khám phá", audioError: "⚠ Âm thanh không khả dụng" }
+                chapters: { label: "Story Mode", title: "The <span class='highlight'>chapters</span>", theme: "From Vietnam to the world, six chapters of figuring things out",
+                    1: { number: "Chapter I", title: "Homeland · Vietnam", desc: "I grew up under a sky that cried a lot. The monsoon taught me early on that beauty and intensity usually show up together. I learned to spot stories in ordinary things, an old man's smile, the hum of a motorbike passing by. Creativity, for me, started as just wanting to hold onto moments before they slipped away." },
+                    2: { number: "Chapter II", title: "The Leap · Arrival in Japan", desc: "Sixteen years old, one backpack, and a head full of questions I couldn't have explained in any language. Loneliness felt like a blank page back then, and slowly I started filling it in, with new friends, new words, and this quiet realization that maybe I actually belonged somewhere I never expected to." },
+                    3: { number: "Chapter III", title: "Awakening · High School Years", desc: "High school was where I figured out I could hold two whole identities at once. Calculus by day, writing stories nobody would ever read by night. I shot my first roll of film, built my first website, tiny little universes, but they were mine." },
+                    4: { number: "Chapter IV", title: "Guardian · Cybersecurity Volunteer", desc: "For three years, I stood between everyday people and the ones trying to take advantage of them. Nobody made me do it. I just believed technology should protect people, not betray them. It taught me that engineering, at its core, is really just ethics you practice every day." },
+                    5: { number: "Chapter V", title: "Scholar · University", desc: "University taught me design isn't about making things pretty. It's about making someone feel seen. I still walk these campus halls, notebooks full of ideas somewhere between code and poetry." },
+                    6: { number: "Chapter VI", title: "Horizon · What's Next", desc: "I'm getting ready to take what I've learned out into the world, not as an expert, but as someone who still thinks curiosity is the most useful skill there is. New cultures, new people to work with, and a future where design doesn't really care about borders." }
                 },
-                ja: {
-                    skipLink: "コンテンツへスキップ",
-                    hero: { subtitle: "デザイナー · デベロッパー · ストーリーテラー", tagline: "ベトナムの雨季から東京のネオンの夜まで、二つの世界を行き来しながら、その間に橋を架けようとしている。", invite: "ようこそ、僕の世界へ。ここにあるコードも、写真も、物語も、全部僕の一部だ。", cta: "旅を始める", caption: "東京、2023年、めずらしく静かだった瞬間", scroll: "スクロール" },
-                    nav: { profile: "プロフィール", chapters: "チャプター", missions: "ミッション", abilities: "スキル", journal: "ジャーナル", terminal: "ターミナル" },
-                    profile: { label: "プレイヤープロフィール", title: "<span class='highlight'>Ross</span>って、どんな人?", quote: "\"僕はウェブサイトを作ってるだけじゃない。人が\"ここが居場所だ\"って思える場所を作りたいんだ。\"", desc: "ベトナムの小さな町で生まれた。雨がやたら降る町だった。16歳のとき、リュック一つ背負って日本に来た。頭の中は、まだ言葉にできない夢でいっぱいだった。", desc2: "今は大学生で、デザイナーで、たまに物語を書く人間でもある。フィルムで写真を撮るのは、みんなが見逃しがちな小さな瞬間を残しておきたいから。コードを書くのは、ちょっとでも\"人間らしさ\"のあるものを作りたいから。デザインをするのは、わかりやすさも優しさの一種だと信じているから。", desc3: "これが僕の物語。まだ全然終わってない。",
-                        stat: { codename: "コードネーム", location: "現在地", origin: "出身", path: "進む道", pathValue: "大学生", essence: "本質", essenceValue: "好奇心旺盛、共感力高め、わりと几帳面", spec: "専門分野", specValue: "テクノロジー × デザイン × ストーリーテリング", listening: "今聴いてるもの", listeningValue: "Lo-fi / 雨音", chapter: "今のチャプター", chapterValue: "文化と文化をつなごうとしてる最中" }
-                    },
-                    chapters: { label: "ストーリーモード", title: "<span class='highlight'>チャプター</span>たち", theme: "ベトナムから世界へ、成長していく6つの章", 1:{number:"第一章",title:"故郷 · ベトナム",desc:"よく雨が降る空の下で育った。あの雨季が、早いうちに教えてくれた。美しさと激しさは、意外と隣り合わせにあるんだって。おじいさんの微笑みとか、バイクの音とか、ありふれたものの中に物語を見つけることを覚えた。創作って、そういう過ぎ去っていく瞬間を、ちょっとでも留めておきたいって気持ちから始まったんだと思う。"}, 2:{number:"第二章",title:"跳躍 · 来日",desc:"16歳、リュック一つとどの言語でも言い表せないくらいの疑問を抱えて日本に着いた。あのときの孤独は、真っ白な紙みたいなものだった。そこに新しい友達とか、新しく覚えた言葉とかを少しずつ塗っていった。そしてある日気づいた。あ、自分にもここに居場所があるんだって。"}, 3:{number:"第三章",title:"目覚め · 高校時代",desc:"高校では、自分の中に二つの顔があってもいいんだって気づいた。昼は微分積分、夜は誰にも読まれない物語を書く。初めてフィルムで写真を撮って、初めて自分のサイトを作った。小さいけど、確かに自分だけのものだった。"}, 4:{number:"第四章",title:"守護者 · サイバーセキュリティボランティア",desc:"3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切るものじゃなくて、守るためのものであるべきだと思ってたから。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。"}, 5:{number:"第五章",title:"学徒 · 大学生活",desc:"大学に来て、デザインって物を綺麗にすることじゃないんだって学んだ。それより、その人が「自分は見てもらえてるんだ」って感じられるようにすることなんだと思う。今も大学の廊下を歩いてて、ノートはコードと詩の間くらいの、なんとも言えないアイデアでいっぱいだ。"}, 6:{number:"第六章",title:"地平線 · 次の場所へ",desc:"今学んでることを、外の世界に持っていく準備をしてる。専門家としてじゃなくて、好奇心が一番の武器だってまだ信じてる一人の学生として。新しい文化、新しい人たちとの出会い、そしてデザインに国境なんて関係ない未来へ。"} },
-                    missions: { label: "ミッションアーカイブ", title: "機密<span class='highlight'>ファイル</span>", intro: "これまで経験してきたいくつかのミッション。どれも、僕という人間の原点を語る一章だ。", 1:{stamp:"トップシークレット",title:"作戦:Think Fraud",brief:"オンライン詐欺の仕組みを内側から見てきた。その知識が今、人々を守るための力になっている。5万人以上がネット詐欺を見抜き、回避できるようにサポートしてきた。",tags:"詐欺対策 · コミュニティ · ベトナム",status:"ステータス:完了"}, 2:{stamp:"機密",title:"プロジェクト:Restaurant Cashier",brief:"3年間、レジと帳簿を任されてた。シフトに入るたびに、責任ってものを少しずつ学んでいった感じ。一円のズレもなく合わせることは、僕なりのちゃんとやってますっていう証明だった。",tags:"経理 · 信頼 · ラーメン店",status:"ステータス:完了"}, 3:{stamp:"極秘",title:"ミッション:Global Elite",brief:"マウスを握れば誰でも頂点にいけるわけじゃないし、練習すればすぐ上手くなるってものでもない。ちょっとした才能と、ものすごい量の練習、その両方が噛み合って初めて上に行ける。反射神経とひたすらの練習が、今の自分を作った。",tags:"戦術 · CS2 · Faceitレベル10",status:"ステータス:継続中"}, 4:{stamp:"プロトタイプ",title:"コードネーム:Polyglot",brief:"海外生活7年以上、3ヶ国語をマスターして、今4つ目に挑戦中。言語って、単なる単語の集まりじゃなくて、誰かの世界にお邪魔するための入り口みたいなものだと思う。",tags:"ベトナム語 · 日本語 · 英語 · ドイツ語",status:"ステータス:継続中"} },
-                    abilities: { label: "スキル", title: "解放された<span class='highlight'>能力</span>", cat1:"クラフト", skill1:"クリエイティブシンキング", skill2:"ストーリーテリング", skill3:"UI/UXデザイン", skill4:"写真", skill5:"映像編集", cat2:"ツール", skill6:"ウェブ開発", skill7:"リサーチ", skill8:"サイバーセキュリティ基礎", cat3:"声", lang:{vi:"ベトナム語 (ネイティブ)",en:"英語 (流暢)",ja:"日本語 (日常会話)"} },
-                    journal: { label: "シネマティックジャーナル", title: "人生の<span class='highlight'>フレーム</span>", 1:{desc:"2022年 · 東京で初めて雪景色を見た日。あ、自分もうよそ者じゃないんだなって、ふと思った。"}, 2:{desc:"2024年 · 深夜のデザイン作業。世界が静かになるほど、頭の中のアイデアはうるさくなる。"}, 3:{desc:"2023年 · ネオンの雨、夢を見るのをやめない街。"}, 4:{desc:"2024年 · 静かな時間。アイデアがだんだん形になっていく瞬間。"}, 5:{desc:"2023年 · 見知らぬ人の微笑み。それだけで、つながりってどこにでもあるんだなって思わされる。"}, 6:{desc:"2022年 · 光に包まれたお寺。忙しない世界の中で、ふと訪れる静止の瞬間。"} },
-                    terminal: { label: "通信ターミナル", title: "<span class='highlight'>チャンネル</span>を開く", invite: "コラボでも、フリーランスの仕事でも、ただの雑談でも、いつでも歓迎です。" },
-                    ending: { title: "セーブポイント", message: "物語はまだ続いてる。", continue: "続ける?", reflection: "ここまで一緒に歩いてくれてありがとう。もしどこかに自分自身の旅の影を見つけてくれたなら、ぜひ聞かせてほしい。一緒に次の章を書いていこう。", signature: "Ross より" },
-                    toast: { easterEgg: "✦ 秘密を発見:探検好きな性格", gameOver: "💀 ゲームオーバー。Yで復活。", respawn: "✦ 秘密を発見:探検好きな性格", audioError: "⚠ オーディオが利用できません" }
-                }
-            };
+                missions: { label: "Mission Archive", title: "Classified <span class='highlight'>dossiers</span>", intro: "A few missions I've taken on along the way, each one part of my own origin story.",
+                    1: { stamp: "Top Secret", summary: "Helping over 50,000 people avoid getting scammed online.", title: "Operation: Think Fraud", brief: "I used to know how to scam people out of a decent amount of money. That past doesn't weigh on me though, if anything, it's exactly why I ended up helping over 50,000 people avoid getting scammed online. The best way to fight the darkness is to actually understand it, then become the light yourself.", tags: "Anti-Fraud · Community · Vietnam", status: "Status: Complete" },
+                    2: { stamp: "Classified", summary: "Three years handling the register and the books.", title: "Project: Restaurant Cashier", brief: "Three years handling the register and the books. Every shift taught me a little more about responsibility. Getting every single cent to match wasn't about being perfect, it was my way of showing I actually cared about doing it right.", tags: "Finance · Trust · Ramen House", status: "Status: Complete" },
+                    3: { stamp: "Confidential", summary: "Reaching the top through talent and relentless practice.", title: "Mission: Global Elite", brief: "Not everyone who picks up a mouse makes it to the top, and practice alone won't get you there either. It's a mix of a little raw talent and a lot of grinding. Reflexes plus stubborn practice is what got me here.", tags: "Tactics · CS2 · Faceit Lvl 10", status: "Status: Active" },
+                    4: { stamp: "Prototype", summary: "Four languages, endless connections.", title: "Codename: Polyglot", brief: "7+ years living abroad, three languages down, working on a fourth. To me, language isn't just vocabulary, it's basically a door into someone else's world.", tags: "Vietnamese · Japanese · English · German", status: "Status: Active" }
+                },
+                abilities: { label: "Abilities", title: "Unlocked <span class='highlight'>skills</span>", cat1: "The Craft", skill1: "Creative Thinking", skill2: "Storytelling", skill3: "UI/UX Design", skill4: "Photography", skill5: "Video Editing", cat2: "The Tools", skill6: "Web Development", skill7: "Research", skill8: "Cybersecurity Basics", cat3: "The Voice", lang: { vi: "Vietnamese (Native)", en: "English (Fluent)", ja: "Japanese (Conversational)" } },
+                journal: { label: "Cinematic Journal", title: "Frames <span class='highlight'>of life</span>",
+                    1: { desc: "2022 · The first time Tokyo turned white with snow, I realized I wasn't a stranger here anymore." },
+                    2: { desc: "2024 · Late-night design work, when the world goes quiet and my head gets loud with ideas." },
+                    3: { desc: "2023 · Neon rain, a city that never really stops dreaming." },
+                    4: { desc: "2024 · That quiet hour when ideas start turning into something real." },
+                    5: { desc: "2023 · A stranger's smile, just enough to remind me connection is everywhere if you look." },
+                    6: { desc: "2022 · A temple lit up at night, one still moment in a world that never slows down." }
+                },
+                terminal: { label: "Communication Terminal", title: "Open <span class='highlight'>channel</span>", invite: "Collabs, freelance work, or just a chat, I'm always up for it." },
+                ending: { title: "Save Point", message: "The story's still going.", continue: "Continue?", reflection: "Thanks for walking through these pages with me. If you saw a bit of your own journey somewhere in here, I'd genuinely love to hear about it. Let's write the next chapter together.", signature: "Take care, Ross" },
+                toast: { easterEgg: "✦ Secret found: Curious explorer, confirmed", gameOver: "💀 Game Over. Press Y to respawn.", respawn: "✦ Secret found: Curious explorer, confirmed", audioError: "⚠ Audio unavailable" }
+            },
+            vi: {
+                skipLink: "Bỏ qua đến Nội dung",
+                hero: { subtitle: "Designer · Developer · Người kể chuyện", tagline: "Từ những cơn mưa mùa ở Việt Nam đến những đêm neon ở Tokyo, mình đi giữa hai thế giới và cố gắng kết nối chúng lại.", invite: "Chào mừng bạn đến thế giới của mình. Mỗi dòng code, mỗi tấm hình, mỗi câu chuyện ở đây đều là một mảnh ghép của mình.", cta: "Bắt đầu hành trình", caption: "Tokyo, 2023, một khoảnh khắc yên tĩnh hiếm hoi", scroll: "cuộn xuống" },
+                nav: { profile: "Hồ sơ", chapters: "Các chương", missions: "Nhiệm vụ", abilities: "Kỹ năng", journal: "Nhật ký", terminal: "Liên hệ" },
+                profile: { label: "Hồ sơ nhân vật", title: "Ross là <span class='highlight'>ai?</span>", quote: "\"Mình không chỉ làm website. Mình muốn tạo ra những nơi khiến người ta thấy như đang ở nhà.\"", desc: "Mình sinh ra ở một thị trấn nhỏ tại Việt Nam, nơi mưa rơi đều đặn như một thói quen. Năm 16 tuổi, mình xách balo qua Nhật, trong đầu chất đầy những ước mơ mà lúc đó còn chẳng biết diễn tả sao cho đúng.", desc2: "Giờ thì mình là sinh viên đại học, cũng là một designer, và cũng là một người thích kể chuyện. Mình chụp phim để giữ lại những khoảnh khắc nhỏ mà người ta hay lướt qua. Mình viết code để tạo ra những thứ có \"hồn\" một chút. Mình làm thiết kế vì mình tin sự rõ ràng cũng là một cách để tử tế với người khác.", desc3: "Đây là câu chuyện của mình. Và nó vẫn chưa xong đâu.",
+                    stat: { codename: "Mật danh", location: "Vị trí", origin: "Xuất thân", path: "Con đường", pathValue: "Sinh viên đại học", essence: "Bản chất", essenceValue: "Tò mò, hay đồng cảm, và khá tỉ mỉ", spec: "Chuyên môn", specValue: "Công nghệ × Thiết kế × Kể chuyện", listening: "Đang nghe", listeningValue: "Lo-fi / Tiếng mưa", chapter: "Chương hiện tại", chapterValue: "Đang cố nối những nền văn hóa lại với nhau" }
+                },
+                chapters: { label: "Chế độ Cốt truyện", title: "Những <span class='highlight'>chương truyện</span>", theme: "Từ Việt Nam ra thế giới, 6 chương của một hành trình trưởng thành",
+                    1: { number: "Chương I", title: "Quê nhà · Việt Nam", desc: "Mình lớn lên dưới bầu trời hay mưa. Từ nhỏ, mấy trận mưa đó đã dạy mình rằng cái đẹp và cái dữ dội thường đi chung với nhau. Mình học được cách nhìn ra chuyện hay ho trong những thứ bình thường nhất, nụ cười của một ông cụ, tiếng xe máy chạy ngang. Sáng tạo với mình bắt đầu chỉ đơn giản là muốn giữ lại mấy khoảnh khắc thoáng qua đó thôi." },
+                    2: { number: "Chương II", title: "Cú nhảy · Đặt chân đến Nhật", desc: "16 tuổi, mình tới Nhật với một cái balo và cả đống câu hỏi trong đầu mà chẳng ngôn ngữ nào diễn tả nổi. Cô đơn lúc đó giống như một tờ giấy trắng, và mình dần tô lên đó bằng những người bạn mới, những từ mới học được, và cái cảm giác nhận ra: à, hóa ra mình cũng có thể thuộc về một nơi mà trước giờ chưa từng nghĩ tới." },
+                    3: { number: "Chương III", title: "Thức tỉnh · Những năm cấp ba", desc: "Cấp ba là lúc mình nhận ra mình có thể sống hai cuộc đời cùng lúc. Ban ngày học giải tích, ban đêm ngồi viết mấy câu chuyện chẳng ai đọc. Mình chụp cuộn phim đầu tiên, làm cái web đầu tiên, tuy nhỏ xíu nhưng đúng là của riêng mình." },
+                    4: { number: "Chương IV", title: "Người bảo vệ · Tình nguyện an ninh mạng", desc: "Ba năm mình đứng giữa những người bình thường và những kẻ chỉ chực lợi dụng họ. Không phải vì ai bắt mình làm, mà vì mình tin công nghệ nên là thứ để bảo vệ người ta, chứ không phải phản bội họ. Nó dạy mình rằng làm kỹ thuật, suy cho cùng, cũng là một dạng đạo đức được thực hành mỗi ngày." },
+                    5: { number: "Chương V", title: "Học giả · Đại học", desc: "Đại học dạy mình rằng thiết kế không phải là làm cho đẹp. Nó là làm sao để người ta cảm thấy được nhìn thấy, được hiểu. Giờ mình vẫn đi lại trong hành lang trường, sổ tay đầy những ý tưởng lưng chừng giữa code và thơ." },
+                    6: { number: "Chương VI", title: "Chân trời · Cột mốc tiếp theo", desc: "Mình đang chuẩn bị mang những gì học được ra ngoài kia, không phải với tư cách chuyên gia, mà như một đứa vẫn tin sự tò mò là kỹ năng đáng giá nhất. Văn hóa mới, hợp tác mới, và một tương lai mà thiết kế không cần biết đến biên giới." }
+                },
+                missions: { label: "Hồ sơ Nhiệm vụ", title: "Những <span class='highlight'>hồ sơ mật</span>", intro: "Vài nhiệm vụ mình từng trải qua, mỗi cái là một mảnh trong câu chuyện xuất thân của chính mình.",
+                    1: { stamp: "Tuyệt mật", summary: "Giúp hơn 50.000 người tránh được lừa đảo trực tuyến.", title: "Chiến dịch: Think Fraud", brief: "Mình từng lừa được kha khá tiền của người khác. Nhưng chuyện đó không đè mình xuống, ngược lại nó là lý do khiến mình muốn giúp hơn 50,000 người tránh được lừa đảo online. Cách để chống lại bóng tối là hiểu nó thật rõ, rồi tự mình trở thành ánh sáng.", tags: "Chống lừa đảo · Cộng đồng · Việt Nam", status: "Trạng thái: Hoàn thành" },
+                    2: { stamp: "Mật", summary: "3 năm ngồi ghi sổ sách, mỗi ca làm với mình giống như một bài học nhỏ về trách nhiệm.", title: "Dự án: Restaurant Cashier", brief: "3 năm ngồi ghi sổ sách, mỗi ca làm với mình giống như một bài học nhỏ về trách nhiệm. Khớp đúng từng đồng là cách mình chứng minh mình để tâm vào việc đang làm.", tags: "Tài chính · Niềm tin · Nhà hàng Ramen", status: "Trạng thái: Hoàn thành" },
+                    3: { stamp: "Tối mật", summary: "Không phải cứ cầm chuột là lên được đỉnh.", title: "Nhiệm vụ: Global Elite", brief: "Không phải cứ cầm chuột là lên được đỉnh, cũng không phải cứ luyện tập là giỏi ngay. Nó là sự kết hợp giữa một chút năng khiếu và rất nhiều giờ khổ luyện. Phản xạ với luyện tập bền bỉ là thứ đưa mình lên top.", tags: "Chiến thuật · CS2 · Faceit Lvl 10", status: "Trạng thái: Đang tiếp diễn" },
+                    4: { stamp: "Nguyên mẫu", summary: "Hơn 7 năm sống xa nhà, thành thạo 3 ngôn ngữ.", title: "Mật danh: Polyglot", brief: "Hơn 7 năm sống xa nhà, thành thạo 3 ngôn ngữ, và đang học thêm ngôn ngữ thứ 4. Với mình, ngôn ngữ không chỉ là từ vựng, nó là cách để mình bước vào thế giới của người khác.", tags: "Tiếng Việt · Tiếng Nhật · Tiếng Anh · Tiếng Đức", status: "Trạng thái: Đang tiếp diễn" }
+                },
+                abilities: { label: "Kỹ năng", title: "Những <span class='highlight'>kỹ năng đã mở khóa</span>", cat1: "Nghệ thuật", skill1: "Tư duy sáng tạo", skill2: "Kể chuyện", skill3: "Thiết kế UI/UX", skill4: "Nhiếp ảnh", skill5: "Dựng phim", cat2: "Công cụ", skill6: "Phát triển Web", skill7: "Nghiên cứu", skill8: "Kiến thức cơ bản về An ninh mạng", cat3: "Tiếng nói", lang: { vi: "Tiếng Việt (Bản ngữ)", en: "Tiếng Anh (Thành thạo)", ja: "Tiếng Nhật (Giao tiếp)" } },
+                journal: { label: "Nhật ký Điện ảnh", title: "Những <span class='highlight'>khung hình cuộc sống</span>",
+                    1: { desc: "2022 · Lần đầu Tokyo phủ tuyết trắng, mình chợt nhận ra mình không còn là người lạ ở đây nữa." },
+                    2: { desc: "2024 · Thiết kế lúc nửa đêm, lúc thế giới ngủ yên còn ý tưởng thì cứ ồn ào trong đầu." },
+                    3: { desc: "2023 · Mưa dưới ánh đèn neon, một thành phố chẳng bao giờ ngừng mơ mộng." },
+                    4: { desc: "2024 · Giờ khắc yên tĩnh, lúc ý tưởng bắt đầu thành hình." },
+                    5: { desc: "2023 · Nụ cười của một người lạ, đủ để nhắc mình rằng kết nối luôn ở quanh đây thôi." },
+                    6: { desc: "2022 · Ngôi đền ngập ánh sáng, một phút giây tĩnh lặng giữa cái thế giới cứ vội vã này." }
+                },
+                terminal: { label: "Kênh liên lạc", title: "Mở <span class='highlight'>kết nối</span>", invite: "Hợp tác, việc freelance, hay đơn giản chỉ muốn tám chuyện, lúc nào mình cũng sẵn lòng." },
+                ending: { title: "Điểm lưu", message: "Câu chuyện vẫn đang tiếp tục.", continue: "Tiếp tục?", reflection: "Cảm ơn bạn đã đi cùng mình qua từng trang này. Nếu bạn thấy đâu đó bóng dáng hành trình của chính mình, mình rất muốn nghe bạn kể. Cùng viết tiếp chương sau nhé.", signature: "Thân, Ross" },
+                toast: { easterEgg: "✦ Tìm thấy bí mật: Bản chất của một người thích khám phá", gameOver: "💀 Game Over. Nhấn Y để hồi sinh.", respawn: "✦ Tìm thấy bí mật: Bản chất của một người thích khám phá", audioError: "⚠ Âm thanh không khả dụng" }
+            },
+            ja: {
+                skipLink: "コンテンツへスキップ",
+                hero: { subtitle: "デザイナー · デベロッパー · ストーリーテラー", tagline: "ベトナムの雨季から東京のネオンの夜まで、二つの世界を行き来しながら、その間に橋を架けようとしている。", invite: "ようこそ、僕の世界へ。ここにあるコードも、写真も、物語も、全部僕の一部だ。", cta: "旅を始める", caption: "東京、2023年、めずらしく静かだった瞬間", scroll: "スクロール" },
+                nav: { profile: "プロフィール", chapters: "チャプター", missions: "ミッション", abilities: "スキル", journal: "ジャーナル", terminal: "ターミナル" },
+                profile: { label: "プレイヤープロフィール", title: "<span class='highlight'>Ross</span>って、どんな人?", quote: "\"僕はウェブサイトを作ってるだけじゃない。人が\"ここが居場所だ\"って思える場所を作りたいんだ。\"", desc: "ベトナムの小さな町で生まれた。雨がやたら降る町だった。16歳のとき、リュック一つ背負って日本に来た。頭の中は、まだ言葉にできない夢でいっぱいだった。", desc2: "今は大学生で、デザイナーで、たまに物語を書く人間でもある。フィルムで写真を撮るのは、みんなが見逃しがちな小さな瞬間を残しておきたいから。コードを書くのは、ちょっとでも\"人間らしさ\"のあるものを作りたいから。デザインをするのは、わかりやすさも優しさの一種だと信じているから。", desc3: "これが僕の物語。まだ全然終わってない。",
+                    stat: { codename: "コードネーム", location: "現在地", origin: "出身", path: "進む道", pathValue: "大学生", essence: "本質", essenceValue: "好奇心旺盛、共感力高め、わりと几帳面", spec: "専門分野", specValue: "テクノロジー × デザイン × ストーリーテリング", listening: "今聴いてるもの", listeningValue: "Lo-fi / 雨音", chapter: "今のチャプター", chapterValue: "文化と文化をつなごうとしてる最中" }
+                },
+                chapters: { label: "ストーリーモード", title: "<span class='highlight'>チャプター</span>たち", theme: "ベトナムから世界へ、成長していく6つの章",
+                    1: { number: "第一章", title: "故郷 · ベトナム", desc: "よく雨が降る空の下で育った。あの雨季が、早いうちに教えてくれた。美しさと激しさは、意外と隣り合わせにあるんだって。おじいさんの微笑みとか、バイクの音とか、ありふれたものの中に物語を見つけることを覚えた。創作って、そういう過ぎ去っていく瞬間を、ちょっとでも留めておきたいって気持ちから始まったんだと思う。" },
+                    2: { number: "第二章", title: "跳躍 · 来日", desc: "16歳、リュック一つとどの言語でも言い表せないくらいの疑問を抱えて日本に着いた。あのときの孤独は、真っ白な紙みたいなものだった。そこに新しい友達とか、新しく覚えた言葉とかを少しずつ塗っていった。そしてある日気づいた。あ、自分にもここに居場所があるんだって。" },
+                    3: { number: "第三章", title: "目覚め · 高校時代", desc: "高校では、自分の中に二つの顔があってもいいんだって気づいた。昼は微分積分、夜は誰にも読まれない物語を書く。初めてフィルムで写真を撮って、初めて自分のサイトを作った。小さいけど、確かに自分だけのものだった。" },
+                    4: { number: "第四章", title: "守護者 · サイバーセキュリティボランティア", desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切るものじゃなくて、守るためのものであるべきだと思ってたから。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。" },
+                    5: { number: "第五章", title: "学徒 · 大学生活", desc: "大学に来て、デザインって物を綺麗にすることじゃないんだって学んだ。それより、その人が「自分は見てもらえてるんだ」って感じられるようにすることなんだと思う。今も大学の廊下を歩いてて、ノートはコードと詩の間くらいの、なんとも言えないアイデアでいっぱいだ。" },
+                    6: { number: "第六章", title: "地平線 · 次の場所へ", desc: "今学んでることを、外の世界に持っていく準備をしてる。専門家としてじゃなくて、好奇心が一番の武器だってまだ信じてる一人の学生として。新しい文化、新しい人たちとの出会い、そしてデザインに国境なんて関係ない未来へ。" }
+                },
+                missions: { label: "ミッションアーカイブ", title: "機密<span class='highlight'>ファイル</span>", intro: "これまで経験してきたいくつかのミッション。どれも、僕という人間の原点を語る一章だ。",
+                    1: { stamp: "トップシークレット", summary: "5万人以上をネット詐欺から守る活動につながった。", title: "作戦:Think Fraud", brief: "昔、けっこうな額のお金を人から騙し取ったことがある。でもその過去が今の自分を苦しめてるわけじゃない。むしろそれがきっかけで、5万人以上をネット詐欺から守る活動につながった。闇と戦う一番の方法は、その正体をちゃんと理解して、自分自身が光になることだと思う。", tags: "詐欺対策 · コミュニティ · ベトナム", status: "ステータス:完了" },
+                    2: { stamp: "機密", summary: "3年間、レジと帳簿を任されてた。", title: "プロジェクト:Restaurant Cashier", brief: "3年間、レジと帳簿を任されてた。シフトに入るたびに、責任ってものを少しずつ学んでいった感じ。一円のズレもなく合わせることは、僕なりのちゃんとやってますっていう証明だった。", tags: "経理 · 信頼 · ラーメン店", status: "ステータス:完了" },
+                    3: { stamp: "極秘", summary: "マウスを握れば誰でも頂点にいけるわけじゃない。", title: "ミッション:Global Elite", brief: "マウスを握れば誰でも頂点にいけるわけじゃないし、練習すればすぐ上手くなるってものでもない。ちょっとした才能と、ものすごい量の練習、その両方が噛み合って初めて上に行ける。反射神経とひたすらの練習が、今の自分を作った。", tags: "戦術 · CS2 · Faceitレベル10", status: "ステータス:継続中" },
+                    4: { stamp: "プロトタイプ", summary: "海外生活7年以上、3ヶ国語をマスター。", title: "コードネーム:Polyglot", brief: "海外生活7年以上、3ヶ国語をマスターして、今4つ目に挑戦中。言語って、単なる単語の集まりじゃなくて、誰かの世界にお邪魔するための入り口みたいなものだと思う。", tags: "ベトナム語 · 日本語 · 英語 · ドイツ語", status: "ステータス:継続中" }
+                },
+                abilities: { label: "スキル", title: "解放された<span class='highlight'>能力</span>", cat1: "クラフト", skill1: "クリエイティブシンキング", skill2: "ストーリーテリング", skill3: "UI/UXデザイン", skill4: "写真", skill5: "映像編集", cat2: "ツール", skill6: "ウェブ開発", skill7: "リサーチ", skill8: "サイバーセキュリティ基礎", cat3: "声", lang: { vi: "ベトナム語 (ネイティブ)", en: "英語 (流暢)", ja: "日本語 (日常会話)" } },
+                journal: { label: "シネマティックジャーナル", title: "人生の<span class='highlight'>フレーム</span>",
+                    1: { desc: "2022年 · 東京で初めて雪景色を見た日。あ、自分もうよそ者じゃないんだなって、ふと思った。" },
+                    2: { desc: "2024年 · 深夜のデザイン作業。世界が静かになるほど、頭の中のアイデアはうるさくなる。" },
+                    3: { desc: "2023年 · ネオンの雨、夢を見るのをやめない街。" },
+                    4: { desc: "2024年 · 静かな時間。アイデアがだんだん形になっていく瞬間。" },
+                    5: { desc: "2023年 · 見知らぬ人の微笑み。それだけで、つながりってどこにでもあるんだなって思わされる。" },
+                    6: { desc: "2022年 · 光に包まれたお寺。忙しない世界の中で、ふと訪れる静止の瞬間。" }
+                },
+                terminal: { label: "通信ターミナル", title: "<span class='highlight'>チャンネル</span>を開く", invite: "コラボでも、フリーランスの仕事でも、ただの雑談でも、いつでも歓迎です。" },
+                ending: { title: "セーブポイント", message: "物語はまだ続いてる。", continue: "続ける?", reflection: "ここまで一緒に歩いてくれてありがとう。もしどこかに自分自身の旅の影を見つけてくれたなら、ぜひ聞かせてほしい。一緒に次の章を書いていこう。", signature: "Ross より" },
+                toast: { easterEgg: "✦ 秘密を発見:探検好きな性格", gameOver: "💀 ゲームオーバー。Yで復活。", respawn: "✦ 秘密を発見:探検好きな性格", audioError: "⚠ オーディオが利用できません" }
+            }
+        };
 
-            // Helper
-            function getNestedTranslation(lang, path) {
-                const keys = path.split('.'); let value = translations[lang];
-                for (const key of keys) { if (value === undefined) return undefined; value = value[key]; }
-                return value;
-            }
-            function applyLanguage(lang) {
-                document.documentElement.lang = lang;
-                document.querySelectorAll('[data-i18n]').forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    const translation = getNestedTranslation(lang, key);
-                    if (translation !== undefined) {
-                        if (translation.includes('<')) el.innerHTML = translation;
-                        else el.textContent = translation;
-                    }
-                });
-                localStorage.setItem('lang', lang);
-                document.getElementById('langSelect').value = lang;
-            }
+        // ─── Helper functions ───
+        function getNestedTranslation(lang, path) {
+            const keys = path.split('.'); let value = translations[lang];
+            for (const key of keys) { if (value === undefined) return undefined; value = value[key]; }
+            return value;
+        }
+        function applyLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const translation = getNestedTranslation(lang, key);
+                if (translation !== undefined) {
+                    if (translation.includes('<')) el.innerHTML = translation;
+                    else el.textContent = translation;
+                }
+            });
+            localStorage.setItem('lang', lang);
+            document.getElementById('langSelect').value = lang;
+        }
+
+        // ─── Initialization ───
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language
             const langSelect = document.getElementById('langSelect');
             langSelect.addEventListener('change', e => applyLanguage(e.target.value));
             applyLanguage(localStorage.getItem('lang') || 'en');
 
-            // Intersection Observer reveals (including ending)
+            // Scroll reveals
             const revealObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('revealed'); });
             }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
             document.querySelectorAll('.section:not(.hero), .chapter-item, .dossier-card, .journal-item, .ending').forEach(el => revealObserver.observe(el));
 
-            // Email
+            // Email obfuscation
             (function(){
                 const emailSpan = document.getElementById('emailLink');
                 if(!emailSpan) return;
@@ -920,7 +977,7 @@
                 emailSpan.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') { e.preventDefault(); window.location.href='mailto:'+full; } });
             })();
 
-            // Lenis
+            // Lenis smooth scroll
             let lenis=null, lenisActive=false;
             try {
                 if(typeof Lenis!=='undefined') {
@@ -935,7 +992,7 @@
                 else window.scrollTo({top: target.getBoundingClientRect().top+window.pageYOffset-offset, behavior:'smooth'});
             }
 
-            // Nav
+            // Navigation
             const navToggle=document.getElementById('navToggle'), navLinks=document.getElementById('navLinks'), navOverlay=document.getElementById('navOverlay');
             function setMenuOpen(open){
                 navLinks.classList.toggle('open', open);
@@ -978,17 +1035,7 @@
             if(lenisActive) lenis.on('scroll', updateNav);
             window.addEventListener('scroll', updateNav, {passive:true}); updateNav();
 
-            // Glow
-            const glow=document.getElementById('cursorGlow'); let mx=0,my=0,tx=0,ty=0, idle;
-            function show(){ glow.classList.add('active'); } function hide(){ glow.classList.remove('active'); }
-            document.addEventListener('mousemove', e=>{ tx=e.clientX; ty=e.clientY; show(); clearTimeout(idle); idle=setTimeout(hide,3000); });
-            document.addEventListener('mouseleave', hide);
-            document.addEventListener('mousedown', ()=>{ glow.style.transform=`translate(${mx}px,${my}px) scale(0.85)`; });
-            document.addEventListener('mouseup', ()=>{ glow.style.transform=`translate(${mx}px,${my}px) scale(1)`; });
-            function moveGlow(){ mx+=(tx-mx)*0.04; my+=(ty-my)*0.04; glow.style.left=mx+'px'; glow.style.top=my+'px'; requestAnimationFrame(moveGlow); }
-            moveGlow();
-
-            // Canvas particles (mobile/tablet aware, debounced)
+            // Canvas particles (performance aware)
             let canvasAnim=true;
             try{
                 const canvas=document.getElementById('heroCanvas'), ctx=canvas.getContext('2d');
@@ -1025,7 +1072,7 @@
                 new IntersectionObserver(entries=>{ canvasAnim=entries[0].isIntersecting; },{threshold:0.1}).observe(document.getElementById('hero'));
             }catch(e){ document.getElementById('heroCanvas').style.display='none'; }
 
-            // Audio
+            // Audio player
             (function(){
                 const btn=document.getElementById('musicToggle'), player=document.getElementById('musicPlayer'), audio=document.getElementById('bgMusic');
                 let playing=false, err=false;
@@ -1047,18 +1094,75 @@
                 });
             })();
 
-            // Dossier cards
+            // Dossier cards & journal toggles
             document.querySelectorAll('.dossier-card').forEach(card=>{
                 card.addEventListener('click', function(){
                     const expanded=this.classList.toggle('expanded'); this.setAttribute('aria-expanded', expanded);
                     const live=this.querySelector('.dossier-card__status-live'); if(live) live.textContent = expanded ? 'Details expanded' : 'Collapsed';
                 });
             });
-
-            // Journal toggle
             document.querySelectorAll('.journal-item').forEach(item=>{
                 item.addEventListener('click', function(){ const shown=this.classList.toggle('show-meta'); this.setAttribute('aria-expanded', shown); });
             });
+
+            // Parallax & visual effects
+            const heroPortrait = document.getElementById('heroPortrait');
+            const journalImages = document.querySelectorAll('.journal-item img');
+            function updateParallax() {
+                const y = lenisActive ? lenis.scroll : window.pageYOffset;
+                if (heroPortrait) heroPortrait.style.transform = `translateY(${y * 0.03}px)`;
+                journalImages.forEach(img => {
+                    const rect = img.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        img.style.transform = `translateY(${(window.innerHeight - rect.top) * 0.02}px)`;
+                    }
+                });
+            }
+            if (lenisActive) lenis.on('scroll', updateParallax);
+            else window.addEventListener('scroll', updateParallax, {passive: true});
+
+            // Timeline drawing
+            const chaptersPath = document.getElementById('chaptersPath');
+            const chaptersContainer = document.getElementById('chaptersContainer');
+            if (chaptersPath && chaptersContainer) {
+                const svg = document.getElementById('chaptersSVG');
+                function updateTimelineSVG() {
+                    const h = chaptersContainer.scrollHeight;
+                    svg.setAttribute('viewBox', `0 0 2 ${h}`);
+                    svg.setAttribute('height', h);
+                    chaptersPath.setAttribute('d', `M1,0 L1,${h}`);
+                    const len = chaptersPath.getTotalLength();
+                    chaptersPath.style.strokeDasharray = len;
+                    chaptersPath.style.strokeDashoffset = len;
+                }
+                updateTimelineSVG();
+                window.addEventListener('resize', updateTimelineSVG);
+                function drawTimeline() {
+                    const y = lenisActive ? lenis.scroll : window.pageYOffset;
+                    const top = chaptersContainer.offsetTop;
+                    const h = chaptersContainer.scrollHeight;
+                    const windowBottom = y + window.innerHeight;
+                    if (windowBottom > top && y < top + h) {
+                        const progress = (windowBottom - top) / (h + window.innerHeight);
+                        const len = chaptersPath.getTotalLength();
+                        chaptersPath.style.strokeDashoffset = len * (1 - Math.min(progress, 1));
+                    }
+                }
+                if (lenisActive) lenis.on('scroll', drawTimeline);
+                else window.addEventListener('scroll', drawTimeline, {passive: true});
+            }
+
+            // Dynamic lighting
+            const bgLighting = document.getElementById('bgLighting');
+            function updateLighting() {
+                const y = lenisActive ? lenis.scroll : window.pageYOffset;
+                const maxScroll = document.body.scrollHeight - window.innerHeight;
+                const progress = Math.min(y / maxScroll, 1);
+                bgLighting.style.opacity = 0.5 + progress * 0.3;
+                bgLighting.style.background = `radial-gradient(ellipse at ${30 + progress * 20}% ${20 - progress * 10}%, rgba(74,144,226,${0.08 + progress * 0.06}), transparent 60%)`;
+            }
+            if (lenisActive) lenis.on('scroll', updateLighting);
+            else window.addEventListener('scroll', updateLighting, {passive: true});
 
             // Footer continue button
             document.getElementById('continueBtn').addEventListener('click', ()=>{ scrollToTarget(document.getElementById('hero'), 60); });
@@ -1076,7 +1180,6 @@
             });
 
             document.getElementById('footerYear').textContent = new Date().getFullYear();
-            document.querySelectorAll('.journal-item img').forEach(img=> img.addEventListener('error', ()=> img.classList.add('broken-image')));
         });
     </script>
 </body>
