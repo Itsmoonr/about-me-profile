@@ -882,7 +882,10 @@
             grid-template-columns: 1fr 1fr;
             gap: var(--space-3);
         }
-        @media(max-width:480px) {
+
+        /* ── FIX: Adjusted breakpoints for profile stats ── */
+        /* At 640px and below, stack stats in a single column */
+        @media(max-width:640px) {
             .profile__stats {
                 grid-template-columns: 1fr;
             }
@@ -890,6 +893,16 @@
                 grid-column: span 1;
             }
         }
+        /* Between 641px and 820px, keep 2 columns but let wide items span 2 */
+        @media(min-width:641px) and (max-width:820px) {
+            .profile__stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            .profile__stat--wide {
+                grid-column: span 2;
+            }
+        }
+
         .profile__stat {
             background: var(--bg-card);
             border-radius: var(--radius-md);
@@ -933,6 +946,14 @@
             font-weight: 500;
             color: #fff;
             word-break: break-word;
+        }
+        /* Make the inner text container wrap gracefully on narrow screens */
+        .profile__stat>div:last-child {
+            min-width: 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0 var(--space-1);
         }
         .profile__stat--wide {
             grid-column: span 2;
