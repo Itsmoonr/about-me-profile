@@ -2984,7 +2984,7 @@
                     4: {
                         number: "第四章",
                         title: "守護者 · サイバーセキュリティボランティア",
-                        desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切るものじゃなくて、守るためのものであるべきだと思ってたから。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。"
+                        desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切るものじゃなくて、守るためのものであるべきだと思ってた。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。"
                     },
                     5: {
                         number: "第五章",
@@ -3000,7 +3000,7 @@
                 portfolio: {
                     label: "厳選プロジェクト",
                     title: "僕が<span class='highlight'>作ってきたもの</span>",
-                    intro: "これまで作ってきたものをいくつか紹介する。どれも、デザインとかコードとか、あるいは人について、何かを教えてくれた。",
+                    intro: "これまで作ってきたものをいくつか紹介する。どれも、デザインとかコード、あるいは人について、何かを教えてくれた。",
                     1: { stamp: "インパクト", title: "Think Fraud",
                         summary: "5万人以上をネット詐欺から守る活動。",
                         brief: "昔、人の貯金をどうやって騙し取るか、正確に知ってた。でもその過去が今の自分を苦しめてるわけじゃない。むしろそれがきっかけで、5万人以上をネット詐欺から守る活動につながったんだ。詐欺師がどう動くかを理解することだけが、それを止める唯一の方法だった。",
@@ -3087,6 +3087,9 @@
             return val;
         }
 
+        // ── Store journal item references for the modal (fixes language sync) ──
+        let journalItemsData = [];
+
         function applyLanguage(lang) {
             document.documentElement.lang = lang;
 
@@ -3121,6 +3124,19 @@
                     const delay = 1.20 + i * 0.07;
                     return `<span style="display:inline-block;opacity:0;transform:translateY(12px);animation:heroWordIn 0.5s cubic-bezier(0.22,0.61,0.36,1) ${delay}s forwards;">${word}</span>`;
                 }).join(' ');
+            }
+
+            // ── Update modal description if modal is open ──
+            const modal = document.getElementById('journalModal');
+            if (modal && modal.classList.contains('active')) {
+                const descEl = document.getElementById('journalModalDesc');
+                const currentIdx = window._journalCurrentIndex;
+                if (currentIdx !== undefined && journalItemsData[currentIdx]) {
+                    const data = journalItemsData[currentIdx];
+                    if (descEl && data.fullEl) {
+                        descEl.textContent = data.fullEl.textContent.trim();
+                    }
+                }
             }
 
             // ── Page title ──
@@ -3457,13 +3473,18 @@
             const modalNext = document.getElementById('journalModalNext');
             let currentIndex = 0;
             const journalItems = document.querySelectorAll('.journal-item');
-            const journalData = [];
 
+            // ── Populate journalItemsData with element references (fix: store fullEl, not cached text) ──
+            journalItemsData = [];
             journalItems.forEach((item, i) => {
                 const img = item.querySelector('img');
                 const full = item.querySelector('.journal-item__full');
                 if (img && full) {
-                    journalData.push({ src: img.src, alt: img.alt || '', desc: full.textContent.trim() });
+                    journalItemsData.push({
+                        src: img.src,
+                        alt: img.alt || '',
+                        fullEl: full // store the element reference, not the text
+                    });
                 }
                 item.addEventListener('click', function() {
                     const idx = parseInt(this.getAttribute('data-index')) || 0;
@@ -3478,14 +3499,17 @@
             });
 
             function openModal(index) {
-                if (index < 0) index = journalData.length - 1;
-                if (index >= journalData.length) index = 0;
+                if (index < 0) index = journalItemsData.length - 1;
+                if (index >= journalItemsData.length) index = 0;
                 currentIndex = index;
-                const data = journalData[currentIndex];
+                window._journalCurrentIndex = currentIndex;
+                const data = journalItemsData[currentIndex];
                 if (data) {
                     modalImg.src = data.src;
                     modalImg.alt = data.alt;
-                    modalDesc.textContent = data.desc;
+                    // ── Read description LIVE from the DOM element ──
+                    // This ensures the current language is always shown
+                    modalDesc.textContent = data.fullEl.textContent.trim();
                     modal.classList.add('active');
                     document.body.style.overflow = 'hidden';
                     setTimeout(() => modalClose.focus(), 100);
