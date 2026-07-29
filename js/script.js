@@ -673,7 +673,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (valid) {
                 const to = 'moonsicson@gmail.com';
                 const subjectText = subject.value.trim() || 'Message from Ross Nguyen profile';
-                const body = `From: ${name.value} (${email.value})\nSent: ${new Date().toLocaleString()}\n\n${message.value}\n\n-- \n`;
+                // 3 dòng trắng ở đầu để chữ ký Outlook không dính vào nội dung chính
+                const body = `\n\n\nFrom: ${name.value} (${email.value})\nSent: ${new Date().toLocaleString()}\n\n${message.value}\n\n-- \n`;
                 window.location.href = `mailto:${to}?subject=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(body)}`;
                 formSuccess.classList.add('show');
                 form.reset();
