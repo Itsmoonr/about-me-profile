@@ -531,7 +531,7 @@ const T = {
   }
 };
 
-// Phần còn lại của file script (các hàm, sự kiện, v.v.) giữ nguyên
+// Utility helpers
 const $ = (s, c) => (c || document).querySelector(s);
 const $$ = (s, c) => [...(c || document).querySelectorAll(s)];
 function getT(lang, path) { const keys = path.split('.'); let v = T[lang] || T.en; for (const k of keys) { if (v === undefined) return undefined; v = v[k]; } return v; }
@@ -658,7 +658,29 @@ document.addEventListener('DOMContentLoaded', function() {
     if (modalNext) modalNext.addEventListener('click', () => openModal(currentIndex + 1));
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); if (e.key === 'ArrowLeft' && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex - 1); } if (e.key === 'ArrowRight' && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex + 1); } });
     const form = $('#contactForm'), formSuccess = $('#formSuccess');
-    if (form) { form.addEventListener('submit', function(e) { e.preventDefault(); let valid = true; const name = $('#contactName'), email = $('#contactEmail'), message = $('#contactMessage'), nameErr = name.parentElement.querySelector('.contact__form-error'), emailErr = email.parentElement.querySelector('.contact__form-error'), msgErr = message.parentElement.querySelector('.contact__form-error'); [nameErr, emailErr, msgErr].forEach(el => el.classList.remove('show')); if (!name.value.trim()) { nameErr.classList.add('show'); valid = false; } if (!email.value.trim() || !email.value.includes('@')) { emailErr.classList.add('show'); valid = false; } if (!message.value.trim()) { msgErr.classList.add('show'); valid = false; } if (valid) { formSuccess.classList.add('show'); form.reset(); setTimeout(() => formSuccess.classList.remove('show'), 4000); } }); }
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let valid = true;
+            const name = $('#contactName'), email = $('#contactEmail'), subject = $('#contactSubject'), message = $('#contactMessage');
+            const nameErr = name.parentElement.querySelector('.contact__form-error');
+            const emailErr = email.parentElement.querySelector('.contact__form-error');
+            const msgErr = message.parentElement.querySelector('.contact__form-error');
+            [nameErr, emailErr, msgErr].forEach(el => el.classList.remove('show'));
+            if (!name.value.trim()) { nameErr.classList.add('show'); valid = false; }
+            if (!email.value.trim() || !email.value.includes('@')) { emailErr.classList.add('show'); valid = false; }
+            if (!message.value.trim()) { msgErr.classList.add('show'); valid = false; }
+            if (valid) {
+                const to = 'moonsicson@gmail.com';
+                const subjectText = subject.value.trim() || 'Message from Ross Nguyen profile';
+                const body = `From: ${name.value} (${email.value})\nSent: ${new Date().toLocaleString()}\n\n${message.value}\n\n-- \n`;
+                window.location.href = `mailto:${to}?subject=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(body)}`;
+                formSuccess.classList.add('show');
+                form.reset();
+                setTimeout(() => formSuccess.classList.remove('show'), 4000);
+            }
+        });
+    }
     $('#footerYear').textContent = new Date().getFullYear();
     $('#continueBtn').addEventListener('click', () => scrollTo($('#hero'), 60));
     document.addEventListener('keydown', e => { const t = e.key; if (t === 'e' || t === 'E') showToast('easterEgg'); else if (t === 'n' || t === 'N') { showToast('gameOver'); const f = $('.ending'); if (f) scrollTo(f, 60); } else if (t === 'y' || t === 'Y') { scrollTo($('#hero'), 60); showToast('respawn'); } });
