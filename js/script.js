@@ -1,6 +1,7 @@
 const T = {
   en: {
     skipLink: "Skip to Content",
+    music: { title: "Ambient · Lo-fi", artist: "Ross Nguyen" },
     hero: {
       subtitle: "Designer · Developer · Storyteller",
       tagline: "From the glamour of Ho Chi Minh City to Tokyo, the City of Lights, I've been writing a story that connects two countries.",
@@ -178,6 +179,7 @@ const T = {
 
   vi: {
     skipLink: "Skip đến Nội dung",
+    music: { title: "Nhạc nền · Lo-fi", artist: "Ross Nguyen" },
     hero: {
       subtitle: "Designer · Developer · Người kể câu chuyện",
       tagline: "Từ Hồ Chí Minh hoa lệ đến Thành Phố Ánh Sáng Tokyo, mình đã và đang viết lên câu chuyện kết nối 2 đất nước.",
@@ -355,6 +357,7 @@ const T = {
 
   ja: {
     skipLink: "コンテンツへスキップ",
+    music: { title: "アンビエント · Lo-fi", artist: "Ross Nguyen" },
     hero: {
       subtitle: "デザイナー · デベロッパー · ストーリーテラー",
       tagline: "煌びやかなホーチミン市から、光の都・東京まで、僕は二つの国をつなぐ物語を書き続けている。",
@@ -417,7 +420,7 @@ const T = {
       4: {
         number: "第四章",
         title: "生まれ変わった僕 · サイバーセキュリティボランティア",
-        desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切る道具じゃなくて、守るためのものであるべきだと思ってたから。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。"
+        desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切る道具じゃなくて、守るためのものであるべきだと思ってた。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。"
       },
       5: {
         number: "第五章",
@@ -635,12 +638,228 @@ document.addEventListener('DOMContentLoaded', function() {
         if (bottom > top && y < top + h) { const progress = (bottom - top) / (h + window.innerHeight); path.style.strokeDashoffset = path.getTotalLength() * (1 - Math.min(progress, 1)); }
     }
     window.addEventListener('scroll', drawTimeline, { passive: true });
-    const musicBtn = $('#musicToggle'), musicPlayer = $('#musicPlayer'), audio = $('#bgMusic');
-    let playing = false, audioErr = false;
+
+    // ============ NEW MUSIC PLAYER ============
+    const musicPlayer = $('#musicPlayer');
+    const playBtn = $('#musicToggle');
+    const audio = $('#bgMusic');
+    const progressWrap = $('#progressWrap');
+    const progressBar = $('#progressBar');
+    const progressThumb = $('#progressThumb');
+    const currentTimeEl = $('#currentTime');
+    const totalTimeEl = $('#totalTime');
+    const volumeToggle = $('#volumeToggle');
+    const volumeFill = $('#volumeFill');
+    const volumeTrack = $('#volumeTrack');
+    const visualizerCanvas = $('#visualizerCanvas');
+    let ctxVis = null;
+    let visualizerId = null;
+    let isPlaying = false;
+    let audioErr = false;
+    let volumeBeforeMute = 0.8;
+    let currentVolume = 0.8;
+
+    // Setup visualizer
+    if (visualizerCanvas) {
+        ctxVis = visualizerCanvas.getContext('2d');
+        const resizeVis = () => {
+            const rect = visualizerCanvas.getBoundingClientRect();
+            visualizerCanvas.width = rect.width || 120;
+            visualizerCanvas.height = rect.height || 30;
+        };
+        resizeVis();
+        window.addEventListener('resize', resizeVis);
+    }
+
     function hideMusic() { musicPlayer.classList.add('hidden'); }
-    function showToast(key) { const lang = localStorage.getItem('lang') || 'en'; const msg = getT(lang, 'toast.' + key) || T.en.toast[key] || key; const t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+    function showToast(key) {
+        const lang = localStorage.getItem('lang') || 'en';
+        const msg = getT(lang, 'toast.' + key) || T.en.toast[key] || key;
+        const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // Audio events
     audio.addEventListener('error', () => { audioErr = true; hideMusic(); showToast('audioError'); });
-    musicBtn.addEventListener('click', () => { if (audioErr) return; if (!playing) { audio.play().then(() => { playing = true; musicBtn.textContent = '❚❚'; musicBtn.classList.add('playing'); musicPlayer.classList.add('playing'); }).catch(() => { audioErr = true; hideMusic(); showToast('audioError'); }); } else { audio.pause(); playing = false; musicBtn.textContent = '▶'; musicBtn.classList.remove('playing'); musicPlayer.classList.remove('playing'); } });
+    audio.addEventListener('loadedmetadata', () => {
+        if (audio.duration) totalTimeEl.textContent = formatTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('play', () => { isPlaying = true; updatePlayIcon(true); startVisualizer(); });
+    audio.addEventListener('pause', () => { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
+    audio.addEventListener('ended', () => { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
+
+    function formatTime(sec) {
+        if (!sec || isNaN(sec)) return '0:00';
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function updateProgress() {
+        if (!audio.duration) return;
+        const pct = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = pct + '%';
+        progressThumb.style.left = pct + '%';
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        if (audio.duration) totalTimeEl.textContent = formatTime(audio.duration);
+        // update aria
+        progressWrap.setAttribute('aria-valuenow', Math.round(pct));
+    }
+
+    function updatePlayIcon(playing) {
+        const playIcon = playBtn.querySelector('.play-icon');
+        const pauseIcons = playBtn.querySelectorAll('.pause-icon');
+        if (playing) {
+            playIcon.style.display = 'none';
+            pauseIcons.forEach(el => el.style.display = 'block');
+        } else {
+            playIcon.style.display = 'block';
+            pauseIcons.forEach(el => el.style.display = 'none');
+        }
+    }
+
+    // Play/Pause
+    playBtn.addEventListener('click', () => {
+        if (audioErr) return;
+        if (audio.paused) {
+            audio.play().catch(() => { audioErr = true; hideMusic(); showToast('audioError'); });
+        } else {
+            audio.pause();
+        }
+    });
+
+    // Progress seek (click & drag)
+    let isDragging = false;
+    progressWrap.addEventListener('mousedown', (e) => {
+        if (!audio.duration) return;
+        isDragging = true;
+        setProgress(e.clientX);
+    });
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) setProgress(e.clientX);
+    });
+    document.addEventListener('mouseup', () => {
+        if (isDragging) { isDragging = false; }
+    });
+    progressWrap.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (!audio.duration) return;
+        isDragging = true;
+        setProgress(e.touches[0].clientX);
+    });
+    document.addEventListener('touchmove', (e) => {
+        if (isDragging) { e.preventDefault(); setProgress(e.touches[0].clientX); }
+    });
+    document.addEventListener('touchend', () => { isDragging = false; });
+
+    function setProgress(clientX) {
+        const rect = progressWrap.getBoundingClientRect();
+        let pct = (clientX - rect.left) / rect.width;
+        pct = Math.max(0, Math.min(1, pct));
+        audio.currentTime = pct * audio.duration;
+        updateProgress();
+    }
+
+    // Volume
+    let volDragging = false;
+    volumeToggle.addEventListener('click', () => {
+        if (audio.muted) {
+            audio.muted = false;
+            audio.volume = volumeBeforeMute;
+            currentVolume = volumeBeforeMute;
+            updateVolumeFill(volumeBeforeMute);
+        } else {
+            volumeBeforeMute = audio.volume || currentVolume;
+            audio.muted = true;
+            audio.volume = 0;
+            currentVolume = 0;
+            updateVolumeFill(0);
+        }
+    });
+    volumeTrack.addEventListener('mousedown', (e) => {
+        volDragging = true;
+        setVolume(e.clientX);
+    });
+    document.addEventListener('mousemove', (e) => {
+        if (volDragging) setVolume(e.clientX);
+    });
+    document.addEventListener('mouseup', () => { volDragging = false; });
+    volumeTrack.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        volDragging = true;
+        setVolume(e.touches[0].clientX);
+    });
+    document.addEventListener('touchmove', (e) => {
+        if (volDragging) { e.preventDefault(); setVolume(e.touches[0].clientX); }
+    });
+    document.addEventListener('touchend', () => { volDragging = false; });
+
+    function setVolume(clientX) {
+        const rect = volumeTrack.getBoundingClientRect();
+        let pct = (clientX - rect.left) / rect.width;
+        pct = Math.max(0, Math.min(1, pct));
+        audio.volume = pct;
+        currentVolume = pct;
+        if (pct === 0) { audio.muted = true; } else { audio.muted = false; }
+        updateVolumeFill(pct);
+    }
+
+    function updateVolumeFill(pct) {
+        volumeFill.style.width = (pct * 100) + '%';
+    }
+
+    // Visualizer
+    function startVisualizer() {
+        if (!ctxVis) return;
+        stopVisualizer();
+        const w = visualizerCanvas.width, h = visualizerCanvas.height;
+        const bars = 24;
+        const barWidth = w / bars;
+        const maxHeight = h * 0.8;
+        let time = 0;
+        function draw() {
+            if (!isPlaying) { stopVisualizer(); return; }
+            ctxVis.clearRect(0, 0, w, h);
+            time += 0.05;
+            for (let i = 0; i < bars; i++) {
+                const val = Math.sin(i * 0.5 + time * 1.8) * 0.6 + 0.4;
+                const height = maxHeight * val * 0.7 + maxHeight * 0.2 * Math.sin(i * 0.3 + time * 2.1) * 0.3 + maxHeight * 0.2;
+                const x = i * barWidth + (barWidth - 2) / 2;
+                const y = h - height;
+                const gradient = ctxVis.createLinearGradient(0, y, 0, h);
+                gradient.addColorStop(0, '#66c0f4');
+                gradient.addColorStop(1, '#f4a261');
+                ctxVis.fillStyle = gradient;
+                ctxVis.fillRect(x, y, 2, height);
+            }
+            visualizerId = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    function stopVisualizer() {
+        if (visualizerId) { cancelAnimationFrame(visualizerId); visualizerId = null; }
+        if (ctxVis) ctxVis.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+    }
+
+    // Initially hide volume if audio unavailable
+    audio.addEventListener('error', () => { /* already handled */ });
+
+    // Keyboard shortcuts: Space to toggle
+    document.addEventListener('keydown', (e) => {
+        if (e.target.matches('input, textarea, select')) return;
+        if (e.key === ' ' || e.key === 'Space') {
+            e.preventDefault();
+            playBtn.click();
+        }
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => { stopVisualizer(); });
+
+    // ============ END MUSIC PLAYER ============
+
     $$('.project-card').forEach(card => { card.addEventListener('click', function() { const expanded = this.classList.toggle('expanded'); this.setAttribute('aria-expanded', expanded); const live = this.querySelector('.project-card__status-live'); if (live) live.textContent = expanded ? 'Details expanded' : 'Collapsed'; }); card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } }); });
     const modal = $('#journalModal'), modalImg = $('#journalModalImg'), modalDesc = $('#journalModalDesc'), modalClose = $('#journalModalClose'), modalPrev = $('#journalModalPrev'), modalNext = $('#journalModalNext');
     let currentIndex = 0;
@@ -673,7 +892,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (valid) {
                 const to = 'moonsicson@gmail.com';
                 const subjectText = subject.value.trim() || 'Message from Ross Nguyen profile';
-                // 3 dòng trắng ở đầu để chữ ký Outlook không dính vào nội dung chính
                 const body = `\n\n\nFrom: ${name.value} (${email.value})\nSent: ${new Date().toLocaleString()}\n\n${message.value}\n\n-- \n`;
                 window.location.href = `mailto:${to}?subject=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(body)}`;
                 formSuccess.classList.add('show');
