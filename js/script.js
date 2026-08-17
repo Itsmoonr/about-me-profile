@@ -992,16 +992,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ---- EASTER EGGS ----
     document.addEventListener('keydown', e => {
-        const t = e.key;
-        if (t === 'e' || t === 'E') showToast('easterEgg');
-        else if (t === 'n' || t === 'N') {
-            showToast('gameOver');
-            const f = $('.ending');
-            if (f) scrollTo(f, 60);
-        } else if (t === 'y' || t === 'Y') {
-            scrollTo($('#hero'), 60);
-            showToast('respawn');
-        }
+    // Chặn easter egg khi đang focus vào input, textarea, select (form)
+    if (e.target.matches('input, textarea, select')) return;
+
+    const t = e.key;
+    if (t === 'e' || t === 'E') showToast('easterEgg');
+    else if (t === 'n' || t === 'N') {
+        showToast('gameOver');
+        const f = $('.ending');
+        if (f) scrollTo(f, 60);
+    } else if (t === 'y' || t === 'Y') {
+        scrollTo($('#hero'), 60);
+        showToast('respawn');
+    }
     });
 
     // ---- VISIBILITY ----
