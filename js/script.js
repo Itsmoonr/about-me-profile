@@ -361,9 +361,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (t) { scrollTo(t, 60); setMenu(false); }
     }));
 
-    // ---- NAV SCROLL STATE ----
+    // ---- NAV SCROLL STATE (gộp vào rAF để tránh reflow) ----
     const nav = $('#nav'),
         sectionEls = $$('section[id]');
+    let navUpdatePending = false;
 
     function updateNav() {
         const y = window.pageYOffset;
@@ -377,7 +378,19 @@ document.addEventListener('DOMContentLoaded', function() {
             a.toggleAttribute('aria-current', a.dataset.section === cur);
         });
     }
-    window.addEventListener('scroll', updateNav, { passive: true });
+
+    function updateNavRaf() {
+        if (!navUpdatePending) {
+            navUpdatePending = true;
+            requestAnimationFrame(() => {
+                updateNav();
+                navUpdatePending = false;
+            });
+        }
+    }
+
+    window.addEventListener('scroll', updateNavRaf, { passive: true });
+    // initial call
     updateNav();
 
     // ---- MOUSE LIGHT ----
@@ -398,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let canvasAnim = true;
     const scrollProgress = $('#scrollProgress');
 
-    // ---- HERO CANVAS ----
+    // ---- HERO CANVAS (giảm particle trên mobile) ----
     try {
         const canvas = $('#heroCanvas'),
             ctx = canvas.getContext('2d');
@@ -436,8 +449,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function init() {
             resize();
-            const count = window.innerWidth < 768 ? 30 : window.innerWidth < 1024 ? 45 : 70;
+            const isMobile = window.innerWidth < 768;
+            const count = isMobile ? 15 : (window.innerWidth < 1024 ? 45 : 70);
             particles = Array.from({ length: count }, () => new Particle());
+            if (isMobile) {
+                // Có thể tắt canvas trên mobile nếu vẫn lag
+                // canvas.style.display = 'none';
+            }
         }
 
         function anim() {
@@ -456,47 +474,59 @@ document.addEventListener('DOMContentLoaded', function() {
         if (c) c.style.display = 'none';
     }
 
-    // ---- MAIN LOOP (orbs, lighting, scroll progress) ----
+    // ---- MAIN LOOP (tối ưu: giảm tần suất cập nhật parallax, dùng transform cho mouse) ----
     let scrollY = 0,
         frameId = null,
         lastTime = 0;
+    let frameCount = 0;
+    const UPDATE_INTERVAL = 2; // cập nhật hoạt ảnh mỗi 2 frame => ~30fps
 
     function mainLoop(time) {
         frameId = requestAnimationFrame(mainLoop);
         const dt = Math.min(time - lastTime, 50);
         lastTime = time;
+
+        // 1. Luôn cập nhật scrollY và scroll progress (cần mượt)
         scrollY = window.pageYOffset;
-        lx += (mx - lx) * .06;
-        ly += (my - ly) * .06;
-        if (!isTouch && mouseLight) {
-            mouseLight.style.left = lx + 'px';
-            mouseLight.style.top = ly + 'px';
-            const edge = 40,
-                near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
-            mouseLight.style.opacity = near ? '.15' : '1';
-        }
-        const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1),
-            frac = scrollY / maxScroll;
+        const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
+        const frac = scrollY / maxScroll;
         if (scrollProgress) {
             scrollProgress.style.width = (frac * 100) + '%';
         }
-        if (orbs[0]) orbs[0].style.transform = `translate3d(${-25 + frac * 45}px,${-15 + frac * 70}px,0)`;
-        if (orbs[1]) orbs[1].style.transform = `translate3d(${18 - frac * 35}px,${-50 + frac * 100}px,0)`;
-        if (orbs[2]) orbs[2].style.transform = `translate3d(${-12 + frac * 28}px,${35 - frac * 85}px,0)`;
-        const bg = $('#bgLighting');
-        if (bg) {
-            const p = Math.min(scrollY / maxScroll, 1);
-            bg.style.opacity = .4 + p * .35;
-            bg.style.background = `radial-gradient(ellipse at ${28 + p * 18}% ${18 - p * 10}%, rgba(212,163,115,${.06 + p * .05}), transparent 58%)`;
+
+        // 2. Mouse light – dùng transform để tránh repaint
+        if (!isTouch && mouseLight) {
+            lx += (mx - lx) * 0.06;
+            ly += (my - ly) * 0.06;
+            mouseLight.style.transform = `translate3d(${lx}px, ${ly}px, 0)`;
+            const edge = 40;
+            const near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
+            mouseLight.style.opacity = near ? '0.15' : '1';
+        }
+
+        // 3. Cập nhật hoạt ảnh nặng (parallax orbs, lighting) chỉ mỗi UPDATE_INTERVAL frame
+        frameCount++;
+        if (frameCount % UPDATE_INTERVAL === 0) {
+            if (orbs[0]) orbs[0].style.transform = `translate3d(${-25 + frac * 45}px,${-15 + frac * 70}px,0)`;
+            if (orbs[1]) orbs[1].style.transform = `translate3d(${18 - frac * 35}px,${-50 + frac * 100}px,0)`;
+            if (orbs[2]) orbs[2].style.transform = `translate3d(${-12 + frac * 28}px,${35 - frac * 85}px,0)`;
+
+            const bg = $('#bgLighting');
+            if (bg) {
+                const p = Math.min(frac, 1);
+                bg.style.opacity = 0.4 + p * 0.35;
+                bg.style.background = `radial-gradient(ellipse at ${28 + p * 18}% ${18 - p * 10}%, rgba(212,163,115,${0.06 + p * 0.05}), transparent 58%)`;
+            }
         }
     }
     lastTime = performance.now();
     frameId = requestAnimationFrame(mainLoop);
 
-    // ---- CHAPTERS TIMELINE ----
+    // ---- CHAPTERS TIMELINE (gộp vào rAF để tránh reflow) ----
     const path = $('#chaptersPath'),
         container = $('#chaptersContainer'),
         svg = $('#chaptersSVG');
+    let timelineUpdatePending = false;
 
     function updateTimeline() {
         if (!path || !container) return;
@@ -522,10 +552,20 @@ document.addEventListener('DOMContentLoaded', function() {
             path.style.strokeDashoffset = path.getTotalLength() * (1 - Math.min(progress, 1));
         }
     }
-    window.addEventListener('scroll', drawTimeline, { passive: true });
+
+    function drawTimelineRaf() {
+        if (!timelineUpdatePending) {
+            timelineUpdatePending = true;
+            requestAnimationFrame(() => {
+                drawTimeline();
+                timelineUpdatePending = false;
+            });
+        }
+    }
+    window.addEventListener('scroll', drawTimelineRaf, { passive: true });
 
     // ============================================================
-    //  MUSIC PLAYER
+    //  MUSIC PLAYER (không thay đổi)
     // ============================================================
     const musicPlayer = $('#musicPlayer');
     const playBtn = $('#musicToggle');
@@ -868,7 +908,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ============================================================
-    //  SITE VERIFICATION SYSTEM (NON‑INTRUSIVE)
+    //  SITE VERIFICATION SYSTEM (giữ nguyên)
     // ============================================================
     window.verifySite = function() {
         const results = [];
@@ -916,7 +956,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const nameErr = name.parentElement.querySelector('.contact__form-error').classList.contains('show');
             const emailErr = email.parentElement.querySelector('.contact__form-error').classList.contains('show');
             const msgErr = message.parentElement.querySelector('.contact__form-error').classList.contains('show');
-            // Reset and clean up
             $$('.contact__form-error').forEach(el => el.classList.remove('show'));
             formEl.reset();
             return nameErr && emailErr && msgErr;
@@ -947,8 +986,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return results;
     };
 
-    // NOTE: Automatic verification is disabled to prevent any unwanted scroll or focus changes.
-    // You can run it manually from the console by typing: verifySite()
+    // Bỏ tự động chạy verify để tránh ảnh hưởng hiệu năng
     // setTimeout(() => { window.verifySite(); }, 800);
 
 }); // end DOMContentLoaded
