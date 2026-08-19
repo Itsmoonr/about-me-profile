@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // initial call
     updateNav();
 
-    // ---- MOUSE LIGHT ----
+    // ---- MOUSE LIGHT (giữ nguyên cách dùng left/top) ----
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
     const mouseLight = $('#mouse-light');
     let mx = window.innerWidth / 2,
@@ -452,10 +452,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const isMobile = window.innerWidth < 768;
             const count = isMobile ? 15 : (window.innerWidth < 1024 ? 45 : 70);
             particles = Array.from({ length: count }, () => new Particle());
-            if (isMobile) {
-                // Có thể tắt canvas trên mobile nếu vẫn lag
-                // canvas.style.display = 'none';
-            }
+            // Nếu muốn tắt canvas trên mobile, bỏ comment dòng dưới
+            // if (isMobile) canvas.style.display = 'none';
         }
 
         function anim() {
@@ -474,12 +472,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (c) c.style.display = 'none';
     }
 
-    // ---- MAIN LOOP (tối ưu: giảm tần suất cập nhật parallax, dùng transform cho mouse) ----
+    // ---- MAIN LOOP (tối ưu: giảm tần suất cập nhật, mouse light dùng left/top) ----
     let scrollY = 0,
         frameId = null,
         lastTime = 0;
     let frameCount = 0;
-    const UPDATE_INTERVAL = 2; // cập nhật hoạt ảnh mỗi 2 frame => ~30fps
+    const UPDATE_INTERVAL = 2; // cập nhật hoạt ảnh mỗi 2 frame
 
     function mainLoop(time) {
         frameId = requestAnimationFrame(mainLoop);
@@ -494,11 +492,12 @@ document.addEventListener('DOMContentLoaded', function() {
             scrollProgress.style.width = (frac * 100) + '%';
         }
 
-        // 2. Mouse light – dùng transform để tránh repaint
+        // 2. Mouse light – vẫn dùng left/top để đảm bảo căn giữa chính xác
         if (!isTouch && mouseLight) {
             lx += (mx - lx) * 0.06;
             ly += (my - ly) * 0.06;
-            mouseLight.style.transform = `translate3d(${lx}px, ${ly}px, 0)`;
+            mouseLight.style.left = lx + 'px';
+            mouseLight.style.top = ly + 'px';
             const edge = 40;
             const near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
             mouseLight.style.opacity = near ? '0.15' : '1';
@@ -522,7 +521,7 @@ document.addEventListener('DOMContentLoaded', function() {
     lastTime = performance.now();
     frameId = requestAnimationFrame(mainLoop);
 
-    // ---- CHAPTERS TIMELINE (gộp vào rAF để tránh reflow) ----
+    // ---- CHAPTERS TIMELINE (gộp vào rAF) ----
     const path = $('#chaptersPath'),
         container = $('#chaptersContainer'),
         svg = $('#chaptersSVG');
@@ -565,7 +564,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', drawTimelineRaf, { passive: true });
 
     // ============================================================
-    //  MUSIC PLAYER (không thay đổi)
+    //  MUSIC PLAYER
     // ============================================================
     const musicPlayer = $('#musicPlayer');
     const playBtn = $('#musicToggle');
