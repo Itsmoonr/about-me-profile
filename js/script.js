@@ -296,7 +296,19 @@ function applyLanguage(lang) {
 //  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
+    // Force the page to start at the top on every reload
+    if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+    }
 
+    // Remove any leftover hash (like #journal) without adding a history entry
+    if (window.location.hash) {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
+    // Instantly jump to the top (using auto prevents smooth-scroll animation)
+    window.scrollTo(0, 0);
+	
     // ---- LOADING ----
     const placeholder = $('#loadingPlaceholder');
     setTimeout(() => placeholder.classList.add('hidden'), 400);
