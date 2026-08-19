@@ -185,8 +185,8 @@ body {
     border-radius: 50%;
     background: radial-gradient(circle at center, rgba(102, 192, 244, .10) 0%, rgba(244, 162, 97, .05) 35%, rgba(102, 192, 244, .02) 55%, transparent 72%);
     transform: translate(-50%, -50%);
+    will-change: transform, opacity;
     mix-blend-mode: screen;
-    will-change: left, top, opacity;
     transition: opacity .6s ease;
 }
 @media (pointer: coarse) {
@@ -731,6 +731,7 @@ body {
     opacity: 0;
     transform: scale(.96) translateY(20px);
     animation: heroPortraitIn .9s var(--ease-out) .3s forwards;
+    will-change: transform, opacity;
 }
 .hero__portrait:hover {
     transform: scale(1.01);
@@ -1897,6 +1898,22 @@ body {
     }
     .music-player__volume { display: none; }
     .music-player__visualizer { display: none; }
+}
+
+/* ============================================
+   MOBILE OPTIMIZATION (giảm tải GPU)
+   ============================================ */
+@media (max-width: 768px) {
+    /* Tắt film-grain để tiết kiệm CPU trên mobile */
+    .film-grain {
+        display: none !important;
+    }
+    /* Giảm cường độ vignette */
+    .cinematic-vignette {
+        opacity: 0.3;
+    }
+    /* Nếu vẫn lag, có thể tắt canvas particles (tuỳ chọn) */
+    /* .hero__canvas { display: none; } */
 }
 
 /* ============================================
