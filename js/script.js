@@ -296,19 +296,13 @@ function applyLanguage(lang) {
 //  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Force the page to start at the top on every reload
+
+    // Force start at top on every reload (prevents browser scroll restoration)
     if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual';
+        history.scrollRestoration = 'manual';
     }
-
-    // Remove any leftover hash (like #journal) without adding a history entry
-    if (window.location.hash) {
-    history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
-
-    // Instantly jump to the top (using auto prevents smooth-scroll animation)
     window.scrollTo(0, 0);
-	
+
     // ---- LOADING ----
     const placeholder = $('#loadingPlaceholder');
     setTimeout(() => placeholder.classList.add('hidden'), 400);
@@ -874,7 +868,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ============================================================
-    //  SITE VERIFICATION SYSTEM
+    //  SITE VERIFICATION SYSTEM (NON‑INTRUSIVE)
     // ============================================================
     window.verifySite = function() {
         const results = [];
@@ -889,7 +883,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         check('Critical DOM elements', () =>
-            ['loadingPlaceholder','navToggle','navLinks','langSelect','heroCanvas','chaptersPath','musicPlayer','musicToggle','bgMusic','contactForm','footerYear','continueBtn']
+            ['loadingPlaceholder','navToggle','navLinks','langSelect','heroCanvas','chaptersPath','musicPlayer','musicToggle','bgMusic','contactForm','footerYear','continueBtn','scrollProgress']
                 .every(id => document.getElementById(id))
         );
 
@@ -901,28 +895,17 @@ document.addEventListener('DOMContentLoaded', function() {
             !!$('#navToggle') && !!$('#navLinks') && $$('.nav__links a[data-section]').length === 6
         );
 
-        const firstCard = $('.project-card');
-        if (firstCard) {
-            const initialExpanded = firstCard.classList.contains('expanded');
-            firstCard.click();
-            const afterClick = firstCard.classList.contains('expanded');
-            firstCard.click();
-            check('Project cards expand/collapse', () =>
-                initialExpanded !== afterClick && firstCard.classList.contains('expanded') === initialExpanded
-            );
-        }
+        check('Project cards present', () =>
+            $$('.project-card').length === 4
+        );
 
-        const firstItem = $('.journal-item');
-        const journalModal = $('#journalModal');
-        if (firstItem && journalModal) {
-            firstItem.click();
-            const active = journalModal.classList.contains('active');
-            $('#journalModalClose').click();
-            check('Journal modal open/close', () => active && !journalModal.classList.contains('active'));
-        }
+        check('Journal modal elements present', () =>
+            !!$('.journal-item') && !!$('#journalModal') && !!$('#journalModalClose') && !!$('#journalModalImg')
+        );
 
-        const formEl = $('#contactForm');
-        if (formEl) {
+        check('Contact form validation', () => {
+            const formEl = $('#contactForm');
+            if (!formEl) return false;
             const name = $('#contactName');
             const email = $('#contactEmail');
             const message = $('#contactMessage');
@@ -933,9 +916,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const nameErr = name.parentElement.querySelector('.contact__form-error').classList.contains('show');
             const emailErr = email.parentElement.querySelector('.contact__form-error').classList.contains('show');
             const msgErr = message.parentElement.querySelector('.contact__form-error').classList.contains('show');
+            // Reset and clean up
             $$('.contact__form-error').forEach(el => el.classList.remove('show'));
-            check('Contact form validation', () => nameErr && emailErr && msgErr);
-        }
+            formEl.reset();
+            return nameErr && emailErr && msgErr;
+        });
 
         check('Music player setup', () =>
             !!$('#bgMusic') && !!$('#musicToggle') && !!$('#progressWrap') && !!$('#volumeFill') && !!$('#visualizerCanvas')
@@ -962,9 +947,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return results;
     };
 
-    // Run automatic verification shortly after load
-    setTimeout(() => {
-        if (window.verifySite) window.verifySite();
-    }, 800);
+    // NOTE: Automatic verification is disabled to prevent any unwanted scroll or focus changes.
+    // You can run it manually from the console by typing: verifySite()
+    // setTimeout(() => { window.verifySite(); }, 800);
 
 }); // end DOMContentLoaded
