@@ -2118,3 +2118,13 @@ body {
 .mt-8 { margin-top: var(--space-8); }
 .mb-4 { margin-bottom: var(--space-4); }
 .hidden { display: none !important; }
+
+/* ============================================
+   GPU HARDWARE ACCELERATION OPTIMIZATION
+   ============================================ */
+.project-card, 
+.chapter-item, 
+.journal-item {
+    contain: layout style paint;
+    will-change: transform, opacity;
+}
