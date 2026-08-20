@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createParticles() {
         const isMobile = window.innerWidth < 768;
-        const count = Math.floor((currentMode === 'rain' ? 70 : 55) * (isMobile ? 0.35 : 1));
+        const count = Math.floor((currentMode === 'rain' ? 70 : 90) * (isMobile ? 0.5 : 1));
         particles = Array.from({ length: count }, () => new Particle(currentMode));
     }
 
