@@ -42,6 +42,16 @@
     --light-size: 480px;
 }
 
+/* Day-theme adjustment for Real-time Day/Night Lighting */
+.day-theme {
+    --bg-deep: #0d1620;
+    --bg-surface: #142130;
+    --bg-card: #1b2a3c;
+    --bg-card-hover: #22354c;
+    --border-subtle: #2d415b;
+    --accent-glow: rgba(102, 192, 244, 0.22);
+}
+
 *,
 *::before,
 *::after {
@@ -64,6 +74,7 @@ body {
     overflow-x: hidden;
     min-height: 100vh;
     -webkit-tap-highlight-color: transparent;
+    transition: background-color 1s ease;
 }
 ::selection {
     background: rgba(102, 192, 244, 0.25);
@@ -171,6 +182,24 @@ body {
     box-shadow: 0 0 12px rgba(102, 192, 244, 0.35);
     transition: width .08s linear;
     pointer-events: none;
+}
+
+/* Camera Shutter Overlay Flash Effect */
+.shutter-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #fff;
+    pointer-events: none;
+    opacity: 0;
+}
+.shutter-overlay.active {
+    animation: shutterFlash 0.2s var(--ease-out) forwards;
+}
+@keyframes shutterFlash {
+    0% { opacity: 0.8; background: #ffffff; }
+    40% { opacity: 0.3; background: #000000; }
+    100% { opacity: 0; }
 }
 
 /* ============================================
@@ -935,7 +964,7 @@ body {
 }
 
 /* ============================================
-   CHAPTERS
+   CHAPTERS & BOKEH FOCUS
    ============================================ */
 .chapters {
     position: relative;
