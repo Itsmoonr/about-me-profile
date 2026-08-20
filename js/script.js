@@ -151,7 +151,7 @@ const T = {
             invite: "Hợp tác, việc freelance, hay đơn giản chỉ muốn tám chuyện, lúc nào mình cũng sẵn lòng.",
             form: { name: "Tên", email: "Email", subject: "Chủ đề", message: "Lời nhắn", submit: "Gửi tin nhắn", nameError: "Vui lòng nhập tên của bạn", emailError: "Vui lòng nhập email hợp lệ", messageError: "Vui lòng nhập lời nhắn", success: "✓ Đã gửi! Mình sẽ phản hồi bạn sớm nhất có thể." }
         },
-        ending: { title: "Điểm lưu", message: "Câu chuyện vẫn đang tiếp tục.", continue: "Tiếp tục?", reflection: "Cảm ơn bạn đã đi cùng mình qua từng trang này. Nếu bạn thấy đâu đó bóng dáng hành trình của chính mình, mình rất muốn nghe bạn kể. Cùng viết tiếp chương sau nhé.", signature: "Thân Ái, Ross" },
+        ending: { title: "Save Point", message: "Câu chuyện vẫn đang tiếp tục.", continue: "Tiếp tục?", reflection: "Cảm ơn bạn đã đi cùng mình qua từng trang này. Nếu bạn thấy đâu đó bóng dáng hành trình của chính mình, mình rất muốn nghe bạn kể. Cùng viết tiếp chương sau nhé.", signature: "Thân Ái, Ross" },
         toast: { easterEgg: "✦ Tìm thấy bí mật: Xác nhận là một kẻ ham khám phá", gameOver: "💀 Game Over. Nhấn Y để hồi sinh.", respawn: "✦ Đã hồi sinh. Tiếp tục khám phá thôi.", audioError: "⚠ Không phát được âm thanh" }
     },
     ja: {
@@ -191,7 +191,7 @@ const T = {
             3: { number: "第三章", title: "Prime Time · 高校時代", desc: "高校では、自分の中に二つの人生を同時に生きられるって気づいた。昼は微分積分、夜は誰にも読まれない物語を書く。初めてフィルムで写真を撮って、初めて自分のサイトを作った。小さいけど、確かに自分だけのものだった。" },
             4: { number: "第四章", title: "生まれ変わった僕 · サイバーセキュリティボランティア", desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切る道具じゃなくて、守るためのものであるべきだと思ってた。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。" },
             5: { number: "第五章", title: "学徒 · 大学生活", desc: "大学に来て、デザインって物を綺麗にすることじゃないんだって学んだ。それより、その人が「自分は見てもらえてるんだ」って感じられるようにすることなんだと思う。今も大学の廊下を歩いてて、ノートはコードと詩の間くらいの、なんとも言えないアイデアでいっぱいだ。" },
-            6: { number: "第六章", title: "地平線 · 次の場所へ", desc: "今学んでることを、外の世界に持っていく準備をしてる。専門家としてじゃなくて、好奇心が一番の武器だってまだ信じてる一人の学生として。新しい文化、一緒に歩んで協力できる新しい人たち、知識、そしてデザイナーが国境なんて気にしなくていい未来へ。" }
+            6: { number: "第六章", title: "地平線 · 次の場所へ", desc: "今学んでることを、外の世界に持っていく準備をしてる。専門家としてじゃなくて、好奇心が一番の武器だってまだ信じてる一人の学生として。新しい文化、一緒に歩んで協力できる新しい人たち、そしてデザイナーが国境なんて気にしなくていい未来へ。" }
         },
         portfolio: {
             label: "厳選プロジェクト",
@@ -224,7 +224,7 @@ const T = {
         contact: {
             label: "連絡する",
             title: "<span class='highlight'>チャンネル</span>を開く",
-            invite: "コラボでも、フリーランスの仕事でも、ただの雑談でも、いつでも歓迎です。",
+            invite: "コラボでも、フリーランスの仕事でも、ただの雑談 settled, いつでも歓迎です。",
             form: { name: "名前", email: "メールアドレス", subject: "件名", message: "メッセージ", submit: "送信する", nameError: "お名前を入力してください", emailError: "有効なメールアドレスを入力してください", messageError: "メッセージを入力してください", success: "✓ 送信完了！なるべく早く返信します。" }
         },
         ending: { title: "セーブポイント", message: "物語はまだ続いてる。", continue: "続ける?", reflection: "ここまで一緒に歩いてくれてありがとう。もしどこかに自分自身の旅の影を見つけてくれたなら、ぜひ聞かせてほしい。一緒に次の章を書いていこう。", signature: "Ross より" },
@@ -293,9 +293,24 @@ function applyLanguage(lang) {
 }
 
 // ============================================================
+//  REAL-TIME DAY / NIGHT LIGHTING
+// ============================================================
+function initDayNightLighting() {
+    const hour = new Date().getHours();
+    const isDaytime = hour >= 6 && hour < 18;
+    if (isDaytime) {
+        document.documentElement.classList.add('day-theme');
+    } else {
+        document.documentElement.classList.remove('day-theme');
+    }
+}
+
+// ============================================================
 //  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
+
+    initDayNightLighting();
 
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
@@ -318,8 +333,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // ---- EMAIL ----
     const emailLink = $('#emailLink');
     if (emailLink) {
-        emailLink.href = 'mailto:' + 'moonsicson' + '@' + 'gmail.com';
-        emailLink.textContent = 'moonsicson' + '@' + 'gmail.com';
+        emailLink.href = 'mailto:moonsicson@gmail.com';
+        emailLink.textContent = 'moonsicson@gmail.com';
     }
 
     // ---- INTERSECTION OBSERVERS ----
@@ -443,6 +458,40 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (_) {}
     }
 
+    // Camera Shutter SFX
+    function playShutterSound() {
+        try {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.06);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.06);
+        } catch (_) {}
+    }
+
+    function triggerShutterEffect() {
+        playShutterSound();
+        let shutter = $('.shutter-overlay');
+        if (!shutter) {
+            shutter = document.createElement('div');
+            shutter.className = 'shutter-overlay';
+            document.body.appendChild(shutter);
+        }
+        shutter.classList.remove('active');
+        void shutter.offsetWidth; // trigger reflow
+        shutter.classList.add('active');
+    }
+
     $$('.hero__cta, .project-card, .chapter-item, .journal-item, .nav__links a, .contact__social-link').forEach(el => {
         el.addEventListener('mouseenter', () => playCinematicSound(150, 'sine', 0.08));
         el.addEventListener('click', () => playCinematicSound(220, 'triangle', 0.15));
@@ -467,14 +516,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    //  DYNAMIC ATMOSPHERE SYSTEM (RAIN / SNOW / AMBIENT)
+    //  DYNAMIC ATMOSPHERE SYSTEM (RAIN: TOP -> CH1 | SNOW: CH2 -> END)
     // ============================================================
     (function initAtmosphere() {
         const canvas = $('#heroCanvas');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let w, h, particles = [];
-        let currentMode = 'ambient'; 
+        let currentMode = 'rain'; 
 
         function resize() {
             w = canvas.width = window.innerWidth;
@@ -490,23 +539,17 @@ document.addEventListener('DOMContentLoaded', function() {
             this.y = Math.random() * h;
             
             if (mode === 'rain') {
-                this.r = Math.random() * 1.2 + 0.6;
-                this.vx = -Math.random() * 0.4 - 0.2;
-                this.vy = Math.random() * 7 + 5;
-                this.length = Math.random() * 14 + 8;
-                this.alpha = Math.random() * 0.25 + 0.12;
-            } else if (mode === 'snow') {
-                this.r = Math.random() * 2.2 + 0.8;
-                this.vx = (Math.random() - 0.5) * 0.6;
-                this.vy = Math.random() * 1.2 + 0.4;
+                this.r = Math.random() * 1.5 + 0.8;
+                this.vx = -Math.random() * 0.5 - 0.2;
+                this.vy = Math.random() * 8 + 6;
+                this.length = Math.random() * 16 + 10;
+                this.alpha = Math.random() * 0.28 + 0.15;
+            } else { // 'snow'
+                this.r = Math.random() * 2.5 + 1.2;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = Math.random() * 1.5 + 0.6;
                 this.length = 0;
-                this.alpha = Math.random() * 0.4 + 0.2;
-            } else {
-                this.r = Math.random() * 1.6 + 0.5;
-                this.vx = (Math.random() - 0.5) * 0.2;
-                this.vy = -Math.random() * 0.25 - 0.05;
-                this.length = 0;
-                this.alpha = Math.random() * 0.2 + 0.06;
+                this.alpha = Math.random() * 0.45 + 0.25;
             }
         };
 
@@ -516,7 +559,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (this.y > h + 15 || this.y < -15 || this.x > w + 15 || this.x < -15) {
                 this.reset(mode);
-                this.y = mode === 'ambient' ? h + 10 : -10;
+                this.y = -10;
             }
         };
 
@@ -530,20 +573,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 ctx.stroke();
             } else {
                 ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                ctx.fillStyle = mode === 'snow' ? `rgba(245, 247, 250, ${this.alpha})` : `rgba(102, 192, 244, ${this.alpha})`;
+                ctx.fillStyle = `rgba(245, 247, 250, ${this.alpha})`;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
                 ctx.fill();
+                ctx.shadowBlur = 0;
             }
         };
 
         function createParticles() {
             resize();
             const isMobile = window.innerWidth < 768;
-            const densityMultiplier = isMobile ? 0.35 : 1;
+            const densityMultiplier = isMobile ? 0.4 : 1;
             
-            let baseCount = 50;
-            if (currentMode === 'rain') baseCount = 75;
-            if (currentMode === 'snow') baseCount = 60;
-
+            let baseCount = currentMode === 'rain' ? 80 : 70;
             const count = Math.floor(baseCount * densityMultiplier);
             particles = Array.from({ length: count }, () => new Particle(currentMode));
         }
@@ -557,28 +600,25 @@ document.addEventListener('DOMContentLoaded', function() {
             requestAnimationFrame(animate);
         }
 
-        const chapterItems = $$('.chapter-item');
-        const chapterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const text = entry.target.innerText.toLowerCase();
-                    let newMode = 'ambient';
-                    
-                    if (text.includes('vietnam') || text.includes('quê nhà') || text.includes('homeland')) {
-                        newMode = 'rain';
-                    } else if (text.includes('japan') || text.includes('nhật')) {
-                        newMode = 'snow';
-                    }
-
-                    if (newMode !== currentMode) {
-                        currentMode = newMode;
-                        createParticles();
-                    }
+        // Exact scroll boundary check: Rain from top through Ch 1, Snow from Ch 2 onwards
+        function checkWeatherBoundary() {
+            const chapters = $$('.chapter-item');
+            let targetMode = 'rain';
+            
+            if (chapters.length >= 2) {
+                const ch2Top = chapters[1].getBoundingClientRect().top + window.pageYOffset;
+                if (window.pageYOffset >= ch2Top - 250) {
+                    targetMode = 'snow';
                 }
-            });
-        }, { threshold: 0.4 });
+            }
 
-        chapterItems.forEach(item => chapterObserver.observe(item));
+            if (targetMode !== currentMode) {
+                currentMode = targetMode;
+                createParticles();
+            }
+        }
+
+        window.addEventListener('scroll', checkWeatherBoundary, { passive: true });
 
         let resizeTO;
         window.addEventListener('resize', () => {
@@ -919,7 +959,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ============================================================
-    //  JOURNAL MODAL
+    //  JOURNAL MODAL WITH CAMERA SHUTTER EFFECT
     // ============================================================
     const modal = $('#journalModal'),
         modalImg = $('#journalModalImg'),
@@ -944,6 +984,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function openModal(index) {
         if (!modal || !modalImg || !modalDesc) return;
+        triggerShutterEffect();
         if (index < 0) index = journalItemsData.length - 1;
         if (index >= journalItemsData.length) index = 0;
         currentIndex = index;
