@@ -549,10 +549,12 @@ body {
     overflow: hidden;
 }
 .hero__canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
 }
 .hero__content {
     display: grid;
@@ -727,14 +729,13 @@ body {
     box-shadow: 0 20px 60px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .04);
     background: #182230;
     position: relative;
-    transition: transform .3s var(--ease-out), box-shadow .5s var(--ease-out);
+    transition: transform .4s var(--ease-out), box-shadow .5s var(--ease-out);
     opacity: 0;
     transform: scale(.96) translateY(20px);
     animation: heroPortraitIn .9s var(--ease-out) .3s forwards;
     will-change: transform, opacity;
 }
 .hero__portrait:hover {
-    transform: scale(1.01);
     box-shadow: 0 24px 72px rgba(0, 0, 0, .7), 0 0 0 1px rgba(102, 192, 244, .1);
 }
 @keyframes heroPortraitIn {
@@ -939,6 +940,7 @@ body {
 .chapters {
     position: relative;
     padding-left: var(--space-9);
+    perspective: 1200px;
 }
 @media (max-width: 600px) {
     .chapters { padding-left: var(--space-7); }
@@ -958,12 +960,23 @@ body {
     padding-left: var(--space-5);
     opacity: 0;
     transform: translateY(28px);
-    transition: opacity .8s var(--ease-out), transform .8s var(--ease-out);
+    transition: opacity .6s ease, transform .6s var(--ease-out), filter .6s var(--ease-out);
 }
 .chapter-item.revealed {
     opacity: 1;
     transform: translateY(0);
 }
+
+.chapters:hover .chapter-item:not(:hover) {
+    filter: blur(2px) grayscale(30%);
+    opacity: 0.45;
+}
+.chapter-item:hover {
+    filter: blur(0px) grayscale(0%);
+    opacity: 1;
+    transform: scale(1.02) translateX(8px);
+}
+
 .chapter-item::before {
     content: '';
     position: absolute;
@@ -1109,10 +1122,11 @@ body {
     font-family: inherit;
     font-size: inherit;
     width: 100%;
-    transition: all .6s var(--ease-out);
+    transition: all .5s var(--ease-out);
     cursor: pointer;
     opacity: 0;
     transform: translateY(20px);
+    overflow: hidden;
 }
 .project-card.revealed {
     opacity: 1;
@@ -1122,11 +1136,25 @@ body {
 .project-card:nth-child(2) { transition-delay: .08s; }
 .project-card:nth-child(3) { transition-delay: .14s; }
 .project-card:nth-child(4) { transition-delay: .20s; }
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 192, 244, 0.12), transparent);
+    transform: skewX(-25deg);
+    transition: left 0.75s ease;
+    pointer-events: none;
+}
+.project-card:hover::before {
+    left: 150%;
+}
+
 .project-card:hover,
 .project-card:focus-visible {
     border-color: var(--accent-warm);
     box-shadow: 0 8px 40px rgba(102, 192, 244, .08), 0 0 0 1px rgba(102, 192, 244, .04);
-    transform: translateY(-6px);
     background: var(--bg-card-hover);
 }
 .project-card__stamp {
@@ -1901,19 +1929,31 @@ body {
 }
 
 /* ============================================
-   MOBILE OPTIMIZATION (giảm tải GPU)
+   MOBILE OPTIMIZATION
    ============================================ */
 @media (max-width: 768px) {
-    /* Tắt film-grain để tiết kiệm CPU trên mobile */
     .film-grain {
         display: none !important;
     }
-    /* Giảm cường độ vignette */
     .cinematic-vignette {
         opacity: 0.3;
     }
-    /* Nếu vẫn lag, có thể tắt canvas particles (tuỳ chọn) */
-    /* .hero__canvas { display: none; } */
+    .parallax-orb {
+        filter: blur(35px) !important;
+        opacity: 0.05 !important;
+    }
+    .nav__links a, 
+    .hero__cta, 
+    .contact__social-link,
+    .music-player__play {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .project-card, .hero__portrait {
+        transform: none !important;
+    }
 }
 
 /* ============================================
