@@ -96,7 +96,7 @@ const T = {
             title: "Ross là <span class='highlight'>ai?</span>",
             quote: "\"Biết ơn những người đã rời đi, trân trọng những người còn ở lại. Cảm ơn quá khứ - hiện tại - tương lai. Và mong cho giây phút này còn tồn tại mãi mãi.\"",
             desc: "Mình lớn lên ở thành phố mang tên Bác, Việt Nam, nơi mưa nhiều hơn nắng. Năm 16 tuổi, mình xách balo qua Nhật với đầu óc chất đầy những giấc mơ mà lúc đó còn chưa biết diễn tả sao cho đúng.",
-            desc2: "Giờ mình là sinh viên đại học, cũng là designer, và thỉnh thoáng là viết truyện. Mình chụp ảnh để giữ lại những khoảnh khắc nhỏ mà người ta hay lướt qua. Mình viết code để làm ra những thứ có chút \"hồn\". Mình làm thiết kế vì mình học được rằng hình thức bề ngoài cũng là một dạng tử tế đối với người nhìn.",
+            desc2: "Giờ mình là sinh viên đại học, cũng là designer, và thỉnh thoảng là viết truyện. Mình chụp ảnh để giữ lại những khoảnh khắc nhỏ mà người ta hay lướt qua. Mình viết code để làm ra những thứ có chút \"hồn\". Mình làm thiết kế vì mình học được rằng hình thức bề ngoài cũng là một dạng tử tế đối với người nhìn.",
             desc3: "Đây là câu chuyện của mình hiện tại, và chắc nó vẫn còn dài.",
             stat: {
                 codename: "Tên", location: "Vị trí", origin: "Xuất thân", path: "Con đường", pathValue: "Đại học · Thiết kế",
@@ -187,7 +187,7 @@ const T = {
             title: "<span class='highlight'>チャプター</span>たち",
             theme: "ベトナムから世界へ、自分を見つけていく6つの章",
             1: { number: "第一章", title: "故郷 · ベトナム", desc: "よく雨が降る空の下で育った。あの雨季が、早いうちに教えてくれた。美しさと激しさは、意外と隣り合わせにあるんだって。おじいさんの微笑みとか、バイクの音とか、ありふれたものの中に物語を見つけることを覚えた。創作って、僕にとっては、過ぎ去っていく瞬間をちょっとでも留めておきたいっていう気持ちから始まったんだと思う。" },
-            2: { number: "第二章", title: "跳躍 · 来日", desc: "16歳、リュック一つと、どの言語でも言い表せないくらいの疑問を抱えて日本に着いた。あのときの孤独は、真っ白な紙みたいなものだった。そこに新しい友達とか、新しく覚えた言葉とかを少しずつ塗っていった。書籍そしてある日、静かに気づいたんだ。あ、自分にもここに居場所があるのかもって。" },
+            2: { number: "第二章", title: "跳躍 · 来日", desc: "16歳、リュック一つと、どの言語でも言い表せないくらいの疑問を抱えて日本に着いた。あのときの孤独は、真っ白な紙みたいなものだった。そこに新しい友達とか、新しく覚えた言葉とかを少しずつ塗っていった。そしてある日、静かに気づいたんだ。あ、自分にもここに居場所があるのかもって。" },
             3: { number: "第三章", title: "Prime Time · 高校時代", desc: "高校では、自分の中に二つの人生を同時に生きられるって気づいた。昼は微分積分、夜は誰にも読まれない物語を書く。初めてフィルムで写真を撮って、初めて自分のサイトを作った。小さいけど、確かに自分だけのものだった。" },
             4: { number: "第四章", title: "生まれ変わった僕 · サイバーセキュリティボランティア", desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切る道具じゃなくて、守るためのものであるべきだと思ってた。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。" },
             5: { number: "第五章", title: "学徒 · 大学生活", desc: "大学に来て、デザインって物を綺麗にすることじゃないんだって学んだ。それより、その人が「自分は見てもらえてるんだ」って感じられるようにすることなんだと思う。今も大学の廊下を歩いてて、ノートはコードと詩の間くらいの、なんとも言えないアイデアでいっぱいだ。" },
@@ -197,7 +197,7 @@ const T = {
             label: "厳選プロジェクト",
             title: "僕が<span class='highlight'>作ってきたもの</span>",
             intro: "これまで作ってきたものをいくつか紹介する。どれも、デザインとかコードとか、あるいは人について、何かを教えてくれた。",
-            1: { stamp: "インパクト", title: "Think Fraud", summary: "5万人以上をネット詐欺から守る活動。", brief: "昔、人をネットで騙してお金を奪う方法を正確に知ってた。でも earningsその過去は僕の汚点なんかじゃない。むしろそれがきっかけで、5万人以上をネット詐欺から守る活動につながったんだ。詐欺師がどう動くかを理解することだけが、それを止める唯一の方法だった。", tags: "詐欺対策 · コミュニティ · 教育", status: "ステータス:完了" },
+            1: { stamp: "インパクト", title: "Think Fraud", summary: "5万人以上をネット詐欺から守る活動。", brief: "昔、人をネットで騙してお金を奪う方法を正確に知ってた。 earningsその過去は僕の汚点なんかじゃない。むしろそれがきっかけで、5万人以上をネット詐欺から守る活動につながったんだ。詐欺師がどう動くかを理解することだけが、それを止める唯一の方法だった。", tags: "詐欺対策 · コミュニティ · 教育", status: "ステータス:完了" },
             2: { stamp: "職人技", title: "Restaurant Cashier", summary: "ラーメン店でレジと帳簿を3年間担当。", brief: "3年間、監査みたいに一円単位で数え続けた。シフトに入るたびに、責任ってものを少しずつ学んでいった感じ。一円のズレもなく合わせることは、完璧主義とかじゃなくて、僕なりのちゃんとやってますっていう証明だった。", tags: "経理 · 信頼 · 接客業", status: "ステータス:完了" },
             3: { stamp: "こだわり", title: "Global Elite", summary: "才能とひたすらの練習で頂点へ。", brief: "マウスさえ握れればゲームができると思ってるなら、CS:GO(CS2)をやってみてほしい。その考え、絶対変わるから。必要なのは本物の才能と、山ほどの過酷な練習量。反射神経とひたすらの練習が、今の自分を作った。", tags: "戦術 · CS2 · Faceitレベル10", status: "ステータス:継続中" },
             4: { stamp: "架け橋", title: "Polyglot", summary: "4つの言語、無限のつながり。", brief: "海外生活7年以上、3ヶ国語をマスターして、今4つ目に挑戦中。僕にとって言語って、単なる単語の集まりじゃなくて、誰かの世界にお邪魔するための入り口みたいなものなんだ。", tags: "ベトナム語 · 日本語 · 英語 · ドイツ語", status: "ステータス:継続中" }
@@ -218,13 +218,13 @@ const T = {
             2: { desc: "2024年 · 深夜のデザイン作業。世界が静かになるほど、頭の中のアイデアはうるさくなる。" },
             3: { desc: "2023年 · 灯りの下の雨、夢を見るのをやめない街。" },
             4: { desc: "2024年 · 静かな時間。アイデアがだんだん形になっていく瞬間。" },
-            5: { desc: "2023年 · 見知らぬ人の微笑み。それだけで、つながりってどこにでもあるんだなって思わされる、ちゃんと見てれば。" },
+            5: { desc: "2023年 · 見知らぬ人の微笑み。それだけで、つながりってどこにもあるんだなって思わされる、ちゃんと見てれば。" },
             6: { desc: "2022年 · 夜に光る寺院。忙しない世界の中で、ふと訪れる静止の瞬間。" }
         },
         contact: {
             label: "連絡する",
             title: "<span class='highlight'>チャンネル</span>を開く",
-            invite: "コラボでも、フリーランスの仕事 settled, いつでも歓迎です。",
+            invite: "コラボでも、フリーランスの仕事でも、ただの雑談 settled, いつでも歓迎です。",
             form: { name: "名前", email: "メールアドレス", subject: "件名", message: "メッセージ", submit: "送信する", nameError: "お名前を入力してください", emailError: "有効なメールアドレスを入力してください", messageError: "メッセージを入力してください", success: "✓ 送信完了！なるべく早く返信します。" }
         },
         ending: { title: "セーブポイント", message: "物語はまだ続いてる。", continue: "続ける?", reflection: "ここまで一緒に歩いてくれてありがとう。もしどこかに自分自身の旅の影を見つけてくれたなら、ぜひ聞かせてほしい。一緒に次の章を書いていこう。", signature: "Ross より" },
@@ -516,110 +516,115 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    //  DYNAMIC ATMOSPHERE SYSTEM (90 FPS MOBILE OPTIMIZED)
+    //  DYNAMIC ATMOSPHERE SYSTEM (90 FPS - FIXED WEATHER BOUNDARY)
     // ============================================================
     (function initAtmosphere() {
-        const canvas = $('#heroCanvas');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d', { alpha: true });
-        let w, h, particles = [];
-        let currentMode = 'rain';
-        let chapter2TopCache = 0;
+    const canvas = $('#heroCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha: true });
+    let w, h, particles = [];
+    let currentMode = 'rain';
+    let chapter3TopCache = 0;
 
-        // Cache vị trí Chapter 2 để không gọi getBoundingClientRect khi scroll
-        function updateCache() {
-            const chapters = $$('.chapter-item');
-            if (chapters.length >= 2) {
-                chapter2TopCache = chapters[1].offsetTop;
+    // Tính chính xác vị trí tuyệt đối của Chapter 3 so với ĐẦU TRANG WEB
+    function updateCache() {
+        const chapters = $$('.chapter-item');
+        if (chapters.length >= 3) {
+            let el = chapters[2]; // Chapter 3
+            let top = 0;
+            while (el) {
+                top += el.offsetTop;
+                el = el.offsetParent;
             }
+            chapter3TopCache = top;
         }
+    }
 
-        function resize() {
-            // Cố định dpr tối đa 1.5 để bảo vệ GPU di động ở 90Hz/120Hz
-            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-            w = window.innerWidth;
-            h = window.innerHeight;
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            ctx.scale(dpr, dpr);
-            updateCache();
+    function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.scale(dpr, dpr);
+        updateCache();
+    }
+
+    function Particle(mode) { this.reset(mode); }
+
+    Particle.prototype.reset = function(mode) {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        if (mode === 'rain') {
+            this.r = Math.random() * 1.5 + 0.8;
+            this.vx = -Math.random() * 0.5 - 0.2;
+            this.vy = Math.random() * 8 + 6;
+            this.length = Math.random() * 16 + 10;
+            this.alpha = Math.random() * 0.28 + 0.15;
+        } else {
+            this.r = Math.random() * 2.2 + 1.0;
+            this.vx = (Math.random() - 0.5) * 0.8;
+            this.vy = Math.random() * 1.5 + 0.6;
+            this.length = 0;
+            this.alpha = Math.random() * 0.45 + 0.25;
         }
+    };
 
-        function Particle(mode) { this.reset(mode); }
-
-        Particle.prototype.reset = function(mode) {
-            this.x = Math.random() * w;
-            this.y = Math.random() * h;
-            if (mode === 'rain') {
-                this.r = Math.random() * 1.5 + 0.8;
-                this.vx = -Math.random() * 0.5 - 0.2;
-                this.vy = Math.random() * 8 + 6;
-                this.length = Math.random() * 16 + 10;
-                this.alpha = Math.random() * 0.28 + 0.15;
-            } else { // 'snow'
-                this.r = Math.random() * 2.2 + 1.0;
-                this.vx = (Math.random() - 0.5) * 0.8;
-                this.vy = Math.random() * 1.5 + 0.6;
-                this.length = 0;
-                this.alpha = Math.random() * 0.45 + 0.25;
-            }
-        };
-
-        Particle.prototype.update = function(mode) {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.y > h + 15 || this.y < -15 || this.x > w + 15 || this.x < -15) {
-                this.reset(mode);
-                this.y = -10;
-            }
-        };
-
-        Particle.prototype.draw = function(mode) {
-            ctx.beginPath();
-            if (mode === 'rain') {
-                ctx.strokeStyle = `rgba(102, 192, 244, ${this.alpha})`;
-                ctx.lineWidth = this.r;
-                ctx.moveTo(this.x, this.y);
-                ctx.lineTo(this.x + this.vx * 2, this.y + this.length);
-                ctx.stroke();
-            } else {
-                // Radial fill nhẹ thay vì shadowBlur (Giảm 80% tải GPU trên Mobile)
-                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(245, 247, 250, ${this.alpha})`;
-                ctx.fill();
-            }
-        };
-
-        function createParticles() {
-            const isMobile = window.innerWidth < 768;
-            const count = Math.floor((currentMode === 'rain' ? 70 : 55) * (isMobile ? 0.35 : 1));
-            particles = Array.from({ length: count }, () => new Particle(currentMode));
+    Particle.prototype.update = function(mode) {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.y > h + 15 || this.y < -15 || this.x > w + 15 || this.x < -15) {
+            this.reset(mode);
+            this.y = -10;
         }
+    };
 
-        function animate() {
-            ctx.clearRect(0, 0, w, h);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update(currentMode);
-                particles[i].draw(currentMode);
-            }
-            requestAnimationFrame(animate);
+    Particle.prototype.draw = function(mode) {
+        ctx.beginPath();
+        if (mode === 'rain') {
+            ctx.strokeStyle = `rgba(102, 192, 244, ${this.alpha})`;
+            ctx.lineWidth = this.r;
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + this.vx * 2, this.y + this.length);
+            ctx.stroke();
+        } else {
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(245, 247, 250, ${this.alpha})`;
+            ctx.fill();
         }
+    };
 
-        function checkWeatherBoundary() {
-            const scrollY = window.pageYOffset;
-            const targetMode = (chapter2TopCache && scrollY >= chapter2TopCache - 250) ? 'snow' : 'rain';
-            if (targetMode !== currentMode) {
-                currentMode = targetMode;
-                createParticles();
-            }
+    function createParticles() {
+        const isMobile = window.innerWidth < 768;
+        const count = Math.floor((currentMode === 'rain' ? 70 : 55) * (isMobile ? 0.35 : 1));
+        particles = Array.from({ length: count }, () => new Particle(currentMode));
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update(currentMode);
+            particles[i].draw(currentMode);
         }
+        requestAnimationFrame(animate);
+    }
 
-        window.addEventListener('scroll', checkWeatherBoundary, { passive: true });
-        window.addEventListener('resize', () => { resize(); createParticles(); }, { passive: true });
+    function checkWeatherBoundary() {
+        const scrollY = window.pageYOffset;
+        // Chỉ đổi sang Tuyết khi cuộn gần tới vị trí thực sự của Chapter 3
+        const targetMode = (chapter3TopCache && scrollY >= chapter3TopCache - 150) ? 'snow' : 'rain';
+        if (targetMode !== currentMode) {
+            currentMode = targetMode;
+            createParticles();
+        }
+    }
 
-        resize();
-        createParticles();
-        animate();
+    window.addEventListener('scroll', checkWeatherBoundary, { passive: true });
+    window.addEventListener('resize', () => { resize(); createParticles(); }, { passive: true });
+
+    resize();
+    createParticles();
+    animate();
     })();
 
     // ---- MAIN ANIMATION LOOP ----
