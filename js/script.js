@@ -191,7 +191,7 @@ const T = {
             3: { number: "第三章", title: "Prime Time · 高校時代", desc: "高校では、自分の中に二つの人生を同時に生きられるって気づいた。昼は微分積分、夜は誰にも読まれない物語を書く。初めてフィルムで写真を撮って、初めて自分のサイトを作った。小さいけど、確かに自分だけのものだった。" },
             4: { number: "第四章", title: "生まれ変わった僕 · サイバーセキュリティボランティア", desc: "3年間、普通の人たちと、その人たちを利用しようとする側との間に立ち続けた。誰かに頼まれたからじゃない。技術は人を裏切る道具じゃなくて、守るためのものであるべきだと思ってた。それで気づいたのは、エンジニアリングって、実は毎日の中で倫理を実践することでもあるんだなってこと。" },
             5: { number: "第五章", title: "学徒 · 大学生活", desc: "大学に来て、デザインって物を綺麗にすることじゃないんだって学んだ。それより、その人が「自分は見てもらえてるんだ」って感じられるようにすることなんだと思う。今も大学の廊下を歩いてて、ノートはコードと詩の間くらいの、なんとも言えないアイデアでいっぱいだ。" },
-            6: { number: "第六章", title: "地平線 · 次の場所へ", desc: "今学んでることを、外の世界に持っていく準備をしてる。専門家としてじゃなくて、好奇心が一番の武器だってまだ信じてる一人の学生として。新しい文化、一緒に歩んで協力できる新しい人たち、そしてデザイナーが国境なんて気にしなくていい未来へ。" }
+            6: { number: "第六章", title: "地平線 · 次の場所へ", desc: "今学んでることを、外の世界に持っていく準備をしてる。専門家としてじゃなくて、好奇心が一番の武器だってまだ信じてる一人の学生として。新しい文化、一緒に歩んで協力できる新しい人たち、知識、そしてデザイナーが国境なんて気にしなくていい未来へ。" }
         },
         portfolio: {
             label: "厳選プロジェクト",
@@ -289,7 +289,7 @@ function applyLanguage(lang) {
         ja: 'Ross Nguyen · Designer & Developer'
     }[lang] || 'Ross Nguyen · Designer & Developer';
     localStorage.setItem('lang', lang);
-    $('#langSelect').value = lang;
+    if ($('#langSelect')) $('#langSelect').value = lang;
 }
 
 // ============================================================
@@ -297,7 +297,6 @@ function applyLanguage(lang) {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Force start at top on every reload (prevents browser scroll restoration)
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
@@ -305,11 +304,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ---- LOADING ----
     const placeholder = $('#loadingPlaceholder');
-    setTimeout(() => placeholder.classList.add('hidden'), 400);
-    setTimeout(() => { placeholder.style.display = 'none'; }, 1200);
+    if (placeholder) {
+        setTimeout(() => placeholder.classList.add('hidden'), 400);
+        setTimeout(() => { placeholder.style.display = 'none'; }, 1200);
+    }
 
     // ---- LANGUAGE ----
-    $('#langSelect').addEventListener('change', e => applyLanguage(e.target.value));
+    if ($('#langSelect')) {
+        $('#langSelect').addEventListener('change', e => applyLanguage(e.target.value));
+    }
     applyLanguage(localStorage.getItem('lang') || 'en');
 
     // ---- EMAIL ----
@@ -344,6 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
         navClose = $('#navClose');
 
     function setMenu(open) {
+        if (!navLinks || !navToggle) return;
         navLinks.classList.toggle('open', open);
         navToggle.classList.toggle('active', open);
         navToggle.setAttribute('aria-expanded', open);
@@ -352,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (f.length) f[0].focus();
         } else navToggle.focus();
     }
-    navToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('open')));
+    if (navToggle) navToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('open')));
     if (navClose) navClose.addEventListener('click', () => setMenu(false));
 
     $$('.nav__links a[data-section]').forEach(a => a.addEventListener('click', e => {
@@ -361,12 +365,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (t) { scrollTo(t, 60); setMenu(false); }
     }));
 
-    // ---- NAV SCROLL STATE (gộp vào rAF để tránh reflow) ----
+    // ---- NAV SCROLL STATE ----
     const nav = $('#nav'),
         sectionEls = $$('section[id]');
     let navUpdatePending = false;
 
     function updateNav() {
+        if (!nav) return;
         const y = window.pageYOffset;
         nav.classList.toggle('scrolled', y > 50);
         let cur = '';
@@ -390,10 +395,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     window.addEventListener('scroll', updateNavRaf, { passive: true });
-    // initial call
     updateNav();
 
-    // ---- MOUSE LIGHT (giữ nguyên cách dùng left/top) ----
+    // ---- MOUSE LIGHT ----
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
     const mouseLight = $('#mouse-light');
     let mx = window.innerWidth / 2,
@@ -408,83 +412,195 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ---- PARALLAX ORBS ----
     const orbs = $$('.parallax-orb');
-    let canvasAnim = true;
     const scrollProgress = $('#scrollProgress');
 
-    // ---- HERO CANVAS (giảm particle trên mobile) ----
-    try {
-        const canvas = $('#heroCanvas'),
-            ctx = canvas.getContext('2d');
-        let w, h, particles = [];
+    // ============================================================
+    //  CINEMATIC WEB AUDIO SFX
+    // ============================================================
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
 
-        function resize() {
-            w = canvas.width = canvas.offsetWidth;
-            h = canvas.height = canvas.offsetHeight;
-        }
-
-        function Particle() {
-            this.reset = function() {
-                this.x = Math.random() * w;
-                this.y = Math.random() * h;
-                this.r = Math.random() * 1.8 + .6;
-                this.vx = (Math.random() - .5) * .10;
-                this.vy = -Math.random() * .18 - .02;
-                this.alpha = Math.random() * .25 + .08;
-            };
-            this.reset();
-        }
-        Particle.prototype.update = function() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.y < -10) { this.y = h + 10; this.x = Math.random() * w; }
-            if (this.x > w + 10) this.x = -10;
-            if (this.x < -10) this.x = w + 10;
-        };
-        Particle.prototype.draw = function() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
-            ctx.fill();
-        };
-
-        function init() {
-            resize();
-            const isMobile = window.innerWidth < 768;
-            const count = isMobile ? 15 : (window.innerWidth < 1024 ? 45 : 70);
-            particles = Array.from({ length: count }, () => new Particle());
-            // Nếu muốn tắt canvas trên mobile, bỏ comment dòng dưới
-            // if (isMobile) canvas.style.display = 'none';
-        }
-
-        function anim() {
-            if (!canvasAnim) { requestAnimationFrame(anim); return; }
-            ctx.clearRect(0, 0, w, h);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(anim);
-        }
-        init();
-        anim();
-        let resizeTO;
-        window.addEventListener('resize', () => { clearTimeout(resizeTO); resizeTO = setTimeout(resize, 120); }, { passive: true });
-        new IntersectionObserver(entries => { canvasAnim = entries[0].isIntersecting; }, { threshold: .1 }).observe($('#hero'));
-    } catch (_) {
-        const c = $('#heroCanvas');
-        if (c) c.style.display = 'none';
+    function playCinematicSound(freq = 120, type = 'sine', duration = 0.12) {
+        try {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + duration);
+            
+            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        } catch (_) {}
     }
 
-    // ---- MAIN LOOP (tối ưu: giảm tần suất cập nhật, mouse light dùng left/top) ----
+    $$('.hero__cta, .project-card, .chapter-item, .journal-item, .nav__links a, .contact__social-link').forEach(el => {
+        el.addEventListener('mouseenter', () => playCinematicSound(150, 'sine', 0.08));
+        el.addEventListener('click', () => playCinematicSound(220, 'triangle', 0.15));
+    });
+
+    // ============================================================
+    //  3D TILT EFFECT
+    // ============================================================
+    if (!isTouch) {
+        $$('.project-card, .hero__portrait').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                card.style.transform = `perspective(1000px) rotateX(${-y / 22}deg) rotateY(${x / 22}deg) translateY(-5px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+            });
+        });
+    }
+
+    // ============================================================
+    //  DYNAMIC ATMOSPHERE SYSTEM (RAIN / SNOW / AMBIENT)
+    // ============================================================
+    (function initAtmosphere() {
+        const canvas = $('#heroCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let w, h, particles = [];
+        let currentMode = 'ambient'; 
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        function Particle(mode) {
+            this.reset(mode);
+        }
+
+        Particle.prototype.reset = function(mode) {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            
+            if (mode === 'rain') {
+                this.r = Math.random() * 1.2 + 0.6;
+                this.vx = -Math.random() * 0.4 - 0.2;
+                this.vy = Math.random() * 7 + 5;
+                this.length = Math.random() * 14 + 8;
+                this.alpha = Math.random() * 0.25 + 0.12;
+            } else if (mode === 'snow') {
+                this.r = Math.random() * 2.2 + 0.8;
+                this.vx = (Math.random() - 0.5) * 0.6;
+                this.vy = Math.random() * 1.2 + 0.4;
+                this.length = 0;
+                this.alpha = Math.random() * 0.4 + 0.2;
+            } else {
+                this.r = Math.random() * 1.6 + 0.5;
+                this.vx = (Math.random() - 0.5) * 0.2;
+                this.vy = -Math.random() * 0.25 - 0.05;
+                this.length = 0;
+                this.alpha = Math.random() * 0.2 + 0.06;
+            }
+        };
+
+        Particle.prototype.update = function(mode) {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.y > h + 15 || this.y < -15 || this.x > w + 15 || this.x < -15) {
+                this.reset(mode);
+                this.y = mode === 'ambient' ? h + 10 : -10;
+            }
+        };
+
+        Particle.prototype.draw = function(mode) {
+            ctx.beginPath();
+            if (mode === 'rain') {
+                ctx.strokeStyle = `rgba(102, 192, 244, ${this.alpha})`;
+                ctx.lineWidth = this.r;
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x + this.vx * 2, this.y + this.length);
+                ctx.stroke();
+            } else {
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fillStyle = mode === 'snow' ? `rgba(245, 247, 250, ${this.alpha})` : `rgba(102, 192, 244, ${this.alpha})`;
+                ctx.fill();
+            }
+        };
+
+        function createParticles() {
+            resize();
+            const isMobile = window.innerWidth < 768;
+            const densityMultiplier = isMobile ? 0.35 : 1;
+            
+            let baseCount = 50;
+            if (currentMode === 'rain') baseCount = 75;
+            if (currentMode === 'snow') baseCount = 60;
+
+            const count = Math.floor(baseCount * densityMultiplier);
+            particles = Array.from({ length: count }, () => new Particle(currentMode));
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
+            particles.forEach(p => {
+                p.update(currentMode);
+                p.draw(currentMode);
+            });
+            requestAnimationFrame(animate);
+        }
+
+        const chapterItems = $$('.chapter-item');
+        const chapterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const text = entry.target.innerText.toLowerCase();
+                    let newMode = 'ambient';
+                    
+                    if (text.includes('vietnam') || text.includes('quê nhà') || text.includes('homeland')) {
+                        newMode = 'rain';
+                    } else if (text.includes('japan') || text.includes('nhật')) {
+                        newMode = 'snow';
+                    }
+
+                    if (newMode !== currentMode) {
+                        currentMode = newMode;
+                        createParticles();
+                    }
+                }
+            });
+        }, { threshold: 0.4 });
+
+        chapterItems.forEach(item => chapterObserver.observe(item));
+
+        let resizeTO;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTO);
+            resizeTO = setTimeout(createParticles, 150);
+        }, { passive: true });
+
+        createParticles();
+        animate();
+    })();
+
+    // ---- MAIN ANIMATION LOOP ----
     let scrollY = 0,
         frameId = null,
         lastTime = 0;
     let frameCount = 0;
-    const UPDATE_INTERVAL = 2; // cập nhật hoạt ảnh mỗi 2 frame
+    const UPDATE_INTERVAL = 2;
 
     function mainLoop(time) {
         frameId = requestAnimationFrame(mainLoop);
-        const dt = Math.min(time - lastTime, 50);
         lastTime = time;
 
-        // 1. Luôn cập nhật scrollY và scroll progress (cần mượt)
         scrollY = window.pageYOffset;
         const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
         const frac = scrollY / maxScroll;
@@ -492,7 +608,6 @@ document.addEventListener('DOMContentLoaded', function() {
             scrollProgress.style.width = (frac * 100) + '%';
         }
 
-        // 2. Mouse light – vẫn dùng left/top để đảm bảo căn giữa chính xác
         if (!isTouch && mouseLight) {
             lx += (mx - lx) * 0.06;
             ly += (my - ly) * 0.06;
@@ -503,7 +618,6 @@ document.addEventListener('DOMContentLoaded', function() {
             mouseLight.style.opacity = near ? '0.15' : '1';
         }
 
-        // 3. Cập nhật hoạt ảnh nặng (parallax orbs, lighting) chỉ mỗi UPDATE_INTERVAL frame
         frameCount++;
         if (frameCount % UPDATE_INTERVAL === 0) {
             if (orbs[0]) orbs[0].style.transform = `translate3d(${-25 + frac * 45}px,${-15 + frac * 70}px,0)`;
@@ -521,14 +635,14 @@ document.addEventListener('DOMContentLoaded', function() {
     lastTime = performance.now();
     frameId = requestAnimationFrame(mainLoop);
 
-    // ---- CHAPTERS TIMELINE (gộp vào rAF) ----
+    // ---- CHAPTERS TIMELINE SVG ----
     const path = $('#chaptersPath'),
         container = $('#chaptersContainer'),
         svg = $('#chaptersSVG');
     let timelineUpdatePending = false;
 
     function updateTimeline() {
-        if (!path || !container) return;
+        if (!path || !container || !svg) return;
         const h = container.scrollHeight;
         svg.setAttribute('viewBox', `0 0 2 ${h}`);
         svg.setAttribute('height', h);
@@ -564,7 +678,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', drawTimelineRaf, { passive: true });
 
     // ============================================================
-    //  MUSIC PLAYER
+    //  MUSIC PLAYER & AUDIO CONTROL
     // ============================================================
     const musicPlayer = $('#musicPlayer');
     const playBtn = $('#musicToggle');
@@ -596,25 +710,29 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('resize', resizeVis);
     }
 
-    function hideMusic() { musicPlayer.classList.add('hidden'); }
+    function hideMusic() { if (musicPlayer) musicPlayer.classList.add('hidden'); }
 
     function showToast(key) {
         const lang = localStorage.getItem('lang') || 'en';
         const msg = getT(lang, 'toast.' + key) || T.en.toast[key] || key;
         const t = $('#toast');
-        t.textContent = msg;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2200);
+        if (t) {
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
+        }
     }
 
-    audio.addEventListener('error', () => { audioErr = true; hideMusic(); showToast('audioError'); });
-    audio.addEventListener('loadedmetadata', () => {
-        if (audio.duration) totalTimeEl.textContent = formatTime(audio.duration);
-    });
-    audio.addEventListener('timeupdate', updateProgress);
-    audio.addEventListener('play', () => { isPlaying = true; updatePlayIcon(true); startVisualizer(); });
-    audio.addEventListener('pause', () => { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
-    audio.addEventListener('ended', () => { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
+    if (audio) {
+        audio.addEventListener('error', () => { audioErr = true; hideMusic(); showToast('audioError'); });
+        audio.addEventListener('loadedmetadata', () => {
+            if (audio.duration && totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration);
+        });
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('play', () => { isPlaying = true; updatePlayIcon(true); startVisualizer(); });
+        audio.addEventListener('pause', () => { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
+        audio.addEventListener('ended', () => { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
+    }
 
     function formatTime(sec) {
         if (!sec || isNaN(sec)) return '0:00';
@@ -624,58 +742,64 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateProgress() {
-        if (!audio.duration) return;
+        if (!audio || !audio.duration) return;
         const pct = (audio.currentTime / audio.duration) * 100;
-        progressBar.style.width = pct + '%';
-        progressThumb.style.left = pct + '%';
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-        if (audio.duration) totalTimeEl.textContent = formatTime(audio.duration);
-        progressWrap.setAttribute('aria-valuenow', Math.round(pct));
+        if (progressBar) progressBar.style.width = pct + '%';
+        if (progressThumb) progressThumb.style.left = pct + '%';
+        if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
+        if (totalTimeEl && audio.duration) totalTimeEl.textContent = formatTime(audio.duration);
+        if (progressWrap) progressWrap.setAttribute('aria-valuenow', Math.round(pct));
     }
 
     function updatePlayIcon(playing) {
+        if (!playBtn) return;
         const playIcon = playBtn.querySelector('.play-icon');
         const pauseIcons = playBtn.querySelectorAll('.pause-icon');
         if (playing) {
-            playIcon.style.display = 'none';
+            if (playIcon) playIcon.style.display = 'none';
             pauseIcons.forEach(el => el.style.display = 'block');
         } else {
-            playIcon.style.display = 'block';
+            if (playIcon) playIcon.style.display = 'block';
             pauseIcons.forEach(el => el.style.display = 'none');
         }
     }
 
-    playBtn.addEventListener('click', () => {
-        if (audioErr) return;
-        if (audio.paused) {
-            audio.play().catch(() => { audioErr = true; hideMusic(); showToast('audioError'); });
-        } else {
-            audio.pause();
-        }
-    });
+    if (playBtn) {
+        playBtn.addEventListener('click', () => {
+            if (audioErr || !audio) return;
+            if (audio.paused) {
+                audio.play().catch(() => { audioErr = true; hideMusic(); showToast('audioError'); });
+            } else {
+                audio.pause();
+            }
+        });
+    }
 
     let isDragging = false;
-    progressWrap.addEventListener('mousedown', (e) => {
-        if (!audio.duration) return;
-        isDragging = true;
-        setProgress(e.clientX);
-    });
-    document.addEventListener('mousemove', (e) => {
-        if (isDragging) setProgress(e.clientX);
-    });
-    document.addEventListener('mouseup', () => { isDragging = false; });
-    progressWrap.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        if (!audio.duration) return;
-        isDragging = true;
-        setProgress(e.touches[0].clientX);
-    });
-    document.addEventListener('touchmove', (e) => {
-        if (isDragging) { e.preventDefault(); setProgress(e.touches[0].clientX); }
-    });
-    document.addEventListener('touchend', () => { isDragging = false; });
+    if (progressWrap) {
+        progressWrap.addEventListener('mousedown', (e) => {
+            if (!audio || !audio.duration) return;
+            isDragging = true;
+            setProgress(e.clientX);
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) setProgress(e.clientX);
+        });
+        document.addEventListener('mouseup', () => { isDragging = false; });
+        progressWrap.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (!audio || !audio.duration) return;
+            isDragging = true;
+            setProgress(e.touches[0].clientX);
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) { e.preventDefault(); setProgress(e.touches[0].clientX); }
+        });
+        document.addEventListener('touchend', () => { isDragging = false; });
+    }
 
     function setProgress(clientX) {
+        if (!progressWrap || !audio) return;
         const rect = progressWrap.getBoundingClientRect();
         let pct = (clientX - rect.left) / rect.width;
         pct = Math.max(0, Math.min(1, pct));
@@ -684,39 +808,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     let volDragging = false;
-    volumeToggle.addEventListener('click', () => {
-        if (audio.muted) {
-            audio.muted = false;
-            audio.volume = volumeBeforeMute;
-            currentVolume = volumeBeforeMute;
-            updateVolumeFill(volumeBeforeMute);
-        } else {
-            volumeBeforeMute = audio.volume || currentVolume;
-            audio.muted = true;
-            audio.volume = 0;
-            currentVolume = 0;
-            updateVolumeFill(0);
-        }
-    });
-    volumeTrack.addEventListener('mousedown', (e) => {
-        volDragging = true;
-        setVolume(e.clientX);
-    });
-    document.addEventListener('mousemove', (e) => {
-        if (volDragging) setVolume(e.clientX);
-    });
-    document.addEventListener('mouseup', () => { volDragging = false; });
-    volumeTrack.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        volDragging = true;
-        setVolume(e.touches[0].clientX);
-    });
-    document.addEventListener('touchmove', (e) => {
-        if (volDragging) { e.preventDefault(); setVolume(e.touches[0].clientX); }
-    });
-    document.addEventListener('touchend', () => { volDragging = false; });
+    if (volumeToggle && audio) {
+        volumeToggle.addEventListener('click', () => {
+            if (audio.muted) {
+                audio.muted = false;
+                audio.volume = volumeBeforeMute;
+                currentVolume = volumeBeforeMute;
+                updateVolumeFill(volumeBeforeMute);
+            } else {
+                volumeBeforeMute = audio.volume || currentVolume;
+                audio.muted = true;
+                audio.volume = 0;
+                currentVolume = 0;
+                updateVolumeFill(0);
+            }
+        });
+    }
+
+    if (volumeTrack) {
+        volumeTrack.addEventListener('mousedown', (e) => {
+            volDragging = true;
+            setVolume(e.clientX);
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (volDragging) setVolume(e.clientX);
+        });
+        document.addEventListener('mouseup', () => { volDragging = false; });
+        volumeTrack.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            volDragging = true;
+            setVolume(e.touches[0].clientX);
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (volDragging) { e.preventDefault(); setVolume(e.touches[0].clientX); }
+        });
+        document.addEventListener('touchend', () => { volDragging = false; });
+    }
 
     function setVolume(clientX) {
+        if (!volumeTrack || !audio) return;
         const rect = volumeTrack.getBoundingClientRect();
         let pct = (clientX - rect.left) / rect.width;
         pct = Math.max(0, Math.min(1, pct));
@@ -727,7 +857,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateVolumeFill(pct) {
-        volumeFill.style.width = (pct * 100) + '%';
+        if (volumeFill) volumeFill.style.width = (pct * 100) + '%';
     }
 
     function startVisualizer() {
@@ -769,10 +899,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.matches('input, textarea, select')) return;
         if (e.key === ' ' || e.key === 'Space') {
             e.preventDefault();
-            playBtn.click();
+            if (playBtn) playBtn.click();
         }
     });
-    window.addEventListener('beforeunload', () => { stopVisualizer(); });
 
     // ============================================================
     //  PROJECT CARDS
@@ -814,6 +943,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function openModal(index) {
+        if (!modal || !modalImg || !modalDesc) return;
         if (index < 0) index = journalItemsData.length - 1;
         if (index >= journalItemsData.length) index = 0;
         currentIndex = index;
@@ -825,23 +955,24 @@ document.addEventListener('DOMContentLoaded', function() {
             modalDesc.textContent = data.fullEl.textContent.trim();
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            setTimeout(() => modalClose.focus(), 100);
+            if (modalClose) setTimeout(() => modalClose.focus(), 100);
         }
     }
 
     function closeModal() {
+        if (!modal) return;
         modal.classList.remove('active');
         document.body.style.overflow = '';
         if (journalItems[currentIndex]) journalItems[currentIndex].focus();
     }
-    modalClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    if (modal) modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
     if (modalPrev) modalPrev.addEventListener('click', () => openModal(currentIndex - 1));
     if (modalNext) modalNext.addEventListener('click', () => openModal(currentIndex + 1));
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') closeModal();
-        if (e.key === 'ArrowLeft' && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex - 1); }
-        if (e.key === 'ArrowRight' && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex + 1); }
+        if (e.key === 'ArrowLeft' && modal && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex - 1); }
+        if (e.key === 'ArrowRight' && modal && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex + 1); }
     });
 
     // ============================================================
@@ -869,18 +1000,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 const subjectText = subject.value.trim() || 'Message from Ross Nguyen profile';
                 const body = `\n\n\nFrom: ${name.value} (${email.value})\nSent: ${new Date().toLocaleString()}\n\n${message.value}\n\n-- \n`;
                 window.location.href = `mailto:${to}?subject=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(body)}`;
-                formSuccess.classList.add('show');
+                if (formSuccess) formSuccess.classList.add('show');
                 form.reset();
-                setTimeout(() => formSuccess.classList.remove('show'), 4000);
+                setTimeout(() => { if (formSuccess) formSuccess.classList.remove('show'); }, 4000);
             }
         });
     }
 
     // ---- FOOTER YEAR ----
-    $('#footerYear').textContent = new Date().getFullYear();
+    const yearEl = $('#footerYear');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     // ---- CONTINUE BUTTON ----
-    $('#continueBtn').addEventListener('click', () => scrollTo($('#hero'), 60));
+    const continueBtn = $('#continueBtn');
+    if (continueBtn) continueBtn.addEventListener('click', () => scrollTo($('#hero'), 60));
 
     // ---- EASTER EGGS ----
     document.addEventListener('keydown', e => {
@@ -897,7 +1030,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ---- VISIBILITY ----
+    // ---- VISIBILITY CHANGE ----
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             if (frameId) { cancelAnimationFrame(frameId); frameId = null; }
@@ -907,7 +1040,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ============================================================
-    //  SITE VERIFICATION SYSTEM (giữ nguyên)
+    //  SITE VERIFICATION SYSTEM
     // ============================================================
     window.verifySite = function() {
         const results = [];
@@ -942,40 +1075,6 @@ document.addEventListener('DOMContentLoaded', function() {
             !!$('.journal-item') && !!$('#journalModal') && !!$('#journalModalClose') && !!$('#journalModalImg')
         );
 
-        check('Contact form validation', () => {
-            const formEl = $('#contactForm');
-            if (!formEl) return false;
-            const name = $('#contactName');
-            const email = $('#contactEmail');
-            const message = $('#contactMessage');
-            name.value = '';
-            email.value = 'invalid';
-            message.value = '';
-            formEl.dispatchEvent(new Event('submit', { cancelable: true }));
-            const nameErr = name.parentElement.querySelector('.contact__form-error').classList.contains('show');
-            const emailErr = email.parentElement.querySelector('.contact__form-error').classList.contains('show');
-            const msgErr = message.parentElement.querySelector('.contact__form-error').classList.contains('show');
-            $$('.contact__form-error').forEach(el => el.classList.remove('show'));
-            formEl.reset();
-            return nameErr && emailErr && msgErr;
-        });
-
-        check('Music player setup', () =>
-            !!$('#bgMusic') && !!$('#musicToggle') && !!$('#progressWrap') && !!$('#volumeFill') && !!$('#visualizerCanvas')
-        );
-
-        check('Hero canvas & timeline', () =>
-            !!$('#heroCanvas') && !!$('#chaptersPath') && !!$('#chaptersSVG')
-        );
-
-        check('Footer year updated', () =>
-            $('#footerYear').textContent == new Date().getFullYear()
-        );
-
-        check('Scroll progress initialized', () =>
-            !!$('#scrollProgress')
-        );
-
         console.groupCollapsed('%cSite Verification', 'color:#f4a261;font-weight:bold;');
         results.forEach(r => {
             console.log(`${r.ok ? '✅' : '⚠️'} ${r.name}${r.error ? ' — ' + r.error : ''}`);
@@ -984,8 +1083,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return results;
     };
-
-    // Bỏ tự động chạy verify để tránh ảnh hưởng hiệu năng
-    // setTimeout(() => { window.verifySite(); }, 800);
-
-}); // end DOMContentLoaded
+});
