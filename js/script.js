@@ -170,7 +170,7 @@ const T = {
         profile: {
             label: "プロフィール",
             title: "<span class='highlight'>Ross</span>って、どんな人?",
-            quote: "「去っていった人たちに感謝を、そばにいてくれる人たちを大切に。過去にも、今にも、これからにも、ありがとう。専門そしてこの瞬間が、ずっと続きますように。」",
+            quote: "「去っていった人たちに感謝を、そばにいてくれる人たちを大切に。過去にも、今にも、これからにも、ありがとう。そしてこの瞬間が、ずっと続きますように。」",
             desc: "僕はベトナムの、ホー・チ・ミン氏(ホーおじさん)の名前がついた街、ホーチミン市で育った。晴れの日より、雨の日の方が多いような街だった。",
             desc2: "今は大学生で、デザイナーで、たまに物語を書く人間でもある。写真を撮るのは、みんなが見逃しがちな小さな瞬間を残しておきたいから。コードを書くのは、ちょっとでも命が宿ったようなものを作りたいから。デザインをするのは、見た目もまた、見る人への優しさの一つなんだって学んだから。",
             desc3: "これが今のところの僕の物語。多分、まだまだ長くなると思う。",
@@ -233,7 +233,7 @@ const T = {
 };
 
 // ============================================================
-//  UTILITY HELPERS & TRANSLATIONS
+//  UTILITY HELPERS
 // ============================================================
 const $ = (s, c) => (c || document).querySelector(s);
 const $$ = (s, c) => [...(c || document).querySelectorAll(s)];
@@ -253,15 +253,18 @@ let journalItemsData = [];
 function applyLanguage(lang) {
     document.documentElement.lang = lang;
     $$('[data-i18n]').forEach(el => {
-        const key = el.dataset.i18n, t = getT(lang, key);
+        const key = el.dataset.i18n,
+            t = getT(lang, key);
         if (t !== undefined) {
             if (typeof t === 'string' && t.includes('<')) el.innerHTML = t;
             else if (typeof t === 'string') el.textContent = t;
         }
     });
 
-    const taglineEl = $('#heroTagline'), inviteEl = $('#heroInvite');
-    const taglineText = getT(lang, 'hero.tagline'), inviteText = getT(lang, 'hero.invite');
+    const taglineEl = $('#heroTagline'),
+        inviteEl = $('#heroInvite');
+    const taglineText = getT(lang, 'hero.tagline'),
+        inviteText = getT(lang, 'hero.invite');
     if (taglineEl && taglineText) {
         taglineEl.innerHTML = taglineText.split(' ').map((w, i) =>
             `<span style="display:inline-block;opacity:0;transform:translateY(16px);animation:heroWordIn .6s cubic-bezier(.22,.61,.36,1) ${.55 + i * .07}s forwards;">${w}</span>`
@@ -275,46 +278,66 @@ function applyLanguage(lang) {
 
     const modal = $('#journalModal');
     if (modal && modal.classList.contains('active')) {
-        const descEl = $('#journalModalDesc'), idx = window._journalCurrentIndex;
+        const descEl = $('#journalModalDesc'),
+            idx = window._journalCurrentIndex;
         if (idx !== undefined && journalItemsData[idx] && descEl) descEl.textContent = journalItemsData[idx].fullEl.textContent.trim();
     }
 
-    document.title = 'Ross Nguyen · Designer & Developer';
+    document.title = {
+        en: 'Ross Nguyen · Designer & Developer',
+        vi: 'Ross Nguyen · Designer & Developer',
+        ja: 'Ross Nguyen · Designer & Developer'
+    }[lang] || 'Ross Nguyen · Designer & Developer';
     localStorage.setItem('lang', lang);
     if ($('#langSelect')) $('#langSelect').value = lang;
 }
 
+// ============================================================
+//  REAL-TIME DAY / NIGHT LIGHTING
+// ============================================================
 function initDayNightLighting() {
     const hour = new Date().getHours();
-    if (hour >= 6 && hour < 18) document.documentElement.classList.add('day-theme');
-    else document.documentElement.classList.remove('day-theme');
+    const isDaytime = hour >= 6 && hour < 18;
+    if (isDaytime) {
+        document.documentElement.classList.add('day-theme');
+    } else {
+        document.documentElement.classList.remove('day-theme');
+    }
 }
 
 // ============================================================
-//  MAIN LOGIC
+//  DOMContentLoaded
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
+
     initDayNightLighting();
 
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
     window.scrollTo(0, 0);
 
+    // ---- LOADING ----
     const placeholder = $('#loadingPlaceholder');
     if (placeholder) {
         setTimeout(() => placeholder.classList.add('hidden'), 400);
         setTimeout(() => { placeholder.style.display = 'none'; }, 1200);
     }
 
-    if ($('#langSelect')) $('#langSelect').addEventListener('change', e => applyLanguage(e.target.value));
+    // ---- LANGUAGE ----
+    if ($('#langSelect')) {
+        $('#langSelect').addEventListener('change', e => applyLanguage(e.target.value));
+    }
     applyLanguage(localStorage.getItem('lang') || 'en');
 
+    // ---- EMAIL ----
     const emailLink = $('#emailLink');
     if (emailLink) {
         emailLink.href = 'mailto:moonsicson@gmail.com';
         emailLink.textContent = 'moonsicson@gmail.com';
     }
 
-    // OBSERVERS
+    // ---- INTERSECTION OBSERVERS ----
     const ro = new IntersectionObserver(entries => {
         entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('revealed'); });
     }, { threshold: .10, rootMargin: '0px 0px -30px 0px' });
@@ -325,6 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: .18, rootMargin: '0px 0px -30px 0px' });
     $$('.chapter-item').forEach(el => co.observe(el));
 
+    // ---- SCROLL HELPERS ----
     function scrollTo(target, offset = 60) {
         window.scrollTo({
             top: target.getBoundingClientRect().top + window.pageYOffset - offset,
@@ -332,13 +356,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // NAVIGATION
-    const navToggle = $('#navToggle'), navLinks = $('#navLinks'), navClose = $('#navClose');
+    // ---- NAVIGATION ----
+    const navToggle = $('#navToggle'),
+        navLinks = $('#navLinks'),
+        navClose = $('#navClose');
+
     function setMenu(open) {
         if (!navLinks || !navToggle) return;
         navLinks.classList.toggle('open', open);
         navToggle.classList.toggle('active', open);
         navToggle.setAttribute('aria-expanded', open);
+        if (open) {
+            const f = navLinks.querySelectorAll('a, button, [tabindex]');
+            if (f.length) f[0].focus();
+        } else navToggle.focus();
     }
     if (navToggle) navToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('open')));
     if (navClose) navClose.addEventListener('click', () => setMenu(false));
@@ -349,296 +380,352 @@ document.addEventListener('DOMContentLoaded', function() {
         if (t) { scrollTo(t, 60); setMenu(false); }
     }));
 
-    // SECTION CACHING (Triệt tiêu Reflow khi cuộn)
+    // ============================================================
+    //  OPTIMIZED: SINGLE SCHEDULER + CACHING
+    // ============================================================
+    const canvas = $('#heroCanvas');
+    const ctx = canvas ? canvas.getContext('2d', { alpha: true }) : null;
+    const mouseLightEl = $('#mouse-light');
+    const scrollProgressEl = $('#scrollProgress');
+    const bgLightingEl = $('#bgLighting');
+    const orbs = $$('.parallax-orb');
+    const chaptersPath = $('#chaptersPath');
+    const chaptersContainer = $('#chaptersContainer');
+    const chaptersSVG = $('#chaptersSVG');
+    const sectionEls = $$('section[id]');
     const nav = $('#nav');
-    let sectionCache = [];
-    function cacheSections() {
-        sectionCache = $$('section[id]').map(s => ({
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+
+    let w = window.innerWidth,
+        h = window.innerHeight;
+    let particles = [];
+    let currentMode = 'rain';
+    let mx = w / 2, my = h / 2;
+    let lx = mx, ly = my;
+    let chapter3TopCache = 0;
+    let maxScrollCache = 1;
+    let sectionTopsCache = [];
+    let timelineLenCache = 0;
+
+    let needsScrollUpdate = true;
+    let needsMouseLightUpdate = false;
+    let needsTiltUpdate = false;
+    let lastFrameTime = performance.now();
+    let frameId = null;
+    let frameCounter = 0;
+
+    function updateCaches() {
+        const chapters = $$('.chapter-item');
+        if (chapters.length >= 3 && chaptersContainer) {
+            let el = chapters[2];
+            let top = 0;
+            while (el) {
+                top += el.offsetTop;
+                el = el.offsetParent;
+            }
+            chapter3TopCache = top;
+        }
+
+        sectionTopsCache = sectionEls.map(s => ({
             id: s.id,
             top: s.offsetTop,
             height: s.offsetHeight
         }));
-    }
-    cacheSections();
-    window.addEventListener('resize', cacheSections, { passive: true });
 
-    function updateNav() {
-        if (!nav) return;
-        const y = window.pageYOffset;
-        nav.classList.toggle('scrolled', y > 50);
-        let cur = '';
-        for (let i = 0; i < sectionCache.length; i++) {
-            const s = sectionCache[i];
-            if (y >= s.top - 100 && y < s.top + s.height - 40) { cur = s.id; break; }
-        }
-        $$('.nav__links a[data-section]').forEach(a => {
-            const active = a.dataset.section === cur;
-            a.classList.toggle('active', active);
-            a.toggleAttribute('aria-current', active);
-        });
-    }
-
-    // MOUSE LIGHT
-    const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    const mouseLight = $('#mouse-light');
-    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    let lx = mx, ly = my;
-
-    if (!isTouch && mouseLight) {
-        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
-        document.addEventListener('mouseleave', () => { mouseLight.style.opacity = '0'; }, { passive: true });
-        document.addEventListener('mouseenter', () => { mouseLight.style.opacity = '1'; }, { passive: true });
-    }
-
-    // AUDIO SFX
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
-    function playCinematicSound(freq = 120, type = 'sine', duration = 0.12) {
-        try {
-            if (!audioCtx) audioCtx = new AudioContext();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + duration);
-            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        } catch (_) {}
-    }
-
-    function playShutterSound() {
-        try {
-            if (!audioCtx) audioCtx = new AudioContext();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(900, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.06);
-            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.06);
-        } catch (_) {}
-    }
-
-    function triggerShutterEffect() {
-        playShutterSound();
-        let shutter = $('.shutter-overlay');
-        if (!shutter) {
-            shutter = document.createElement('div');
-            shutter.className = 'shutter-overlay';
-            document.body.appendChild(shutter);
-        }
-        shutter.classList.remove('active');
-        void shutter.offsetWidth;
-        shutter.classList.add('active');
-    }
-
-    $$('.hero__cta, .project-card, .chapter-item, .journal-item, .nav__links a, .contact__social-link').forEach(el => {
-        el.addEventListener('mouseenter', () => playCinematicSound(150, 'sine', 0.08));
-        el.addEventListener('click', () => playCinematicSound(220, 'triangle', 0.15));
-    });
-
-    // 3D TILT EFFECT WITH rAF
-    if (!isTouch) {
-        $$('.project-card, .hero__portrait').forEach(card => {
-            let tiltFrame = null;
-            card.addEventListener('mousemove', e => {
-                if (tiltFrame) cancelAnimationFrame(tiltFrame);
-                tiltFrame = requestAnimationFrame(() => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left - rect.width / 2;
-                    const y = e.clientY - rect.top - rect.height / 2;
-                    card.style.transform = `perspective(1000px) rotateX(${-y / 22}deg) rotateY(${x / 22}deg) translateY(-5px)`;
-                });
-            });
-            card.addEventListener('mouseleave', () => {
-                if (tiltFrame) cancelAnimationFrame(tiltFrame);
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-            });
-        });
-    }
-
-    // DYNAMIC ATMOSPHERE CANVAS
-    let isCanvasVisible = true;
-    (function initAtmosphere() {
-        const canvas = $('#heroCanvas');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d', { alpha: true });
-        let w, h, particles = [];
-        let currentMode = 'rain';
-        let chapter3TopCache = 0;
-
-        const canvasObs = new IntersectionObserver(entries => {
-            isCanvasVisible = entries[0].isIntersecting;
-        }, { threshold: 0.01 });
-        canvasObs.observe(canvas);
-
-        function updateCache() {
-            const chapters = $$('.chapter-item');
-            if (chapters.length >= 3) {
-                let el = chapters[2];
-                let top = 0;
-                while (el) { top += el.offsetTop; el = el.offsetParent; }
-                chapter3TopCache = top;
-            }
+        if (chaptersPath) {
+            timelineLenCache = chaptersPath.getTotalLength();
         }
 
-        function resize() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-            w = window.innerWidth; h = window.innerHeight;
-            canvas.width = w * dpr; canvas.height = h * dpr;
-            ctx.scale(dpr, dpr);
-            updateCache();
-        }
-
-        function Particle(mode) { this.reset(mode); }
-        Particle.prototype.reset = function(mode) {
-            this.x = Math.random() * w; this.y = Math.random() * h;
-            if (mode === 'rain') {
-                this.r = Math.random() * 1.5 + 0.8;
-                this.vx = -Math.random() * 0.5 - 0.2;
-                this.vy = Math.random() * 8 + 6;
-                this.length = Math.random() * 16 + 10;
-                this.alpha = Math.random() * 0.28 + 0.15;
-            } else {
-                this.r = Math.random() * 2.2 + 1.0;
-                this.vx = (Math.random() - 0.5) * 0.8;
-                this.vy = Math.random() * 1.5 + 0.6;
-                this.length = 0;
-                this.alpha = Math.random() * 0.45 + 0.25;
-            }
-        };
-
-        Particle.prototype.update = function(mode) {
-            this.x += this.vx; this.y += this.vy;
-            if (this.y > h + 15 || this.y < -15 || this.x > w + 15 || this.x < -15) {
-                this.reset(mode); this.y = -10;
-            }
-        };
-
-        Particle.prototype.draw = function(mode) {
-            ctx.beginPath();
-            if (mode === 'rain') {
-                ctx.strokeStyle = `rgba(102, 192, 244, ${this.alpha})`;
-                ctx.lineWidth = this.r;
-                ctx.moveTo(this.x, this.y);
-                ctx.lineTo(this.x + this.vx * 2, this.y + this.length);
-                ctx.stroke();
-            } else {
-                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(245, 247, 250, ${this.alpha})`;
-                ctx.fill();
-            }
-        };
-
-        function createParticles() {
-            const isMobile = window.innerWidth < 768;
-            const count = Math.floor((currentMode === 'rain' ? 60 : 80) * (isMobile ? 0.5 : 1));
-            particles = Array.from({ length: count }, () => new Particle(currentMode));
-        }
-
-        function animate() {
-            if (isCanvasVisible) {
-                ctx.clearRect(0, 0, w, h);
-                for (let i = 0; i < particles.length; i++) {
-                    particles[i].update(currentMode);
-                    particles[i].draw(currentMode);
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-
-        function checkWeatherBoundary() {
-            const scrollY = window.pageYOffset;
-            const targetMode = (chapter3TopCache && scrollY >= chapter3TopCache - 150) ? 'snow' : 'rain';
-            if (targetMode !== currentMode) {
-                currentMode = targetMode;
-                createParticles();
-            }
-        }
-
-        window.addEventListener('scroll', checkWeatherBoundary, { passive: true });
-        window.addEventListener('resize', () => { resize(); createParticles(); }, { passive: true });
-
-        resize(); createParticles(); animate();
-    })();
-
-    // MAIN ANIMATION LOOP
-    const orbs = $$('.parallax-orb');
-    const scrollProgress = $('#scrollProgress');
-    let maxScrollCache = 1;
-
-    function updateMaxScroll() {
         maxScrollCache = Math.max(document.body.scrollHeight - window.innerHeight, 1);
     }
-    updateMaxScroll();
-    window.addEventListener('resize', updateMaxScroll, { passive: true });
 
-    function mainLoop() {
+    function resizeCanvas() {
+        if (!canvas || !ctx) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        updateCaches();
+    }
+
+    function Particle(mode) { this.reset(mode); }
+
+    Particle.prototype.reset = function(mode) {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        if (mode === 'rain') {
+            this.r = Math.random() * 1.5 + 0.8;
+            this.vx = -Math.random() * 0.5 - 0.2;
+            this.vy = Math.random() * 8 + 6;
+            this.length = Math.random() * 16 + 10;
+            this.alpha = Math.random() * 0.28 + 0.15;
+        } else {
+            this.r = Math.random() * 2.2 + 1.0;
+            this.vx = (Math.random() - 0.5) * 0.8;
+            this.vy = Math.random() * 1.5 + 0.6;
+            this.length = 0;
+            this.alpha = Math.random() * 0.45 + 0.25;
+        }
+    };
+
+    Particle.prototype.update = function(mode) {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.y > h + 15 || this.y < -15 || this.x > w + 15 || this.x < -15) {
+            this.reset(mode);
+            this.y = -10;
+        }
+    };
+
+    Particle.prototype.draw = function(mode) {
+        ctx.beginPath();
+        if (mode === 'rain') {
+            ctx.strokeStyle = `rgba(102, 192, 244, ${this.alpha})`;
+            ctx.lineWidth = this.r;
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + this.vx * 2, this.y + this.length);
+            ctx.stroke();
+        } else {
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(245, 247, 250, ${this.alpha})`;
+            ctx.fill();
+        }
+    };
+
+    function createParticles() {
+        if (!ctx) return;
+        const isMobile = window.innerWidth < 768;
+        const count = Math.floor((currentMode === 'rain' ? 70 : 97) * (isMobile ? 0.55 : 1));
+        particles = Array.from({ length: count }, () => new Particle(currentMode));
+    }
+
+    function drawAtmosphere() {
+        if (!ctx || !canvas) return;
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update(currentMode);
+            particles[i].draw(currentMode);
+        }
+    }
+
+    function updateScrollRelated() {
         const scrollY = window.pageYOffset;
         const frac = scrollY / maxScrollCache;
 
-        if (scrollProgress) scrollProgress.style.width = (frac * 100) + '%';
-
-        updateNav();
-
-        if (!isTouch && mouseLight) {
-            lx += (mx - lx) * 0.08;
-            ly += (my - ly) * 0.08;
-            mouseLight.style.transform = `translate3d(${lx - 240}px, ${ly - 240}px, 0)`;
+        if (scrollProgressEl) {
+            scrollProgressEl.style.transform = `scaleX(${Math.min(frac, 1)})`;
         }
 
+        const targetMode = (chapter3TopCache && scrollY >= chapter3TopCache - 150) ? 'snow' : 'rain';
+        if (targetMode !== currentMode) {
+            currentMode = targetMode;
+            createParticles();
+        }
+
+        let cur = '';
+        sectionTopsCache.forEach(s => {
+            if (scrollY >= s.top - 100 && scrollY < s.top + s.height - 40) cur = s.id;
+        });
+        $$('.nav__links a[data-section]').forEach(a => {
+            a.classList.toggle('active', a.dataset.section === cur);
+            a.toggleAttribute('aria-current', a.dataset.section === cur);
+        });
+        if (nav) nav.classList.toggle('scrolled', scrollY > 50);
+
+        if (chaptersPath && chaptersContainer) {
+            const top = chaptersContainer.offsetTop;
+            const ch = chaptersContainer.scrollHeight;
+            const bottom = scrollY + window.innerHeight;
+            if (bottom > top && scrollY < top + ch) {
+                const progress = (bottom - top) / (ch + window.innerHeight);
+                chaptersPath.style.strokeDashoffset = timelineLenCache * (1 - Math.min(progress, 1));
+            }
+        }
+
+        frameCounter++;
+        if (frameCounter % 2 === 0) {
+            updateOrbs(frac);
+            updateBgLighting(frac);
+        }
+    }
+
+    function updateOrbs(frac) {
         if (orbs[0]) orbs[0].style.transform = `translate3d(${-25 + frac * 45}px,${-15 + frac * 70}px,0)`;
         if (orbs[1]) orbs[1].style.transform = `translate3d(${18 - frac * 35}px,${-50 + frac * 100}px,0)`;
         if (orbs[2]) orbs[2].style.transform = `translate3d(${-12 + frac * 28}px,${35 - frac * 85}px,0)`;
-
-        requestAnimationFrame(mainLoop);
     }
-    requestAnimationFrame(mainLoop);
 
-    // CHAPTERS TIMELINE SVG
-    const path = $('#chaptersPath'), container = $('#chaptersContainer'), svg = $('#chaptersSVG');
-    function updateTimeline() {
-        if (!path || !container || !svg) return;
-        const h = container.scrollHeight;
-        svg.setAttribute('viewBox', `0 0 2 ${h}`);
-        svg.setAttribute('height', h);
-        path.setAttribute('d', `M1,0 L1,${h}`);
-        const len = path.getTotalLength();
-        path.style.strokeDasharray = len;
-        path.style.strokeDashoffset = len;
+    function updateBgLighting(frac) {
+        if (!bgLightingEl) return;
+        const p = Math.min(frac, 1);
+        bgLightingEl.style.opacity = 0.4 + p * 0.35;
+        bgLightingEl.style.background = `radial-gradient(ellipse at ${28 + p * 18}% ${18 - p * 10}%, rgba(212,163,115,${0.06 + p * 0.05}), transparent 58%)`;
     }
-    updateTimeline();
-    window.addEventListener('resize', updateTimeline, { passive: true });
 
-    function drawTimeline() {
-        if (!path || !container) return;
-        const y = window.pageYOffset, top = container.offsetTop, h = container.scrollHeight;
-        const bottom = y + window.innerHeight;
-        if (bottom > top && y < top + h) {
-            const progress = (bottom - top) / (h + window.innerHeight);
-            path.style.strokeDashoffset = path.getTotalLength() * (1 - Math.min(progress, 1));
+    function updateMouseLight() {
+        if (isTouch || !mouseLightEl) return;
+        lx += (mx - lx) * 0.06;
+        ly += (my - ly) * 0.06;
+        mouseLightEl.style.left = lx + 'px';
+        mouseLightEl.style.top = ly + 'px';
+        const edge = 40;
+        const near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
+        mouseLightEl.style.opacity = near ? '0.15' : '1';
+    }
+
+    const tiltCards = $$('.project-card, .hero__portrait');
+    let tiltData = [];
+    tiltCards.forEach((card, index) => {
+        card.addEventListener('mouseenter', () => {
+            const rect = card.getBoundingClientRect();
+            tiltData[index] = {
+                card,
+                left: rect.left,
+                top: rect.top,
+                width: rect.width,
+                height: rect.height,
+                active: true
+            };
+            needsTiltUpdate = true;
+        });
+        card.addEventListener('mousemove', (e) => {
+            if (!tiltData[index]) return;
+            tiltData[index].mx = e.clientX;
+            tiltData[index].my = e.clientY;
+            needsTiltUpdate = true;
+        });
+        card.addEventListener('mouseleave', () => {
+            if (tiltData[index]) {
+                tiltData[index].active = false;
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+                needsTiltUpdate = true;
+            }
+        });
+    });
+
+    function processTilt() {
+        if (!needsTiltUpdate) return;
+        needsTiltUpdate = false;
+        tiltData.forEach(data => {
+            if (!data || !data.active) return;
+            const x = data.mx - data.left - data.width / 2;
+            const y = data.my - data.top - data.height / 2;
+            data.card.style.transform = `perspective(1000px) rotateX(${-y / 22}deg) rotateY(${x / 22}deg) translateY(-5px)`;
+        });
+    }
+
+    function mainLoop(time) {
+        frameId = requestAnimationFrame(mainLoop);
+        const delta = time - lastFrameTime;
+        lastFrameTime = time;
+
+        if (!document.hidden && ctx) {
+            drawAtmosphere();
+        }
+
+        if (needsScrollUpdate) {
+            needsScrollUpdate = false;
+            updateScrollRelated();
+        }
+
+        if (needsMouseLightUpdate) {
+            needsMouseLightUpdate = false;
+            updateMouseLight();
+        }
+
+        if (needsTiltUpdate) {
+            processTilt();
         }
     }
-    window.addEventListener('scroll', drawTimeline, { passive: true });
 
-    // MUSIC PLAYER
-    const musicPlayer = $('#musicPlayer'), playBtn = $('#musicToggle'), audio = $('#bgMusic');
-    const progressWrap = $('#progressWrap'), progressBar = $('#progressBar'), progressThumb = $('#progressThumb');
-    const currentTimeEl = $('#currentTime'), totalTimeEl = $('#totalTime');
-    const volumeToggle = $('#volumeToggle'), volumeFill = $('#volumeFill'), volumeTrack = $('#volumeTrack');
+    window.addEventListener('scroll', () => {
+        needsScrollUpdate = true;
+    }, { passive: true });
+
+    if (!isTouch && mouseLightEl) {
+        document.addEventListener('mousemove', (e) => {
+            mx = e.clientX;
+            my = e.clientY;
+            needsMouseLightUpdate = true;
+        }, { passive: true });
+        document.addEventListener('mouseleave', () => {
+            if (mouseLightEl) mouseLightEl.style.opacity = '0';
+        }, { passive: true });
+        document.addEventListener('mouseenter', () => {
+            if (mouseLightEl) mouseLightEl.style.opacity = '1';
+            needsMouseLightUpdate = true;
+        }, { passive: true });
+    }
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            resizeCanvas();
+            createParticles();
+            updateCaches();
+            needsScrollUpdate = true;
+        }, 200);
+    }, { passive: true });
+
+    resizeCanvas();
+    createParticles();
+    updateCaches();
+    needsScrollUpdate = true;
+
+    frameId = requestAnimationFrame(mainLoop);
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            if (frameId) {
+                cancelAnimationFrame(frameId);
+                frameId = null;
+            }
+        } else {
+            if (!frameId) {
+                lastFrameTime = performance.now();
+                frameId = requestAnimationFrame(mainLoop);
+            }
+        }
+    });
+
+    function initTimeline() {
+        if (!chaptersPath || !chaptersContainer || !chaptersSVG) return;
+        const h = chaptersContainer.scrollHeight;
+        chaptersSVG.setAttribute('viewBox', `0 0 2 ${h}`);
+        chaptersSVG.setAttribute('height', h);
+        chaptersPath.setAttribute('d', `M1,0 L1,${h}`);
+        const len = chaptersPath.getTotalLength();
+        chaptersPath.style.strokeDasharray = len;
+        chaptersPath.style.strokeDashoffset = len;
+        timelineLenCache = len;
+    }
+    initTimeline();
+    window.addEventListener('resize', initTimeline, { passive: true });
+
+    // ============================================================
+    //  MUSIC PLAYER & AUDIO CONTROL
+    // ============================================================
+    const musicPlayer = $('#musicPlayer');
+    const playBtn = $('#musicToggle');
+    const audio = $('#bgMusic');
+    const progressWrap = $('#progressWrap');
+    const progressBar = $('#progressBar');
+    const progressThumb = $('#progressThumb');
+    const currentTimeEl = $('#currentTime');
+    const totalTimeEl = $('#totalTime');
+    const volumeToggle = $('#volumeToggle');
+    const volumeFill = $('#volumeFill');
+    const volumeTrack = $('#volumeTrack');
     const visualizerCanvas = $('#visualizerCanvas');
-    let ctxVis = null, visualizerId = null, isPlaying = false, audioErr = false;
-    let volumeBeforeMute = 0.8, currentVolume = 0.8;
+    let ctxVis = null;
+    let visualizerId = null;
+    let isPlaying = false;
+    let audioErr = false;
+    let volumeBeforeMute = 0.8;
+    let currentVolume = 0.8;
 
     if (visualizerCanvas) {
         ctxVis = visualizerCanvas.getContext('2d');
@@ -652,6 +739,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function hideMusic() { if (musicPlayer) musicPlayer.classList.add('hidden'); }
+
     function showToast(key) {
         const lang = localStorage.getItem('lang') || 'en';
         const msg = getT(lang, 'toast.' + key) || T.en.toast[key] || key;
@@ -665,7 +753,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (audio) {
         audio.addEventListener('error', () => { audioErr = true; hideMusic(); showToast('audioError'); });
-        audio.addEventListener('loadedmetadata', () => { if (audio.duration && totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration); });
+        audio.addEventListener('loadedmetadata', () => {
+            if (audio.duration && totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration);
+        });
         audio.addEventListener('timeupdate', updateProgress);
         audio.addEventListener('play', () => { isPlaying = true; updatePlayIcon(true); startVisualizer(); });
         audio.addEventListener('pause', () => { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
@@ -674,18 +764,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function formatTime(sec) {
         if (!sec || isNaN(sec)) return '0:00';
-        const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
         return `${m}:${s.toString().padStart(2, '0')}`;
     }
 
     function updateProgress() {
         if (!audio || !audio.duration) return;
-        const pct = (audio.currentTime / audio.duration) * 100;
-        if (progressBar) progressBar.style.width = pct + '%';
-        if (progressThumb) progressThumb.style.left = pct + '%';
+        const pct = (audio.currentTime / audio.duration);
+        if (progressBar) progressBar.style.transform = `scaleX(${pct})`;
+        if (progressThumb) progressThumb.style.left = (pct * 100) + '%';
         if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
         if (totalTimeEl && audio.duration) totalTimeEl.textContent = formatTime(audio.duration);
-        if (progressWrap) progressWrap.setAttribute('aria-valuenow', Math.round(pct));
+        if (progressWrap) progressWrap.setAttribute('aria-valuenow', Math.round(pct * 100));
     }
 
     function updatePlayIcon(playing) {
@@ -704,22 +795,42 @@ document.addEventListener('DOMContentLoaded', function() {
     if (playBtn) {
         playBtn.addEventListener('click', () => {
             if (audioErr || !audio) return;
-            if (audio.paused) audio.play().catch(() => { audioErr = true; hideMusic(); showToast('audioError'); });
-            else audio.pause();
+            if (audio.paused) {
+                audio.play().catch(() => { audioErr = true; hideMusic(); showToast('audioError'); });
+            } else {
+                audio.pause();
+            }
         });
     }
 
     let isDragging = false;
     if (progressWrap) {
-        progressWrap.addEventListener('mousedown', (e) => { if (audio && audio.duration) { isDragging = true; setProgress(e.clientX); } });
-        document.addEventListener('mousemove', (e) => { if (isDragging) setProgress(e.clientX); });
+        progressWrap.addEventListener('mousedown', (e) => {
+            if (!audio || !audio.duration) return;
+            isDragging = true;
+            setProgress(e.clientX);
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) setProgress(e.clientX);
+        });
         document.addEventListener('mouseup', () => { isDragging = false; });
+        progressWrap.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (!audio || !audio.duration) return;
+            isDragging = true;
+            setProgress(e.touches[0].clientX);
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) { e.preventDefault(); setProgress(e.touches[0].clientX); }
+        });
+        document.addEventListener('touchend', () => { isDragging = false; });
     }
 
     function setProgress(clientX) {
         if (!progressWrap || !audio) return;
         const rect = progressWrap.getBoundingClientRect();
-        let pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        let pct = (clientX - rect.left) / rect.width;
+        pct = Math.max(0, Math.min(1, pct));
         audio.currentTime = pct * audio.duration;
         updateProgress();
     }
@@ -728,36 +839,67 @@ document.addEventListener('DOMContentLoaded', function() {
     if (volumeToggle && audio) {
         volumeToggle.addEventListener('click', () => {
             if (audio.muted) {
-                audio.muted = false; audio.volume = volumeBeforeMute; currentVolume = volumeBeforeMute;
+                audio.muted = false;
+                audio.volume = volumeBeforeMute;
+                currentVolume = volumeBeforeMute;
                 updateVolumeFill(volumeBeforeMute);
             } else {
-                volumeBeforeMute = audio.volume || currentVolume; audio.muted = true; audio.volume = 0; currentVolume = 0;
+                volumeBeforeMute = audio.volume || currentVolume;
+                audio.muted = true;
+                audio.volume = 0;
+                currentVolume = 0;
                 updateVolumeFill(0);
             }
         });
     }
 
     if (volumeTrack) {
-        volumeTrack.addEventListener('mousedown', (e) => { volDragging = true; setVolume(e.clientX); });
-        document.addEventListener('mousemove', (e) => { if (volDragging) setVolume(e.clientX); });
+        volumeTrack.addEventListener('mousedown', (e) => {
+            volDragging = true;
+            setVolume(e.clientX);
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (volDragging) setVolume(e.clientX);
+        });
         document.addEventListener('mouseup', () => { volDragging = false; });
+        volumeTrack.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            volDragging = true;
+            setVolume(e.touches[0].clientX);
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (volDragging) { e.preventDefault(); setVolume(e.touches[0].clientX); }
+        });
+        document.addEventListener('touchend', () => { volDragging = false; });
     }
 
     function setVolume(clientX) {
         if (!volumeTrack || !audio) return;
         const rect = volumeTrack.getBoundingClientRect();
-        let pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-        audio.volume = pct; currentVolume = pct; audio.muted = (pct === 0);
+        let pct = (clientX - rect.left) / rect.width;
+        pct = Math.max(0, Math.min(1, pct));
+        audio.volume = pct;
+        currentVolume = pct;
+        if (pct === 0) { audio.muted = true; } else { audio.muted = false; }
         updateVolumeFill(pct);
     }
 
-    function updateVolumeFill(pct) { if (volumeFill) volumeFill.style.width = (pct * 100) + '%'; }
+    function updateVolumeFill(pct) {
+        if (volumeFill) volumeFill.style.width = (pct * 100) + '%';
+    }
 
+    let visGradient = null;
     function startVisualizer() {
         if (!ctxVis) return;
         stopVisualizer();
-        const w = visualizerCanvas.width, h = visualizerCanvas.height;
-        const bars = 24, barWidth = w / bars, maxHeight = h * 0.8;
+        const w = visualizerCanvas.width,
+            h = visualizerCanvas.height;
+        visGradient = ctxVis.createLinearGradient(0, 0, 0, h);
+        visGradient.addColorStop(0, '#66c0f4');
+        visGradient.addColorStop(1, '#f4a261');
+        const bars = 24;
+        const barWidth = w / bars;
+        const maxHeight = h * 0.8;
         let time = 0;
 
         function draw() {
@@ -767,10 +909,10 @@ document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < bars; i++) {
                 const val = Math.sin(i * 0.5 + time * 1.8) * 0.6 + 0.4;
                 const height = maxHeight * val * 0.7 + maxHeight * 0.2 * Math.sin(i * 0.3 + time * 2.1) * 0.3 + maxHeight * 0.2;
-                const x = i * barWidth + (barWidth - 2) / 2, y = h - height;
-                const gradient = ctxVis.createLinearGradient(0, y, 0, h);
-                gradient.addColorStop(0, '#66c0f4'); gradient.addColorStop(1, '#f4a261');
-                ctxVis.fillStyle = gradient; ctxVis.fillRect(x, y, 2, height);
+                const x = i * barWidth + (barWidth - 2) / 2;
+                const y = h - height;
+                ctxVis.fillStyle = visGradient;
+                ctxVis.fillRect(x, y, 2, height);
             }
             visualizerId = requestAnimationFrame(draw);
         }
@@ -782,28 +924,51 @@ document.addEventListener('DOMContentLoaded', function() {
         if (ctxVis) ctxVis.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
     }
 
-    // PROJECT CARDS
+    document.addEventListener('keydown', (e) => {
+        if (e.target.matches('input, textarea, select')) return;
+        if (e.key === ' ' || e.key === 'Space') {
+            e.preventDefault();
+            if (playBtn) playBtn.click();
+        }
+    });
+
+    // ============================================================
+    //  PROJECT CARDS
+    // ============================================================
     $$('.project-card').forEach(card => {
         card.addEventListener('click', function() {
             const expanded = this.classList.toggle('expanded');
             this.setAttribute('aria-expanded', expanded);
+            const live = this.querySelector('.project-card__status-live');
+            if (live) live.textContent = expanded ? 'Details expanded' : 'Collapsed';
         });
-        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } });
+        card.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+        });
     });
 
-    // JOURNAL MODAL
-    const modal = $('#journalModal'), modalImg = $('#journalModalImg'), modalDesc = $('#journalModalDesc');
-    const modalClose = $('#journalModalClose'), modalPrev = $('#journalModalPrev'), modalNext = $('#journalModalNext');
+    // ============================================================
+    //  JOURNAL MODAL WITH CAMERA SHUTTER EFFECT
+    // ============================================================
+    const modal = $('#journalModal'),
+        modalImg = $('#journalModalImg'),
+        modalDesc = $('#journalModalDesc'),
+        modalClose = $('#journalModalClose'),
+        modalPrev = $('#journalModalPrev'),
+        modalNext = $('#journalModalNext');
     let currentIndex = 0;
     const journalItems = $$('.journal-item');
     journalItemsData = journalItems.map((item) => {
-        const img = item.querySelector('img'), full = item.querySelector('.journal-item__full');
+        const img = item.querySelector('img'),
+            full = item.querySelector('.journal-item__full');
         return img && full ? { src: img.src, alt: img.alt || '', fullEl: full } : null;
     }).filter(Boolean);
 
     journalItems.forEach((item, i) => {
         item.addEventListener('click', () => openModal(i));
-        item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); item.click(); } });
+        item.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); item.click(); }
+        });
     });
 
     function openModal(index) {
@@ -811,10 +976,12 @@ document.addEventListener('DOMContentLoaded', function() {
         triggerShutterEffect();
         if (index < 0) index = journalItemsData.length - 1;
         if (index >= journalItemsData.length) index = 0;
-        currentIndex = index; window._journalCurrentIndex = currentIndex;
+        currentIndex = index;
+        window._journalCurrentIndex = currentIndex;
         const data = journalItemsData[currentIndex];
         if (data) {
-            modalImg.src = data.src; modalImg.alt = data.alt;
+            modalImg.src = data.src;
+            modalImg.alt = data.alt;
             modalDesc.textContent = data.fullEl.textContent.trim();
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -824,7 +991,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function closeModal() {
         if (!modal) return;
-        modal.classList.remove('active'); document.body.style.overflow = '';
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
         if (journalItems[currentIndex]) journalItems[currentIndex].focus();
     }
     if (modalClose) modalClose.addEventListener('click', closeModal);
@@ -833,17 +1001,23 @@ document.addEventListener('DOMContentLoaded', function() {
     if (modalNext) modalNext.addEventListener('click', () => openModal(currentIndex + 1));
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') closeModal();
-        if (e.key === 'ArrowLeft' && modal && modal.classList.contains('active')) openModal(currentIndex - 1);
-        if (e.key === 'ArrowRight' && modal && modal.classList.contains('active')) openModal(currentIndex + 1);
+        if (e.key === 'ArrowLeft' && modal && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex - 1); }
+        if (e.key === 'ArrowRight' && modal && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex + 1); }
     });
 
-    // CONTACT FORM
-    const form = $('#contactForm'), formSuccess = $('#formSuccess');
+    // ============================================================
+    //  CONTACT FORM
+    // ============================================================
+    const form = $('#contactForm'),
+        formSuccess = $('#formSuccess');
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             let valid = true;
-            const name = $('#contactName'), email = $('#contactEmail'), subject = $('#contactSubject'), message = $('#contactMessage');
+            const name = $('#contactName'),
+                email = $('#contactEmail'),
+                subject = $('#contactSubject'),
+                message = $('#contactMessage');
             const nameErr = name.parentElement.querySelector('.contact__form-error');
             const emailErr = email.parentElement.querySelector('.contact__form-error');
             const msgErr = message.parentElement.querySelector('.contact__form-error');
@@ -863,24 +1037,71 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ---- FOOTER YEAR ----
     const yearEl = $('#footerYear');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+    // ---- CONTINUE BUTTON ----
     const continueBtn = $('#continueBtn');
     if (continueBtn) continueBtn.addEventListener('click', () => scrollTo($('#hero'), 60));
 
-    // EASTER EGGS & KEYBOARD SHORTCUTS
+    // ---- EASTER EGGS ----
     document.addEventListener('keydown', e => {
         if (e.target.matches('input, textarea, select')) return;
         const t = e.key;
         if (t === 'e' || t === 'E') showToast('easterEgg');
         else if (t === 'n' || t === 'N') {
             showToast('gameOver');
-            const f = $('.ending'); if (f) scrollTo(f, 60);
+            const f = $('.ending');
+            if (f) scrollTo(f, 60);
         } else if (t === 'y' || t === 'Y') {
-            scrollTo($('#hero'), 60); showToast('respawn');
-        } else if (t === ' ' || t === 'Space') {
-            e.preventDefault(); if (playBtn) playBtn.click();
+            scrollTo($('#hero'), 60);
+            showToast('respawn');
         }
     });
+
+    // ============================================================
+    //  SITE VERIFICATION SYSTEM
+    // ============================================================
+    window.verifySite = function() {
+        const results = [];
+        const check = (name, fn) => {
+            try {
+                const ok = !!fn();
+                results.push({ name, ok });
+                if (!ok) console.warn(`[verify] ✗ ${name}`);
+            } catch (e) {
+                results.push({ name, ok: false, error: e.message });
+            }
+        };
+
+        check('Critical DOM elements', () =>
+            ['loadingPlaceholder','navToggle','navLinks','langSelect','heroCanvas','chaptersPath','musicPlayer','musicToggle','bgMusic','contactForm','footerYear','continueBtn','scrollProgress']
+                .every(id => document.getElementById(id))
+        );
+
+        check('Translation data', () =>
+            typeof T === 'object' && T.en && T.vi && T.ja && T.en.nav && T.vi.nav && T.ja.nav
+        );
+
+        check('Navigation structure', () =>
+            !!$('#navToggle') && !!$('#navLinks') && $$('.nav__links a[data-section]').length === 6
+        );
+
+        check('Project cards present', () =>
+            $$('.project-card').length === 4
+        );
+
+        check('Journal modal elements present', () =>
+            !!$('.journal-item') && !!$('#journalModal') && !!$('#journalModalClose') && !!$('#journalModalImg')
+        );
+
+        console.groupCollapsed('%cSite Verification', 'color:#f4a261;font-weight:bold;');
+        results.forEach(r => {
+            console.log(`${r.ok ? '✅' : '⚠️'} ${r.name}${r.error ? ' — ' + r.error : ''}`);
+        });
+        console.groupEnd();
+
+        return results;
+    };
 });
