@@ -380,44 +380,157 @@ document.addEventListener('DOMContentLoaded', function() {
         if (t) { scrollTo(t, 60); setMenu(false); }
     }));
 
-    // ============================================================
-    //  OPTIMIZED: SINGLE SCHEDULER + CACHING
-    // ============================================================
-    const canvas = $('#heroCanvas');
-    const ctx = canvas ? canvas.getContext('2d', { alpha: true }) : null;
-    const mouseLightEl = $('#mouse-light');
-    const scrollProgressEl = $('#scrollProgress');
-    const bgLightingEl = $('#bgLighting');
-    const orbs = $$('.parallax-orb');
-    const chaptersPath = $('#chaptersPath');
-    const chaptersContainer = $('#chaptersContainer');
-    const chaptersSVG = $('#chaptersSVG');
-    const sectionEls = $$('section[id]');
-    const nav = $('#nav');
+    // ---- NAV SCROLL STATE ----
+    const nav = $('#nav'),
+        sectionEls = $$('section[id]');
+    let navUpdatePending = false;
+
+    function updateNav() {
+        if (!nav) return;
+        const y = window.pageYOffset;
+        nav.classList.toggle('scrolled', y > 50);
+        let cur = '';
+        sectionEls.forEach(s => {
+            if (y >= s.offsetTop - 100 && y < s.offsetTop + s.offsetHeight - 40) cur = s.id;
+        });
+        $$('.nav__links a[data-section]').forEach(a => {
+            a.classList.toggle('active', a.dataset.section === cur);
+            a.toggleAttribute('aria-current', a.dataset.section === cur);
+        });
+    }
+
+    function updateNavRaf() {
+        if (!navUpdatePending) {
+            navUpdatePending = true;
+            requestAnimationFrame(() => {
+                updateNav();
+                navUpdatePending = false;
+            });
+        }
+    }
+
+    window.addEventListener('scroll', updateNavRaf, { passive: true });
+    updateNav();
+
+    // ---- MOUSE LIGHT ----
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    const mouseLight = $('#mouse-light');
+    let mx = window.innerWidth / 2,
+        my = window.innerHeight / 2,
+        lx = mx,
+        ly = my;
+    if (!isTouch && mouseLight) {
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+        document.addEventListener('mouseleave', () => { if (mouseLight) mouseLight.style.opacity = '0'; }, { passive: true });
+        document.addEventListener('mouseenter', () => { if (mouseLight) mouseLight.style.opacity = '1'; }, { passive: true });
+    }
 
-    let w = window.innerWidth,
-        h = window.innerHeight;
-    let particles = [];
+    // ---- PARALLAX ORBS ----
+    const orbs = $$('.parallax-orb');
+    const scrollProgress = $('#scrollProgress');
+
+    // ============================================================
+    //  CINEMATIC WEB AUDIO SFX
+    // ============================================================
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function playCinematicSound(freq = 120, type = 'sine', duration = 0.12) {
+        try {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + duration);
+            
+            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        } catch (_) {}
+    }
+
+    // Camera Shutter SFX
+    function playShutterSound() {
+        try {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.06);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.06);
+        } catch (_) {}
+    }
+
+    function triggerShutterEffect() {
+        playShutterSound();
+        let shutter = $('.shutter-overlay');
+        if (!shutter) {
+            shutter = document.createElement('div');
+            shutter.className = 'shutter-overlay';
+            document.body.appendChild(shutter);
+        }
+        shutter.classList.remove('active');
+        void shutter.offsetWidth; // trigger reflow
+        shutter.classList.add('active');
+    }
+
+    $$('.hero__cta, .project-card, .chapter-item, .journal-item, .nav__links a, .contact__social-link').forEach(el => {
+        el.addEventListener('mouseenter', () => playCinematicSound(150, 'sine', 0.08));
+        el.addEventListener('click', () => playCinematicSound(220, 'triangle', 0.15));
+    });
+
+    // ============================================================
+    //  3D TILT EFFECT
+    // ============================================================
+    if (!isTouch) {
+        $$('.project-card, .hero__portrait').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                card.style.transform = `perspective(1000px) rotateX(${-y / 22}deg) rotateY(${x / 22}deg) translateY(-5px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+            });
+        });
+    }
+
+    // ============================================================
+    //  DYNAMIC ATMOSPHERE SYSTEM (90 FPS - FIXED WEATHER BOUNDARY)
+    // ============================================================
+    (function initAtmosphere() {
+    const canvas = $('#heroCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha: true });
+    let w, h, particles = [];
     let currentMode = 'rain';
-    let mx = w / 2, my = h / 2;
-    let lx = mx, ly = my;
     let chapter3TopCache = 0;
-    let maxScrollCache = 1;
-    let sectionTopsCache = [];
-    let timelineLenCache = 0;
 
-    let needsScrollUpdate = true;
-    let needsMouseLightUpdate = false;
-    let needsTiltUpdate = false;
-    let lastFrameTime = performance.now();
-    let frameId = null;
-    let frameCounter = 0;
-
-    function updateCaches() {
+    // Tính chính xác vị trí tuyệt đối của Chapter 3 so với ĐẦU TRANG WEB
+    function updateCache() {
         const chapters = $$('.chapter-item');
-        if (chapters.length >= 3 && chaptersContainer) {
-            let el = chapters[2];
+        if (chapters.length >= 3) {
+            let el = chapters[2]; // Chapter 3
             let top = 0;
             while (el) {
                 top += el.offsetTop;
@@ -425,29 +538,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             chapter3TopCache = top;
         }
-
-        sectionTopsCache = sectionEls.map(s => ({
-            id: s.id,
-            top: s.offsetTop,
-            height: s.offsetHeight
-        }));
-
-        if (chaptersPath) {
-            timelineLenCache = chaptersPath.getTotalLength();
-        }
-
-        maxScrollCache = Math.max(document.body.scrollHeight - window.innerHeight, 1);
     }
 
-    function resizeCanvas() {
-        if (!canvas || !ctx) return;
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+    function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         w = window.innerWidth;
         h = window.innerHeight;
         canvas.width = w * dpr;
         canvas.height = h * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        updateCaches();
+        ctx.scale(dpr, dpr);
+        updateCache();
     }
 
     function Particle(mode) { this.reset(mode); }
@@ -495,215 +595,124 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function createParticles() {
-        if (!ctx) return;
         const isMobile = window.innerWidth < 768;
         const count = Math.floor((currentMode === 'rain' ? 70 : 97) * (isMobile ? 0.55 : 1));
         particles = Array.from({ length: count }, () => new Particle(currentMode));
     }
 
-    function drawAtmosphere() {
-        if (!ctx || !canvas) return;
+    function animate() {
         ctx.clearRect(0, 0, w, h);
         for (let i = 0; i < particles.length; i++) {
             particles[i].update(currentMode);
             particles[i].draw(currentMode);
         }
+        requestAnimationFrame(animate);
     }
 
-    function updateScrollRelated() {
+    function checkWeatherBoundary() {
         const scrollY = window.pageYOffset;
-        const frac = scrollY / maxScrollCache;
-
-        if (scrollProgressEl) {
-            scrollProgressEl.style.transform = `scaleX(${Math.min(frac, 1)})`;
-        }
-
+        // Chỉ đổi sang Tuyết khi cuộn gần tới vị trí thực sự của Chapter 3
         const targetMode = (chapter3TopCache && scrollY >= chapter3TopCache - 150) ? 'snow' : 'rain';
         if (targetMode !== currentMode) {
             currentMode = targetMode;
             createParticles();
         }
-
-        let cur = '';
-        sectionTopsCache.forEach(s => {
-            if (scrollY >= s.top - 100 && scrollY < s.top + s.height - 40) cur = s.id;
-        });
-        $$('.nav__links a[data-section]').forEach(a => {
-            a.classList.toggle('active', a.dataset.section === cur);
-            a.toggleAttribute('aria-current', a.dataset.section === cur);
-        });
-        if (nav) nav.classList.toggle('scrolled', scrollY > 50);
-
-        if (chaptersPath && chaptersContainer) {
-            const top = chaptersContainer.offsetTop;
-            const ch = chaptersContainer.scrollHeight;
-            const bottom = scrollY + window.innerHeight;
-            if (bottom > top && scrollY < top + ch) {
-                const progress = (bottom - top) / (ch + window.innerHeight);
-                chaptersPath.style.strokeDashoffset = timelineLenCache * (1 - Math.min(progress, 1));
-            }
-        }
-
-        frameCounter++;
-        if (frameCounter % 2 === 0) {
-            updateOrbs(frac);
-            updateBgLighting(frac);
-        }
     }
 
-    function updateOrbs(frac) {
-        if (orbs[0]) orbs[0].style.transform = `translate3d(${-25 + frac * 45}px,${-15 + frac * 70}px,0)`;
-        if (orbs[1]) orbs[1].style.transform = `translate3d(${18 - frac * 35}px,${-50 + frac * 100}px,0)`;
-        if (orbs[2]) orbs[2].style.transform = `translate3d(${-12 + frac * 28}px,${35 - frac * 85}px,0)`;
-    }
+    window.addEventListener('scroll', checkWeatherBoundary, { passive: true });
+    window.addEventListener('resize', () => { resize(); createParticles(); }, { passive: true });
 
-    function updateBgLighting(frac) {
-        if (!bgLightingEl) return;
-        const p = Math.min(frac, 1);
-        bgLightingEl.style.opacity = 0.4 + p * 0.35;
-        bgLightingEl.style.background = `radial-gradient(ellipse at ${28 + p * 18}% ${18 - p * 10}%, rgba(212,163,115,${0.06 + p * 0.05}), transparent 58%)`;
-    }
+    resize();
+    createParticles();
+    animate();
+    })();
 
-    function updateMouseLight() {
-        if (isTouch || !mouseLightEl) return;
-        lx += (mx - lx) * 0.06;
-        ly += (my - ly) * 0.06;
-        mouseLightEl.style.left = lx + 'px';
-        mouseLightEl.style.top = ly + 'px';
-        const edge = 40;
-        const near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
-        mouseLightEl.style.opacity = near ? '0.15' : '1';
-    }
-
-    const tiltCards = $$('.project-card, .hero__portrait');
-    let tiltData = [];
-    tiltCards.forEach((card, index) => {
-        card.addEventListener('mouseenter', () => {
-            const rect = card.getBoundingClientRect();
-            tiltData[index] = {
-                card,
-                left: rect.left,
-                top: rect.top,
-                width: rect.width,
-                height: rect.height,
-                active: true
-            };
-            needsTiltUpdate = true;
-        });
-        card.addEventListener('mousemove', (e) => {
-            if (!tiltData[index]) return;
-            tiltData[index].mx = e.clientX;
-            tiltData[index].my = e.clientY;
-            needsTiltUpdate = true;
-        });
-        card.addEventListener('mouseleave', () => {
-            if (tiltData[index]) {
-                tiltData[index].active = false;
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-                needsTiltUpdate = true;
-            }
-        });
-    });
-
-    function processTilt() {
-        if (!needsTiltUpdate) return;
-        needsTiltUpdate = false;
-        tiltData.forEach(data => {
-            if (!data || !data.active) return;
-            const x = data.mx - data.left - data.width / 2;
-            const y = data.my - data.top - data.height / 2;
-            data.card.style.transform = `perspective(1000px) rotateX(${-y / 22}deg) rotateY(${x / 22}deg) translateY(-5px)`;
-        });
-    }
+    // ---- MAIN ANIMATION LOOP ----
+    let scrollY = 0,
+        frameId = null,
+        lastTime = 0;
+    let frameCount = 0;
+    const UPDATE_INTERVAL = 2;
 
     function mainLoop(time) {
         frameId = requestAnimationFrame(mainLoop);
-        const delta = time - lastFrameTime;
-        lastFrameTime = time;
+        lastTime = time;
 
-        if (!document.hidden && ctx) {
-            drawAtmosphere();
+        scrollY = window.pageYOffset;
+        const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
+        const frac = scrollY / maxScroll;
+        if (scrollProgress) {
+            scrollProgress.style.width = (frac * 100) + '%';
         }
 
-        if (needsScrollUpdate) {
-            needsScrollUpdate = false;
-            updateScrollRelated();
+        if (!isTouch && mouseLight) {
+            lx += (mx - lx) * 0.06;
+            ly += (my - ly) * 0.06;
+            mouseLight.style.left = lx + 'px';
+            mouseLight.style.top = ly + 'px';
+            const edge = 40;
+            const near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
+            mouseLight.style.opacity = near ? '0.15' : '1';
         }
 
-        if (needsMouseLightUpdate) {
-            needsMouseLightUpdate = false;
-            updateMouseLight();
-        }
+        frameCount++;
+        if (frameCount % UPDATE_INTERVAL === 0) {
+            if (orbs[0]) orbs[0].style.transform = `translate3d(${-25 + frac * 45}px,${-15 + frac * 70}px,0)`;
+            if (orbs[1]) orbs[1].style.transform = `translate3d(${18 - frac * 35}px,${-50 + frac * 100}px,0)`;
+            if (orbs[2]) orbs[2].style.transform = `translate3d(${-12 + frac * 28}px,${35 - frac * 85}px,0)`;
 
-        if (needsTiltUpdate) {
-            processTilt();
+            const bg = $('#bgLighting');
+            if (bg) {
+                const p = Math.min(frac, 1);
+                bg.style.opacity = 0.4 + p * 0.35;
+                bg.style.background = `radial-gradient(ellipse at ${28 + p * 18}% ${18 - p * 10}%, rgba(212,163,115,${0.06 + p * 0.05}), transparent 58%)`;
+            }
         }
     }
-
-    window.addEventListener('scroll', () => {
-        needsScrollUpdate = true;
-    }, { passive: true });
-
-    if (!isTouch && mouseLightEl) {
-        document.addEventListener('mousemove', (e) => {
-            mx = e.clientX;
-            my = e.clientY;
-            needsMouseLightUpdate = true;
-        }, { passive: true });
-        document.addEventListener('mouseleave', () => {
-            if (mouseLightEl) mouseLightEl.style.opacity = '0';
-        }, { passive: true });
-        document.addEventListener('mouseenter', () => {
-            if (mouseLightEl) mouseLightEl.style.opacity = '1';
-            needsMouseLightUpdate = true;
-        }, { passive: true });
-    }
-
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            resizeCanvas();
-            createParticles();
-            updateCaches();
-            needsScrollUpdate = true;
-        }, 200);
-    }, { passive: true });
-
-    resizeCanvas();
-    createParticles();
-    updateCaches();
-    needsScrollUpdate = true;
-
+    lastTime = performance.now();
     frameId = requestAnimationFrame(mainLoop);
 
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            if (frameId) {
-                cancelAnimationFrame(frameId);
-                frameId = null;
-            }
-        } else {
-            if (!frameId) {
-                lastFrameTime = performance.now();
-                frameId = requestAnimationFrame(mainLoop);
-            }
-        }
-    });
+    // ---- CHAPTERS TIMELINE SVG ----
+    const path = $('#chaptersPath'),
+        container = $('#chaptersContainer'),
+        svg = $('#chaptersSVG');
+    let timelineUpdatePending = false;
 
-    function initTimeline() {
-        if (!chaptersPath || !chaptersContainer || !chaptersSVG) return;
-        const h = chaptersContainer.scrollHeight;
-        chaptersSVG.setAttribute('viewBox', `0 0 2 ${h}`);
-        chaptersSVG.setAttribute('height', h);
-        chaptersPath.setAttribute('d', `M1,0 L1,${h}`);
-        const len = chaptersPath.getTotalLength();
-        chaptersPath.style.strokeDasharray = len;
-        chaptersPath.style.strokeDashoffset = len;
-        timelineLenCache = len;
+    function updateTimeline() {
+        if (!path || !container || !svg) return;
+        const h = container.scrollHeight;
+        svg.setAttribute('viewBox', `0 0 2 ${h}`);
+        svg.setAttribute('height', h);
+        path.setAttribute('d', `M1,0 L1,${h}`);
+        const len = path.getTotalLength();
+        path.style.strokeDasharray = len;
+        path.style.strokeDashoffset = len;
     }
-    initTimeline();
-    window.addEventListener('resize', initTimeline, { passive: true });
+    updateTimeline();
+    window.addEventListener('resize', updateTimeline, { passive: true });
+
+    function drawTimeline() {
+        if (!path || !container) return;
+        const y = window.pageYOffset,
+            top = container.offsetTop,
+            h = container.scrollHeight,
+            bottom = y + window.innerHeight;
+        if (bottom > top && y < top + h) {
+            const progress = (bottom - top) / (h + window.innerHeight);
+            path.style.strokeDashoffset = path.getTotalLength() * (1 - Math.min(progress, 1));
+        }
+    }
+
+    function drawTimelineRaf() {
+        if (!timelineUpdatePending) {
+            timelineUpdatePending = true;
+            requestAnimationFrame(() => {
+                drawTimeline();
+                timelineUpdatePending = false;
+            });
+        }
+    }
+    window.addEventListener('scroll', drawTimelineRaf, { passive: true });
 
     // ============================================================
     //  MUSIC PLAYER & AUDIO CONTROL
@@ -771,12 +780,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateProgress() {
         if (!audio || !audio.duration) return;
-        const pct = (audio.currentTime / audio.duration);
-        if (progressBar) progressBar.style.transform = `scaleX(${pct})`;
-        if (progressThumb) progressThumb.style.left = (pct * 100) + '%';
+        const pct = (audio.currentTime / audio.duration) * 100;
+        if (progressBar) progressBar.style.width = pct + '%';
+        if (progressThumb) progressThumb.style.left = pct + '%';
         if (currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
         if (totalTimeEl && audio.duration) totalTimeEl.textContent = formatTime(audio.duration);
-        if (progressWrap) progressWrap.setAttribute('aria-valuenow', Math.round(pct * 100));
+        if (progressWrap) progressWrap.setAttribute('aria-valuenow', Math.round(pct));
     }
 
     function updatePlayIcon(playing) {
@@ -888,15 +897,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (volumeFill) volumeFill.style.width = (pct * 100) + '%';
     }
 
-    let visGradient = null;
     function startVisualizer() {
         if (!ctxVis) return;
         stopVisualizer();
         const w = visualizerCanvas.width,
             h = visualizerCanvas.height;
-        visGradient = ctxVis.createLinearGradient(0, 0, 0, h);
-        visGradient.addColorStop(0, '#66c0f4');
-        visGradient.addColorStop(1, '#f4a261');
         const bars = 24;
         const barWidth = w / bars;
         const maxHeight = h * 0.8;
@@ -911,7 +916,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const height = maxHeight * val * 0.7 + maxHeight * 0.2 * Math.sin(i * 0.3 + time * 2.1) * 0.3 + maxHeight * 0.2;
                 const x = i * barWidth + (barWidth - 2) / 2;
                 const y = h - height;
-                ctxVis.fillStyle = visGradient;
+                const gradient = ctxVis.createLinearGradient(0, y, 0, h);
+                gradient.addColorStop(0, '#66c0f4');
+                gradient.addColorStop(1, '#f4a261');
+                ctxVis.fillStyle = gradient;
                 ctxVis.fillRect(x, y, 2, height);
             }
             visualizerId = requestAnimationFrame(draw);
@@ -1057,6 +1065,15 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (t === 'y' || t === 'Y') {
             scrollTo($('#hero'), 60);
             showToast('respawn');
+        }
+    });
+
+    // ---- VISIBILITY CHANGE ----
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            if (frameId) { cancelAnimationFrame(frameId); frameId = null; }
+        } else {
+            if (!frameId) { lastTime = performance.now(); frameId = requestAnimationFrame(mainLoop); }
         }
     });
 
