@@ -166,8 +166,8 @@ body {
     inset: -50%;
     z-index: 2;
     pointer-events: none;
-    opacity: .02;
-    mix-blend-mode: normal;
+    opacity: .035;
+    mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 180px 180px;
 }
@@ -176,13 +176,11 @@ body {
     top: 0;
     left: 0;
     height: 2px;
-    width: 100%;
+    width: 0%;
     z-index: 1001;
     background: var(--accent-gradient);
     box-shadow: 0 0 12px rgba(102, 192, 244, 0.35);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: none;
+    transition: width .08s linear;
     pointer-events: none;
 }
 
@@ -217,7 +215,7 @@ body {
     background: radial-gradient(circle at center, rgba(102, 192, 244, .10) 0%, rgba(244, 162, 97, .05) 35%, rgba(102, 192, 244, .02) 55%, transparent 72%);
     transform: translate(-50%, -50%);
     will-change: transform, opacity;
-    mix-blend-mode: normal;
+    mix-blend-mode: screen;
     transition: opacity .6s ease;
 }
 @media (pointer: coarse) {
@@ -232,7 +230,7 @@ body {
     pointer-events: none;
     z-index: 0;
     will-change: transform;
-    filter: blur(40px);
+    filter: blur(80px);
     opacity: .08;
     transition: opacity 1.2s ease;
 }
@@ -281,8 +279,8 @@ body {
     justify-content: space-between;
     padding: var(--space-4) var(--space-7);
     background: rgba(11, 17, 24, .70);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid transparent;
     transition: background var(--duration-smooth), border-color var(--duration-smooth), box-shadow var(--duration-smooth);
 }
@@ -523,7 +521,7 @@ body {
     transform: translateY(32px);
     transition: opacity var(--duration-reveal) var(--ease-out), transform var(--duration-reveal) var(--ease-out);
     content-visibility: auto;
-    contain-intrinsic-size: 800px;
+    contain-intrinsic-size: 480px;
     scroll-margin-top: 80px;
 }
 .section.revealed {
@@ -792,8 +790,7 @@ body {
     background: rgba(0, 0, 0, .35);
     padding: var(--space-1) var(--space-3);
     border-radius: var(--radius-sm);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
     font-family: var(--font-mono);
     border: 1px solid rgba(255, 255, 255, .04);
 }
@@ -806,8 +803,7 @@ body {
     letter-spacing: .12em;
     color: #fff;
     background: rgba(0, 0, 0, .4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
     padding: var(--space-1) var(--space-4);
     border-radius: var(--radius-full);
     border: 1px solid rgba(255, 255, 255, .08);
@@ -1058,7 +1054,7 @@ body {
     height: 120%;
     background: radial-gradient(circle at left center, rgba(244, 162, 97, .10), transparent 70%);
     pointer-events: none;
-    filter: blur(10px);
+    filter: blur(20px);
 }
 @media (max-width: 600px) {
     .chapter-item--climax::after {
@@ -1403,8 +1399,7 @@ body {
     height: 32px;
     border-radius: 50%;
     background: rgba(0, 0, 0, .4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1431,8 +1426,8 @@ body {
     inset: 0;
     z-index: var(--z-modal);
     background: rgba(11, 17, 24, .92);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1517,7 +1512,6 @@ body {
     transition: all var(--duration-fast);
     z-index: 3;
     backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
 }
 .journal-modal__nav-btn:hover {
     opacity: 0.8;
@@ -1772,8 +1766,8 @@ body {
     right: 0;
     z-index: var(--z-music);
     background: rgba(11, 17, 24, .88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid var(--border-subtle);
     box-shadow: 0 -8px 40px rgba(0, 0, 0, .6);
     padding: var(--space-2) var(--space-4);
@@ -1866,10 +1860,8 @@ body {
     height: 100%;
     border-radius: 4px;
     background: var(--accent-gradient);
-    width: 100%;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: none;
+    width: 0%;
+    transition: width .05s linear;
 }
 .music-player__progress-thumb {
     position: absolute;
@@ -2014,7 +2006,6 @@ body {
     box-shadow: 0 12px 40px rgba(0, 0, 0, .5);
     max-width: 340px;
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
 }
 .toast.show {
     opacity: 1;
@@ -2135,5 +2126,5 @@ body {
 .chapter-item, 
 .journal-item {
     contain: layout style paint;
-    will-change: auto;
+    will-change: transform, opacity;
 }
