@@ -458,7 +458,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (_) {}
     }
 
-    // Camera Shutter SFX
     function playShutterSound() {
         try {
             if (!audioCtx) audioCtx = new AudioContext();
@@ -516,115 +515,125 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    //  DYNAMIC ATMOSPHERE SYSTEM (90 FPS - FIXED WEATHER BOUNDARY)
+    //  DYNAMIC ATMOSPHERE SYSTEM 
     // ============================================================
     (function initAtmosphere() {
-    const canvas = $('#heroCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: true });
-    let w, h, particles = [];
-    let currentMode = 'rain';
-    let chapter3TopCache = 0;
+        const canvas = $('#heroCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d', { alpha: true });
+        let w, h, particles = [];
+        let currentMode = 'rain';
+        let chapter3TopCache = 0;
 
-    // Tính chính xác vị trí tuyệt đối của Chapter 3 so với ĐẦU TRANG WEB
-    function updateCache() {
-        const chapters = $$('.chapter-item');
-        if (chapters.length >= 3) {
-            let el = chapters[2]; // Chapter 3
-            let top = 0;
-            while (el) {
-                top += el.offsetTop;
-                el = el.offsetParent;
+        function updateCache() {
+            const chapters = $$('.chapter-item');
+            if (chapters.length >= 3) {
+                let el = chapters[2]; // Chapter 3
+                let top = 0;
+                while (el) {
+                    top += el.offsetTop;
+                    el = el.offsetParent;
+                }
+                chapter3TopCache = top;
             }
-            chapter3TopCache = top;
         }
-    }
 
-    function resize() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        w = window.innerWidth;
-        h = window.innerHeight;
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
-        ctx.scale(dpr, dpr);
-        updateCache();
-    }
-
-    function Particle(mode) { this.reset(mode); }
-
-    Particle.prototype.reset = function(mode) {
-        this.x = Math.random() * w;
-        this.y = Math.random() * h;
-        if (mode === 'rain') {
-            this.r = Math.random() * 1.5 + 0.8;
-            this.vx = -Math.random() * 0.5 - 0.2;
-            this.vy = Math.random() * 8 + 6;
-            this.length = Math.random() * 16 + 10;
-            this.alpha = Math.random() * 0.28 + 0.15;
-        } else {
-            this.r = Math.random() * 2.2 + 1.0;
-            this.vx = (Math.random() - 0.5) * 0.8;
-            this.vy = Math.random() * 1.5 + 0.6;
-            this.length = 0;
-            this.alpha = Math.random() * 0.45 + 0.25;
+        function resize() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+            w = window.innerWidth;
+            h = window.innerHeight;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            ctx.scale(dpr, dpr);
+            updateCache();
         }
-    };
 
-    Particle.prototype.update = function(mode) {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.y > h + 15 || this.y < -15 || this.x > w + 15 || this.x < -15) {
-            this.reset(mode);
-            this.y = -10;
+        function Particle(mode) { this.reset(mode); }
+
+        Particle.prototype.reset = function(mode) {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            if (mode === 'rain') {
+                this.r = Math.random() * 1.5 + 0.8;
+                this.vx = -Math.random() * 0.5 - 0.2;
+                this.vy = Math.random() * 8 + 6;
+                this.length = Math.random() * 16 + 10;
+                this.alpha = Math.random() * 0.28 + 0.15;
+            } else {
+                this.r = Math.random() * 2.2 + 1.0;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = Math.random() * 1.5 + 0.6;
+                this.length = 0;
+                this.alpha = Math.random() * 0.45 + 0.25;
+            }
+        };
+
+        Particle.prototype.update = function(mode) {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.y > h + 15 || this.y < -15 || this.x > w + 15 || this.x < -15) {
+                this.reset(mode);
+                this.y = -10;
+            }
+        };
+
+        Particle.prototype.draw = function(mode) {
+            ctx.beginPath();
+            if (mode === 'rain') {
+                ctx.strokeStyle = `rgba(102, 192, 244, ${this.alpha})`;
+                ctx.lineWidth = this.r;
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x + this.vx * 2, this.y + this.length);
+                ctx.stroke();
+            } else {
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(245, 247, 250, ${this.alpha})`;
+                ctx.fill();
+            }
+        };
+
+        function createParticles() {
+            const isMobile = window.innerWidth < 768;
+            const count = Math.floor((currentMode === 'rain' ? 70 : 97) * (isMobile ? 0.55 : 1));
+            particles = Array.from({ length: count }, () => new Particle(currentMode));
         }
-    };
 
-    Particle.prototype.draw = function(mode) {
-        ctx.beginPath();
-        if (mode === 'rain') {
-            ctx.strokeStyle = `rgba(102, 192, 244, ${this.alpha})`;
-            ctx.lineWidth = this.r;
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x + this.vx * 2, this.y + this.length);
-            ctx.stroke();
-        } else {
-            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(245, 247, 250, ${this.alpha})`;
-            ctx.fill();
+        // 
+        function updateWeather() {
+            ctx.clearRect(0, 0, w, h);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(currentMode);
+                particles[i].draw(currentMode);
+            }
         }
-    };
 
-    function createParticles() {
-        const isMobile = window.innerWidth < 768;
-        const count = Math.floor((currentMode === 'rain' ? 70 : 97) * (isMobile ? 0.55 : 1));
-        particles = Array.from({ length: count }, () => new Particle(currentMode));
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, w, h);
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].update(currentMode);
-            particles[i].draw(currentMode);
+        function checkWeatherBoundary() {
+            const scrollY = window.pageYOffset;
+            const targetMode = (chapter3TopCache && scrollY >= chapter3TopCache - 150) ? 'snow' : 'rain';
+            if (targetMode !== currentMode) {
+                currentMode = targetMode;
+                createParticles();
+            }
         }
-        requestAnimationFrame(animate);
-    }
 
-    function checkWeatherBoundary() {
-        const scrollY = window.pageYOffset;
-        // Chỉ đổi sang Tuyết khi cuộn gần tới vị trí thực sự của Chapter 3
-        const targetMode = (chapter3TopCache && scrollY >= chapter3TopCache - 150) ? 'snow' : 'rain';
-        if (targetMode !== currentMode) {
-            currentMode = targetMode;
-            createParticles();
-        }
-    }
+        // 
+        window._weatherState = {
+            update: updateWeather,
+            resize: resize,
+            createParticles: createParticles,
+            checkBoundary: checkWeatherBoundary,
+            getParticles: () => particles,
+            setMode: (mode) => { currentMode = mode; }
+        };
 
-    window.addEventListener('scroll', checkWeatherBoundary, { passive: true });
-    window.addEventListener('resize', () => { resize(); createParticles(); }, { passive: true });
+        window.addEventListener('scroll', checkWeatherBoundary, { passive: true });
+        window.addEventListener('resize', () => { resize(); createParticles(); }, { passive: true });
 
-    resize();
-    createParticles();
-    animate();
+        resize();
+        createParticles();
+
+        // Khởi tạo lần đầu
+        updateWeather();
     })();
 
     // ---- MAIN ANIMATION LOOP ----
@@ -633,6 +642,7 @@ document.addEventListener('DOMContentLoaded', function() {
         lastTime = 0;
     let frameCount = 0;
     const UPDATE_INTERVAL = 2;
+    let bgScrolled = false;
 
     function mainLoop(time) {
         frameId = requestAnimationFrame(mainLoop);
@@ -645,30 +655,43 @@ document.addEventListener('DOMContentLoaded', function() {
             scrollProgress.style.width = (frac * 100) + '%';
         }
 
+        // ---- Mouse light update ----
         if (!isTouch && mouseLight) {
             lx += (mx - lx) * 0.06;
             ly += (my - ly) * 0.06;
-            mouseLight.style.left = lx + 'px';
-            mouseLight.style.top = ly + 'px';
+            // SỬA LỖI LỆCH: dùng translate3d thay vì left/top
+            mouseLight.style.transform = `translate3d(${lx}px, ${ly}px, 0) translate3d(-50%, -50%, 0)`;
             const edge = 40;
             const near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
             mouseLight.style.opacity = near ? '0.15' : '1';
         }
 
+        // ---- Parallax orbs update (mỗi 2 frame) ----
         frameCount++;
         if (frameCount % UPDATE_INTERVAL === 0) {
             if (orbs[0]) orbs[0].style.transform = `translate3d(${-25 + frac * 45}px,${-15 + frac * 70}px,0)`;
             if (orbs[1]) orbs[1].style.transform = `translate3d(${18 - frac * 35}px,${-50 + frac * 100}px,0)`;
             if (orbs[2]) orbs[2].style.transform = `translate3d(${-12 + frac * 28}px,${35 - frac * 85}px,0)`;
 
+            // ---- Cập nhật background lighting chỉ khi vượt ngưỡng ----
             const bg = $('#bgLighting');
             if (bg) {
-                const p = Math.min(frac, 1);
-                bg.style.opacity = 0.4 + p * 0.35;
-                bg.style.background = `radial-gradient(ellipse at ${28 + p * 18}% ${18 - p * 10}%, rgba(212,163,115,${0.06 + p * 0.05}), transparent 58%)`;
+                if (!bgScrolled && frac > 0.25) {
+                    bgScrolled = true;
+                    bg.classList.add('scrolled');
+                } else if (bgScrolled && frac <= 0.25) {
+                    bgScrolled = false;
+                    bg.classList.remove('scrolled');
+                }
             }
         }
+
+        // ---- Weather update (canvas) ----
+        if (window._weatherState) {
+            window._weatherState.update();
+        }
     }
+
     lastTime = performance.now();
     frameId = requestAnimationFrame(mainLoop);
 
@@ -956,7 +979,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ============================================================
-    //  JOURNAL MODAL WITH CAMERA SHUTTER EFFECT
+    //  JOURNAL MODAL
     // ============================================================
     const modal = $('#journalModal'),
         modalImg = $('#journalModalImg'),
