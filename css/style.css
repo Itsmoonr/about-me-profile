@@ -42,7 +42,6 @@
     --light-size: 480px;
 }
 
-/* Day-theme adjustment for Real-time Day/Night Lighting */
 .day-theme {
     --bg-deep: #0d1620;
     --bg-surface: #142130;
@@ -81,7 +80,6 @@ body {
     color: #fff;
 }
 
-/* reduced motion */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -112,7 +110,6 @@ body {
     }
 }
 
-/* scrollbar */
 ::-webkit-scrollbar {
     width: 5px;
 }
@@ -129,7 +126,6 @@ body {
     border-radius: var(--radius-sm);
 }
 
-/* skip link */
 .skip-link {
     position: fixed;
     top: -120px;
@@ -184,7 +180,6 @@ body {
     pointer-events: none;
 }
 
-/* Camera Shutter Overlay Flash Effect */
 .shutter-overlay {
     position: fixed;
     inset: 0;
@@ -203,7 +198,7 @@ body {
 }
 
 /* ============================================
-   LIGHTING & ORBS
+   LIGHTING & ORBS (tối ưu)
    ============================================ */
 #mouse-light {
     position: fixed;
@@ -213,8 +208,8 @@ body {
     height: var(--light-size);
     border-radius: 50%;
     background: radial-gradient(circle at center, rgba(102, 192, 244, .10) 0%, rgba(244, 162, 97, .05) 35%, rgba(102, 192, 244, .02) 55%, transparent 72%);
-    transform: translate(-50%, -50%);
-    will-change: transform, opacity;
+    /* KHÔNG dùng transform ở đây – JS sẽ điều khiển */
+    will-change: transform;
     mix-blend-mode: screen;
     transition: opacity .6s ease;
 }
@@ -230,27 +225,27 @@ body {
     pointer-events: none;
     z-index: 0;
     will-change: transform;
-    filter: blur(80px);
-    opacity: .08;
+    filter: blur(40px);
+    opacity: 0.08;
     transition: opacity 1.2s ease;
 }
 .parallax-orb.orb-1 {
-    width: 560px;
-    height: 560px;
+    width: 380px;
+    height: 380px;
     background: radial-gradient(circle, rgba(102, 192, 244, .5) 0%, transparent 70%);
     top: -12%;
     left: -10%;
 }
 .parallax-orb.orb-2 {
-    width: 420px;
-    height: 420px;
+    width: 300px;
+    height: 300px;
     background: radial-gradient(circle, rgba(244, 162, 97, .4) 0%, transparent 70%);
     top: 45%;
     right: -8%;
 }
 .parallax-orb.orb-3 {
-    width: 480px;
-    height: 480px;
+    width: 340px;
+    height: 340px;
     background: radial-gradient(circle, rgba(102, 192, 244, .4) 0%, transparent 70%);
     bottom: -10%;
     left: 15%;
@@ -262,7 +257,12 @@ body {
     z-index: -1;
     pointer-events: none;
     background: radial-gradient(ellipse at 25% 20%, rgba(102, 192, 244, .06), transparent 55%);
-    transition: opacity 1.2s ease, background 1.2s ease;
+    transition: background 1.2s ease, opacity 1.2s ease;
+    opacity: 0.4;
+}
+.bg-lighting.scrolled {
+    background: radial-gradient(ellipse at 46% 8%, rgba(212, 163, 115, 0.11), transparent 58%);
+    opacity: 0.75;
 }
 
 /* ============================================
@@ -964,7 +964,7 @@ body {
 }
 
 /* ============================================
-   CHAPTERS & BOKEH FOCUS
+   CHAPTERS & BOKEH FOCUS (tối ưu)
    ============================================ */
 .chapters {
     position: relative;
@@ -997,11 +997,11 @@ body {
 }
 
 .chapters:hover .chapter-item:not(:hover) {
-    filter: blur(2px) grayscale(30%);
+    filter: grayscale(30%);
     opacity: 0.45;
 }
 .chapter-item:hover {
-    filter: blur(0px) grayscale(0%);
+    filter: grayscale(0%);
     opacity: 1;
     transform: scale(1.02) translateX(8px);
 }
@@ -1968,7 +1968,7 @@ body {
         opacity: 0.3;
     }
     .parallax-orb {
-        filter: blur(35px) !important;
+        filter: blur(25px) !important;
         opacity: 0.05 !important;
     }
     .nav__links a, 
@@ -2127,4 +2127,7 @@ body {
 .journal-item {
     contain: layout style paint;
     will-change: transform, opacity;
+}
+#mouse-light {
+    will-change: transform;
 }
