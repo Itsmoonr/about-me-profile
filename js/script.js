@@ -659,7 +659,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isTouch && mouseLight) {
             lx += (mx - lx) * 0.06;
             ly += (my - ly) * 0.06;
-            // SỬA LỖI LỆCH: dùng translate3d thay vì left/top
+            // Translate3d 
             mouseLight.style.transform = `translate3d(${lx}px, ${ly}px, 0) translate3d(-50%, -50%, 0)`;
             const edge = 40;
             const near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
@@ -673,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (orbs[1]) orbs[1].style.transform = `translate3d(${18 - frac * 35}px,${-50 + frac * 100}px,0)`;
             if (orbs[2]) orbs[2].style.transform = `translate3d(${-12 + frac * 28}px,${35 - frac * 85}px,0)`;
 
-            // ---- Cập nhật background lighting chỉ khi vượt ngưỡng ----
+            // ---- Update Background Lightning ----
             const bg = $('#bgLighting');
             if (bg) {
                 if (!bgScrolled && frac > 0.25) {
