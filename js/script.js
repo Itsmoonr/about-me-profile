@@ -357,8 +357,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ---- NAVIGATION ----
-    const navToggle = $('#navToggle'),
-        navLinks = $('#navLinks');
+    const navToggle = $('#navToggle');
+    const navLinks = $('#navLinks');
 
     function setMenu(open) {
         if (!navLinks || !navToggle) return;
@@ -373,37 +373,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Hamburger toggle — stopPropagation click-outside 
-    if (navToggle) navToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        setMenu(!navLinks.classList.contains('open'));
+    // Hamburger toggle: stopPropagation so click-outside doesn't close it immediately
+    if (navToggle) {
+        navToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            setMenu(!navLinks.classList.contains('open'));
+        });
+    }
+
+    // Click nav links: scroll + close menu
+    $$('.nav__links a[data-section]').forEach(function(a) {
+        a.addEventListener('click', function(e) {
+            e.preventDefault();
+            const t = document.getElementById(a.dataset.section);
+            if (t) { scrollTo(t, 60); setMenu(false); }
+        });
     });
 
-    // Click nav links → scroll + close menu
-    $$('.nav__links a[data-section]').forEach(a => a.addEventListener('click', e => {
-        e.preventDefault();
-        const t = document.getElementById(a.dataset.section);
-        if (t) { scrollTo(t, 60); setMenu(false); }
-    }));
-
-    // ── Click ──
-    document.addEventListener('click', (e) => {
+    // Click outside menu to close
+    document.addEventListener('click', function(e) {
         if (!navLinks || !navLinks.classList.contains('open')) return;
         if (navLinks.contains(e.target)) return;
         if (navToggle && navToggle.contains(e.target)) return;
         setMenu(false);
     });
 
-    // ── ESC ──
-    document.addEventListener('keydown', (e) => {
+    // ESC to close menu
+    document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && navLinks && navLinks.classList.contains('open')) {
             setMenu(false);
         }
     });
 
     // ---- NAV SCROLL STATE ----
-    const nav = $('#nav'),
-        sectionEls = $$('section[id]');
+    const nav = $('#nav');
+    const sectionEls = $$('section[id]');
     let navUpdatePending = false;
 
     function updateNav() {
@@ -411,10 +415,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const y = window.pageYOffset;
         nav.classList.toggle('scrolled', y > 50);
         let cur = '';
-        sectionEls.forEach(s => {
+        sectionEls.forEach(function(s) {
             if (y >= s.offsetTop - 100 && y < s.offsetTop + s.offsetHeight - 40) cur = s.id;
         });
-        $$('.nav__links a[data-section]').forEach(a => {
+        $$('.nav__links a[data-section]').forEach(function(a) {
             a.classList.toggle('active', a.dataset.section === cur);
             a.toggleAttribute('aria-current', a.dataset.section === cur);
         });
@@ -423,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateNavRaf() {
         if (!navUpdatePending) {
             navUpdatePending = true;
-            requestAnimationFrame(() => {
+            requestAnimationFrame(function() {
                 updateNav();
                 navUpdatePending = false;
             });
@@ -436,14 +440,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // ---- MOUSE LIGHT ----
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
     const mouseLight = $('#mouse-light');
-    let mx = window.innerWidth / 2,
-        my = window.innerHeight / 2,
-        lx = mx,
-        ly = my;
+    let mx = window.innerWidth / 2;
+    let my = window.innerHeight / 2;
+    let lx = mx;
+    let ly = my;
     if (!isTouch && mouseLight) {
-        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
-        document.addEventListener('mouseleave', () => { if (mouseLight) mouseLight.style.opacity = '0'; }, { passive: true });
-        document.addEventListener('mouseenter', () => { if (mouseLight) mouseLight.style.opacity = '1'; }, { passive: true });
+        document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; }, { passive: true });
+        document.addEventListener('mouseleave', function() { if (mouseLight) mouseLight.style.opacity = '0'; }, { passive: true });
+        document.addEventListener('mouseenter', function() { if (mouseLight) mouseLight.style.opacity = '1'; }, { passive: true });
     }
 
     // ---- PARALLAX ORBS ----
@@ -457,25 +461,29 @@ document.addEventListener('DOMContentLoaded', function() {
     let audioCtx = null;
     let audioUnlocked = false;
 
-    // ── Unlock audio user gesture  ──
-    // (click / touchstart / keydown / pointerdown — mouseenter)
+    // Unlock audio only after first real user gesture
     function unlockAudio() {
         if (audioUnlocked) return;
         try {
             if (!audioCtx) audioCtx = new AudioContext();
             if (audioCtx.state === 'suspended') {
-                audioCtx.resume().then(() => { audioUnlocked = true; }).catch(() => {});
+                audioCtx.resume().then(function() { audioUnlocked = true; }).catch(function() {});
             } else {
                 audioUnlocked = true;
             }
         } catch (_) {}
     }
-    ['click', 'touchstart', 'keydown', 'pointerdown'].forEach(evt => {
+
+    const audioUnlockEvents = ['click', 'touchstart', 'keydown', 'pointerdown'];
+    audioUnlockEvents.forEach(function(evt) {
         document.addEventListener(evt, unlockAudio, { passive: true });
     });
 
-    function playCinematicSound(freq = 120, type = 'sine', duration = 0.12) {
+    function playCinematicSound(freq, type, duration) {
         if (!audioUnlocked || !audioCtx) return;
+        freq = freq || 120;
+        type = type || 'sine';
+        duration = duration || 0.12;
         try {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -522,28 +530,28 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.appendChild(shutter);
         }
         shutter.classList.remove('active');
-        void shutter.offsetWidth; // trigger reflow
+        void shutter.offsetWidth;
         shutter.classList.add('active');
     }
 
-    $$('.hero__cta, .project-card, .chapter-item, .journal-item, .nav__links a, .contact__social-link').forEach(el => {
-        el.addEventListener('mouseenter', () => playCinematicSound(150, 'sine', 0.08));
-        el.addEventListener('click', () => playCinematicSound(220, 'triangle', 0.15));
+    $$('.hero__cta, .project-card, .chapter-item, .journal-item, .nav__links a, .contact__social-link').forEach(function(el) {
+        el.addEventListener('mouseenter', function() { playCinematicSound(150, 'sine', 0.08); });
+        el.addEventListener('click', function() { playCinematicSound(220, 'triangle', 0.15); });
     });
 
     // ============================================================
     //  3D TILT EFFECT
     // ============================================================
     if (!isTouch) {
-        $$('.project-card, .hero__portrait').forEach(card => {
-            card.addEventListener('mousemove', e => {
+        $$('.project-card, .hero__portrait').forEach(function(card) {
+            card.addEventListener('mousemove', function(e) {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
-                card.style.transform = `perspective(1000px) rotateX(${-y / 22}deg) rotateY(${x / 22}deg) translateY(-5px)`;
+                card.style.transform = 'perspective(1000px) rotateX(' + (-y / 22) + 'deg) rotateY(' + (x / 22) + 'deg) translateY(-5px)';
             });
 
-            card.addEventListener('mouseleave', () => {
+            card.addEventListener('mouseleave', function() {
                 card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
             });
         });
@@ -556,14 +564,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const canvas = $('#heroCanvas');
         if (!canvas) return;
         const ctx = canvas.getContext('2d', { alpha: true });
-        let w, h, particles = [];
+        let w, h;
+        let particles = [];
         let currentMode = 'rain';
         let chapter3TopCache = 0;
 
         function updateCache() {
             const chapters = $$('.chapter-item');
             if (chapters.length >= 3) {
-                let el = chapters[2]; // Chapter 3
+                let el = chapters[2];
                 let top = 0;
                 while (el) {
                     top += el.offsetTop;
@@ -615,14 +624,14 @@ document.addEventListener('DOMContentLoaded', function() {
         Particle.prototype.draw = function(mode) {
             ctx.beginPath();
             if (mode === 'rain') {
-                ctx.strokeStyle = `rgba(102, 192, 244, ${this.alpha})`;
+                ctx.strokeStyle = 'rgba(102, 192, 244, ' + this.alpha + ')';
                 ctx.lineWidth = this.r;
                 ctx.moveTo(this.x, this.y);
                 ctx.lineTo(this.x + this.vx * 2, this.y + this.length);
                 ctx.stroke();
             } else {
                 ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(245, 247, 250, ${this.alpha})`;
+                ctx.fillStyle = 'rgba(245, 247, 250, ' + this.alpha + ')';
                 ctx.fill();
             }
         };
@@ -630,7 +639,8 @@ document.addEventListener('DOMContentLoaded', function() {
         function createParticles() {
             const isMobile = window.innerWidth < 768;
             const count = Math.floor((currentMode === 'rain' ? 70 : 97) * (isMobile ? 0.55 : 1));
-            particles = Array.from({ length: count }, () => new Particle(currentMode));
+            particles = [];
+            for (let i = 0; i < count; i++) particles.push(new Particle(currentMode));
         }
 
         function updateWeather() {
@@ -655,12 +665,12 @@ document.addEventListener('DOMContentLoaded', function() {
             resize: resize,
             createParticles: createParticles,
             checkBoundary: checkWeatherBoundary,
-            getParticles: () => particles,
-            setMode: (mode) => { currentMode = mode; }
+            getParticles: function() { return particles; },
+            setMode: function(mode) { currentMode = mode; }
         };
 
         window.addEventListener('scroll', checkWeatherBoundary, { passive: true });
-        window.addEventListener('resize', () => { resize(); createParticles(); }, { passive: true });
+        window.addEventListener('resize', function() { resize(); createParticles(); }, { passive: true });
 
         resize();
         createParticles();
@@ -668,9 +678,9 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
 
     // ---- MAIN ANIMATION LOOP ----
-    let scrollY = 0,
-        frameId = null,
-        lastTime = 0;
+    let scrollY = 0;
+    let frameId = null;
+    let lastTime = 0;
     let frameCount = 0;
     const UPDATE_INTERVAL = 2;
     let bgScrolled = false;
@@ -686,24 +696,24 @@ document.addEventListener('DOMContentLoaded', function() {
             scrollProgress.style.width = (frac * 100) + '%';
         }
 
-        // ---- Mouse light update ----
+        // Mouse light update
         if (!isTouch && mouseLight) {
             lx += (mx - lx) * 0.06;
             ly += (my - ly) * 0.06;
-            mouseLight.style.transform = `translate3d(${lx}px, ${ly}px, 0) translate3d(-50%, -50%, 0)`;
+            mouseLight.style.transform = 'translate3d(' + lx + 'px, ' + ly + 'px, 0) translate3d(-50%, -50%, 0)';
             const edge = 40;
             const near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
             mouseLight.style.opacity = near ? '0.15' : '1';
         }
 
-        // ---- Parallax orbs update ----
+        // Parallax orbs update (every 2 frames)
         frameCount++;
         if (frameCount % UPDATE_INTERVAL === 0) {
-            if (orbs[0]) orbs[0].style.transform = `translate3d(${-25 + frac * 45}px,${-15 + frac * 70}px,0)`;
-            if (orbs[1]) orbs[1].style.transform = `translate3d(${18 - frac * 35}px,${-50 + frac * 100}px,0)`;
-            if (orbs[2]) orbs[2].style.transform = `translate3d(${-12 + frac * 28}px,${35 - frac * 85}px,0)`;
+            if (orbs[0]) orbs[0].style.transform = 'translate3d(' + (-25 + frac * 45) + 'px,' + (-15 + frac * 70) + 'px,0)';
+            if (orbs[1]) orbs[1].style.transform = 'translate3d(' + (18 - frac * 35) + 'px,' + (-50 + frac * 100) + 'px,0)';
+            if (orbs[2]) orbs[2].style.transform = 'translate3d(' + (-12 + frac * 28) + 'px,' + (35 - frac * 85) + 'px,0)';
 
-            // ---- Update Background Lightning ----
+            // Update Background Lightning
             const bg = $('#bgLighting');
             if (bg) {
                 if (!bgScrolled && frac > 0.25) {
@@ -716,7 +726,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // ---- Weather update (canvas) ----
+        // Weather update (canvas)
         if (window._weatherState) {
             window._weatherState.update();
         }
@@ -726,17 +736,17 @@ document.addEventListener('DOMContentLoaded', function() {
     frameId = requestAnimationFrame(mainLoop);
 
     // ---- CHAPTERS TIMELINE SVG ----
-    const path = $('#chaptersPath'),
-        container = $('#chaptersContainer'),
-        svg = $('#chaptersSVG');
+    const path = $('#chaptersPath');
+    const container = $('#chaptersContainer');
+    const svg = $('#chaptersSVG');
     let timelineUpdatePending = false;
 
     function updateTimeline() {
         if (!path || !container || !svg) return;
         const h = container.scrollHeight;
-        svg.setAttribute('viewBox', `0 0 2 ${h}`);
+        svg.setAttribute('viewBox', '0 0 2 ' + h);
         svg.setAttribute('height', h);
-        path.setAttribute('d', `M1,0 L1,${h}`);
+        path.setAttribute('d', 'M1,0 L1,' + h);
         const len = path.getTotalLength();
         path.style.strokeDasharray = len;
         path.style.strokeDashoffset = len;
@@ -746,10 +756,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function drawTimeline() {
         if (!path || !container) return;
-        const y = window.pageYOffset,
-            top = container.offsetTop,
-            h = container.scrollHeight,
-            bottom = y + window.innerHeight;
+        const y = window.pageYOffset;
+        const top = container.offsetTop;
+        const h = container.scrollHeight;
+        const bottom = y + window.innerHeight;
         if (bottom > top && y < top + h) {
             const progress = (bottom - top) / (h + window.innerHeight);
             path.style.strokeDashoffset = path.getTotalLength() * (1 - Math.min(progress, 1));
@@ -759,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function drawTimelineRaf() {
         if (!timelineUpdatePending) {
             timelineUpdatePending = true;
-            requestAnimationFrame(() => {
+            requestAnimationFrame(function() {
                 drawTimeline();
                 timelineUpdatePending = false;
             });
@@ -791,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (visualizerCanvas) {
         ctxVis = visualizerCanvas.getContext('2d');
-        const resizeVis = () => {
+        const resizeVis = function() {
             const rect = visualizerCanvas.getBoundingClientRect();
             visualizerCanvas.width = rect.width || 120;
             visualizerCanvas.height = rect.height || 30;
@@ -809,26 +819,26 @@ document.addEventListener('DOMContentLoaded', function() {
         if (t) {
             t.textContent = msg;
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2200);
+            setTimeout(function() { t.classList.remove('show'); }, 2200);
         }
     }
 
     if (audio) {
-        audio.addEventListener('error', () => { audioErr = true; hideMusic(); showToast('audioError'); });
-        audio.addEventListener('loadedmetadata', () => {
+        audio.addEventListener('error', function() { audioErr = true; hideMusic(); showToast('audioError'); });
+        audio.addEventListener('loadedmetadata', function() {
             if (audio.duration && totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration);
         });
         audio.addEventListener('timeupdate', updateProgress);
-        audio.addEventListener('play', () => { isPlaying = true; updatePlayIcon(true); startVisualizer(); });
-        audio.addEventListener('pause', () => { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
-        audio.addEventListener('ended', () => { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
+        audio.addEventListener('play', function() { isPlaying = true; updatePlayIcon(true); startVisualizer(); });
+        audio.addEventListener('pause', function() { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
+        audio.addEventListener('ended', function() { isPlaying = false; updatePlayIcon(false); stopVisualizer(); });
     }
 
     function formatTime(sec) {
         if (!sec || isNaN(sec)) return '0:00';
         const m = Math.floor(sec / 60);
         const s = Math.floor(sec % 60);
-        return `${m}:${s.toString().padStart(2, '0')}`;
+        return m + ':' + (s < 10 ? '0' + s : s);
     }
 
     function updateProgress() {
@@ -847,18 +857,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const pauseIcons = playBtn.querySelectorAll('.pause-icon');
         if (playing) {
             if (playIcon) playIcon.style.display = 'none';
-            pauseIcons.forEach(el => el.style.display = 'block');
+            pauseIcons.forEach(function(el) { el.style.display = 'block'; });
         } else {
             if (playIcon) playIcon.style.display = 'block';
-            pauseIcons.forEach(el => el.style.display = 'none');
+            pauseIcons.forEach(function(el) { el.style.display = 'none'; });
         }
     }
 
     if (playBtn) {
-        playBtn.addEventListener('click', () => {
+        playBtn.addEventListener('click', function() {
             if (audioErr || !audio) return;
             if (audio.paused) {
-                audio.play().catch(() => { audioErr = true; hideMusic(); showToast('audioError'); });
+                audio.play().catch(function() { audioErr = true; hideMusic(); showToast('audioError'); });
             } else {
                 audio.pause();
             }
@@ -867,25 +877,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let isDragging = false;
     if (progressWrap) {
-        progressWrap.addEventListener('mousedown', (e) => {
+        progressWrap.addEventListener('mousedown', function(e) {
             if (!audio || !audio.duration) return;
             isDragging = true;
             setProgress(e.clientX);
         });
-        document.addEventListener('mousemove', (e) => {
+        document.addEventListener('mousemove', function(e) {
             if (isDragging) setProgress(e.clientX);
         });
-        document.addEventListener('mouseup', () => { isDragging = false; });
-        progressWrap.addEventListener('touchstart', (e) => {
+        document.addEventListener('mouseup', function() { isDragging = false; });
+        progressWrap.addEventListener('touchstart', function(e) {
             e.preventDefault();
             if (!audio || !audio.duration) return;
             isDragging = true;
             setProgress(e.touches[0].clientX);
         });
-        document.addEventListener('touchmove', (e) => {
+        document.addEventListener('touchmove', function(e) {
             if (isDragging) { e.preventDefault(); setProgress(e.touches[0].clientX); }
         });
-        document.addEventListener('touchend', () => { isDragging = false; });
+        document.addEventListener('touchend', function() { isDragging = false; });
     }
 
     function setProgress(clientX) {
@@ -899,7 +909,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let volDragging = false;
     if (volumeToggle && audio) {
-        volumeToggle.addEventListener('click', () => {
+        volumeToggle.addEventListener('click', function() {
             if (audio.muted) {
                 audio.muted = false;
                 audio.volume = volumeBeforeMute;
@@ -916,23 +926,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (volumeTrack) {
-        volumeTrack.addEventListener('mousedown', (e) => {
+        volumeTrack.addEventListener('mousedown', function(e) {
             volDragging = true;
             setVolume(e.clientX);
         });
-        document.addEventListener('mousemove', (e) => {
+        document.addEventListener('mousemove', function(e) {
             if (volDragging) setVolume(e.clientX);
         });
-        document.addEventListener('mouseup', () => { volDragging = false; });
-        volumeTrack.addEventListener('touchstart', (e) => {
+        document.addEventListener('mouseup', function() { volDragging = false; });
+        volumeTrack.addEventListener('touchstart', function(e) {
             e.preventDefault();
             volDragging = true;
             setVolume(e.touches[0].clientX);
         });
-        document.addEventListener('touchmove', (e) => {
+        document.addEventListener('touchmove', function(e) {
             if (volDragging) { e.preventDefault(); setVolume(e.touches[0].clientX); }
         });
-        document.addEventListener('touchend', () => { volDragging = false; });
+        document.addEventListener('touchend', function() { volDragging = false; });
     }
 
     function setVolume(clientX) {
@@ -951,19 +961,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    //  VISUALIZER —
+    //  VISUALIZER: single cached gradient (optimized)
     // ============================================================
     function startVisualizer() {
         if (!ctxVis) return;
         stopVisualizer();
-        const w = visualizerCanvas.width,
-            h = visualizerCanvas.height;
+        const w = visualizerCanvas.width;
+        const h = visualizerCanvas.height;
         const bars = 24;
         const barWidth = w / bars;
         const maxHeight = h * 0.8;
         let time = 0;
 
-        // Cache 1 gradient
+        // Single cached gradient
         const gradient = ctxVis.createLinearGradient(0, 0, 0, h);
         gradient.addColorStop(0, '#66c0f4');
         gradient.addColorStop(1, '#f4a261');
@@ -990,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (ctxVis) ctxVis.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
     }
 
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', function(e) {
         if (e.target.matches('input, textarea, select')) return;
         if (e.key === ' ' || e.key === 'Space') {
             e.preventDefault();
@@ -1001,14 +1011,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     //  PROJECT CARDS
     // ============================================================
-    $$('.project-card').forEach(card => {
+    $$('.project-card').forEach(function(card) {
         card.addEventListener('click', function() {
             const expanded = this.classList.toggle('expanded');
             this.setAttribute('aria-expanded', expanded);
             const live = this.querySelector('.project-card__status-live');
             if (live) live.textContent = expanded ? 'Details expanded' : 'Collapsed';
         });
-        card.addEventListener('keydown', e => {
+        card.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
         });
     });
@@ -1016,23 +1026,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     //  JOURNAL MODAL
     // ============================================================
-    const modal = $('#journalModal'),
-        modalImg = $('#journalModalImg'),
-        modalDesc = $('#journalModalDesc'),
-        modalClose = $('#journalModalClose'),
-        modalPrev = $('#journalModalPrev'),
-        modalNext = $('#journalModalNext');
+    const modal = $('#journalModal');
+    const modalImg = $('#journalModalImg');
+    const modalDesc = $('#journalModalDesc');
+    const modalClose = $('#journalModalClose');
+    const modalPrev = $('#journalModalPrev');
+    const modalNext = $('#journalModalNext');
     let currentIndex = 0;
     const journalItems = $$('.journal-item');
-    journalItemsData = journalItems.map((item) => {
-        const img = item.querySelector('img'),
-            full = item.querySelector('.journal-item__full');
+    journalItemsData = journalItems.map(function(item) {
+        const img = item.querySelector('img');
+        const full = item.querySelector('.journal-item__full');
         return img && full ? { src: img.src, alt: img.alt || '', fullEl: full } : null;
     }).filter(Boolean);
 
-    journalItems.forEach((item, i) => {
-        item.addEventListener('click', () => openModal(i));
-        item.addEventListener('keydown', e => {
+    journalItems.forEach(function(item, i) {
+        item.addEventListener('click', function() { openModal(i); });
+        item.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); item.click(); }
         });
     });
@@ -1051,7 +1061,7 @@ document.addEventListener('DOMContentLoaded', function() {
             modalDesc.textContent = data.fullEl.textContent.trim();
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            if (modalClose) setTimeout(() => modalClose.focus(), 100);
+            if (modalClose) setTimeout(function() { modalClose.focus(); }, 100);
         }
     }
 
@@ -1062,10 +1072,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (journalItems[currentIndex]) journalItems[currentIndex].focus();
     }
     if (modalClose) modalClose.addEventListener('click', closeModal);
-    if (modal) modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    if (modalPrev) modalPrev.addEventListener('click', () => openModal(currentIndex - 1));
-    if (modalNext) modalNext.addEventListener('click', () => openModal(currentIndex + 1));
-    document.addEventListener('keydown', e => {
+    if (modal) modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+    if (modalPrev) modalPrev.addEventListener('click', function() { openModal(currentIndex - 1); });
+    if (modalNext) modalNext.addEventListener('click', function() { openModal(currentIndex + 1); });
+    document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
         if (e.key === 'ArrowLeft' && modal && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex - 1); }
         if (e.key === 'ArrowRight' && modal && modal.classList.contains('active')) { e.preventDefault(); openModal(currentIndex + 1); }
@@ -1074,31 +1084,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     //  CONTACT FORM
     // ============================================================
-    const form = $('#contactForm'),
-        formSuccess = $('#formSuccess');
+    const form = $('#contactForm');
+    const formSuccess = $('#formSuccess');
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             let valid = true;
-            const name = $('#contactName'),
-                email = $('#contactEmail'),
-                subject = $('#contactSubject'),
-                message = $('#contactMessage');
+            const name = $('#contactName');
+            const email = $('#contactEmail');
+            const subject = $('#contactSubject');
+            const message = $('#contactMessage');
             const nameErr = name.parentElement.querySelector('.contact__form-error');
             const emailErr = email.parentElement.querySelector('.contact__form-error');
             const msgErr = message.parentElement.querySelector('.contact__form-error');
-            [nameErr, emailErr, msgErr].forEach(el => el.classList.remove('show'));
+            [nameErr, emailErr, msgErr].forEach(function(el) { el.classList.remove('show'); });
             if (!name.value.trim()) { nameErr.classList.add('show'); valid = false; }
             if (!email.value.trim() || !email.value.includes('@')) { emailErr.classList.add('show'); valid = false; }
             if (!message.value.trim()) { msgErr.classList.add('show'); valid = false; }
             if (valid) {
                 const to = 'moonsicson@gmail.com';
                 const subjectText = subject.value.trim() || 'Message from Ross Nguyen profile';
-                const body = `\n\n\nFrom: ${name.value} (${email.value})\nSent: ${new Date().toLocaleString()}\n\n${message.value}\n\n-- \n`;
-                window.location.href = `mailto:${to}?subject=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(body)}`;
+                const body = '\n\n\nFrom: ' + name.value + ' (' + email.value + ')\nSent: ' + new Date().toLocaleString() + '\n\n' + message.value + '\n\n--\n';
+                window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subjectText) + '&body=' + encodeURIComponent(body);
                 if (formSuccess) formSuccess.classList.add('show');
                 form.reset();
-                setTimeout(() => { if (formSuccess) formSuccess.classList.remove('show'); }, 4000);
+                setTimeout(function() { if (formSuccess) formSuccess.classList.remove('show'); }, 4000);
             }
         });
     }
@@ -1109,10 +1119,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ---- CONTINUE BUTTON ----
     const continueBtn = $('#continueBtn');
-    if (continueBtn) continueBtn.addEventListener('click', () => scrollTo($('#hero'), 60));
+    if (continueBtn) continueBtn.addEventListener('click', function() { scrollTo($('#hero'), 60); });
 
     // ---- EASTER EGGS ----
-    document.addEventListener('keydown', e => {
+    document.addEventListener('keydown', function(e) {
         if (e.target.matches('input, textarea, select')) return;
         const t = e.key;
         if (t === 'e' || t === 'E') showToast('easterEgg');
@@ -1127,7 +1137,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ---- VISIBILITY CHANGE ----
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
             if (frameId) { cancelAnimationFrame(frameId); frameId = null; }
         } else {
@@ -1140,40 +1150,40 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     window.verifySite = function() {
         const results = [];
-        const check = (name, fn) => {
+        const check = function(name, fn) {
             try {
                 const ok = !!fn();
-                results.push({ name, ok });
-                if (!ok) console.warn(`[verify] ✗ ${name}`);
+                results.push({ name: name, ok: ok });
+                if (!ok) console.warn('[verify] ✗ ' + name);
             } catch (e) {
-                results.push({ name, ok: false, error: e.message });
+                results.push({ name: name, ok: false, error: e.message });
             }
         };
 
-        check('Critical DOM elements', () =>
-            ['loadingPlaceholder','navToggle','navLinks','langSelect','heroCanvas','chaptersPath','musicPlayer','musicToggle','bgMusic','contactForm','footerYear','continueBtn','scrollProgress']
-                .every(id => document.getElementById(id))
-        );
+        check('Critical DOM elements', function() {
+            return ['loadingPlaceholder', 'navToggle', 'navLinks', 'langSelect', 'heroCanvas', 'chaptersPath', 'musicPlayer', 'musicToggle', 'bgMusic', 'contactForm', 'footerYear', 'continueBtn', 'scrollProgress']
+                .every(function(id) { return document.getElementById(id); });
+        });
 
-        check('Translation data', () =>
-            typeof T === 'object' && T.en && T.vi && T.ja && T.en.nav && T.vi.nav && T.ja.nav
-        );
+        check('Translation data', function() {
+            return typeof T === 'object' && T.en && T.vi && T.ja && T.en.nav && T.vi.nav && T.ja.nav;
+        });
 
-        check('Navigation structure', () =>
-            !!$('#navToggle') && !!$('#navLinks') && $$('.nav__links a[data-section]').length === 6
-        );
+        check('Navigation structure', function() {
+            return !!$('#navToggle') && !!$('#navLinks') && $$('.nav__links a[data-section]').length === 6;
+        });
 
-        check('Project cards present', () =>
-            $$('.project-card').length === 4
-        );
+        check('Project cards present', function() {
+            return $$('.project-card').length === 4;
+        });
 
-        check('Journal modal elements present', () =>
-            !!$('.journal-item') && !!$('#journalModal') && !!$('#journalModalClose') && !!$('#journalModalImg')
-        );
+        check('Journal modal elements present', function() {
+            return !!$('.journal-item') && !!$('#journalModal') && !!$('#journalModalClose') && !!$('#journalModalImg');
+        });
 
         console.groupCollapsed('%cSite Verification', 'color:#f4a261;font-weight:bold;');
-        results.forEach(r => {
-            console.log(`${r.ok ? '✅' : '⚠️'} ${r.name}${r.error ? ' — ' + r.error : ''}`);
+        results.forEach(function(r) {
+            console.log((r.ok ? '✅' : '⚠️') + ' ' + r.name + (r.error ? ' — ' + r.error : ''));
         });
         console.groupEnd();
 
