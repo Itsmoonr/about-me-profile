@@ -434,12 +434,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
-
-    function playCinematicSound(freq = 120, type = 'sine', duration = 0.12) {
+	let audioUnlocked = false;
+	
+	// ── Unlock audio ──
+    // (click / touchstart / keydown / pointerdown — mouseenter)
+    function unlockAudio() {
+        if (audioUnlocked) return;
         try {
             if (!audioCtx) audioCtx = new AudioContext();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume().then(() => { audioUnlocked = true; }).catch(() => {});
+            } else {
+                audioUnlocked = true;
+            }
+        } catch (_) {}
+    }
+    ['click', 'touchstart', 'keydown', 'pointerdown'].forEach(evt => {
+        document.addEventListener(evt, unlockAudio, { passive: true });
+    });
+
+    function playCinematicSound(freq = 120, type = 'sine', duration = 0.12) {
+        if (!audioUnlocked || !audioCtx) return;
+		try {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             
@@ -459,10 +475,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function playShutterSound() {
-        try {
-            if (!audioCtx) audioCtx = new AudioContext();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
+        if (!audioUnlocked || !audioCtx) return;
+		try {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'square';
@@ -632,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resize();
         createParticles();
 
-        // Khởi tạo lần đầu
+        // Initial initialization
         updateWeather();
     })();
 
@@ -666,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function() {
             mouseLight.style.opacity = near ? '0.15' : '1';
         }
 
-        // ---- Parallax orbs update (mỗi 2 frame) ----
+        // ---- Parallax orbs update ----
         frameCount++;
         if (frameCount % UPDATE_INTERVAL === 0) {
             if (orbs[0]) orbs[0].style.transform = `translate3d(${-25 + frac * 45}px,${-15 + frac * 70}px,0)`;
@@ -920,6 +934,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (volumeFill) volumeFill.style.width = (pct * 100) + '%';
     }
 
+    // ============================================================
+    //  VISUALIZER
+    // ============================================================
     function startVisualizer() {
         if (!ctxVis) return;
         stopVisualizer();
@@ -930,19 +947,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxHeight = h * 0.8;
         let time = 0;
 
+        // Cache 1 gradient 
+        const gradient = ctxVis.createLinearGradient(0, 0, 0, h);
+        gradient.addColorStop(0, '#66c0f4');
+        gradient.addColorStop(1, '#f4a261');
+
         function draw() {
             if (!isPlaying) { stopVisualizer(); return; }
             ctxVis.clearRect(0, 0, w, h);
             time += 0.05;
+            ctxVis.fillStyle = gradient;
             for (let i = 0; i < bars; i++) {
                 const val = Math.sin(i * 0.5 + time * 1.8) * 0.6 + 0.4;
                 const height = maxHeight * val * 0.7 + maxHeight * 0.2 * Math.sin(i * 0.3 + time * 2.1) * 0.3 + maxHeight * 0.2;
                 const x = i * barWidth + (barWidth - 2) / 2;
                 const y = h - height;
-                const gradient = ctxVis.createLinearGradient(0, y, 0, h);
-                gradient.addColorStop(0, '#66c0f4');
-                gradient.addColorStop(1, '#f4a261');
-                ctxVis.fillStyle = gradient;
                 ctxVis.fillRect(x, y, 2, height);
             }
             visualizerId = requestAnimationFrame(draw);
