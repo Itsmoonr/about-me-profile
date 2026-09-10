@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ---- NAVIGATION ----
     const navToggle = $('#navToggle'),
-        navLinks = $('#navLinks'),
+        navLinks = $('#navLinks');
 
     function setMenu(open) {
         if (!navLinks || !navToggle) return;
@@ -368,15 +368,38 @@ document.addEventListener('DOMContentLoaded', function() {
         if (open) {
             const f = navLinks.querySelectorAll('a, button, [tabindex]');
             if (f.length) f[0].focus();
-        } else navToggle.focus();
+        } else {
+            navToggle.focus({ preventScroll: true });
+        }
     }
-    if (navToggle) navToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('open')));
 
+    // Hamburger toggle — stopPropagation click-outside 
+    if (navToggle) navToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setMenu(!navLinks.classList.contains('open'));
+    });
+
+    // Click nav links → scroll + close menu
     $$('.nav__links a[data-section]').forEach(a => a.addEventListener('click', e => {
         e.preventDefault();
         const t = document.getElementById(a.dataset.section);
         if (t) { scrollTo(t, 60); setMenu(false); }
     }));
+
+    // ── Click ──
+    document.addEventListener('click', (e) => {
+        if (!navLinks || !navLinks.classList.contains('open')) return;
+        if (navLinks.contains(e.target)) return;
+        if (navToggle && navToggle.contains(e.target)) return;
+        setMenu(false);
+    });
+
+    // ── ESC ──
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks && navLinks.classList.contains('open')) {
+            setMenu(false);
+        }
+    });
 
     // ---- NAV SCROLL STATE ----
     const nav = $('#nav'),
@@ -432,9 +455,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
-	let audioUnlocked = false;
-	
-	// ── Unlock audio ──
+    let audioUnlocked = false;
+
+    // ── Unlock audio user gesture  ──
     // (click / touchstart / keydown / pointerdown — mouseenter)
     function unlockAudio() {
         if (audioUnlocked) return;
@@ -453,20 +476,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function playCinematicSound(freq = 120, type = 'sine', duration = 0.12) {
         if (!audioUnlocked || !audioCtx) return;
-		try {
+        try {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            
+
             osc.type = type;
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
             osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + duration);
-            
+
             gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-            
+
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-            
+
             osc.start();
             osc.stop(audioCtx.currentTime + duration);
         } catch (_) {}
@@ -474,7 +497,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function playShutterSound() {
         if (!audioUnlocked || !audioCtx) return;
-		try {
+        try {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'square';
@@ -482,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
             osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.06);
             gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
-            
+
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
@@ -519,7 +542,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const y = e.clientY - rect.top - rect.height / 2;
                 card.style.transform = `perspective(1000px) rotateX(${-y / 22}deg) rotateY(${x / 22}deg) translateY(-5px)`;
             });
-            
+
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
             });
@@ -527,7 +550,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    //  DYNAMIC ATMOSPHERE SYSTEM 
+    //  DYNAMIC ATMOSPHERE SYSTEM
     // ============================================================
     (function initAtmosphere() {
         const canvas = $('#heroCanvas');
@@ -610,7 +633,6 @@ document.addEventListener('DOMContentLoaded', function() {
             particles = Array.from({ length: count }, () => new Particle(currentMode));
         }
 
-        // 
         function updateWeather() {
             ctx.clearRect(0, 0, w, h);
             for (let i = 0; i < particles.length; i++) {
@@ -628,7 +650,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // 
         window._weatherState = {
             update: updateWeather,
             resize: resize,
@@ -643,8 +664,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         resize();
         createParticles();
-
-        // Initial initialization
         updateWeather();
     })();
 
@@ -671,7 +690,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isTouch && mouseLight) {
             lx += (mx - lx) * 0.06;
             ly += (my - ly) * 0.06;
-            // Translate3d 
             mouseLight.style.transform = `translate3d(${lx}px, ${ly}px, 0) translate3d(-50%, -50%, 0)`;
             const edge = 40;
             const near = mx < edge || mx > window.innerWidth - edge || my < edge || my > window.innerHeight - edge;
@@ -933,7 +951,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    //  VISUALIZER
+    //  VISUALIZER —
     // ============================================================
     function startVisualizer() {
         if (!ctxVis) return;
@@ -945,7 +963,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxHeight = h * 0.8;
         let time = 0;
 
-        // Cache 1 gradient 
+        // Cache 1 gradient
         const gradient = ctxVis.createLinearGradient(0, 0, 0, h);
         gradient.addColorStop(0, '#66c0f4');
         gradient.addColorStop(1, '#f4a261');
