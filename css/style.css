@@ -601,7 +601,7 @@ body {
         gap: var(--space-8);
     }
     .hero {
-        padding: 100px var(--space-4) 150px;  
+        padding: 100px var(--space-4) 320px;  
     }
     .hero__text,
     .hero__invite {
@@ -614,7 +614,7 @@ body {
 
     /* ── SCROLL hint */
     .hero__scroll-indicator {
-        bottom: var(--space-6);   
+        bottom: var(--space-4);   
         gap: var(--space-1);      
         font-size: .6rem;         
     }
