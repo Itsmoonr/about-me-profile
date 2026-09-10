@@ -616,7 +616,7 @@ body {
     .hero__scroll-indicator {
         bottom: var(--space-0);   
         gap: var(--space-0);      
-        font-size: .7rem;         
+        font-size: .75rem;         
     }
     .hero__scroll-line {
         height: 32px;             
