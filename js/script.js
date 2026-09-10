@@ -359,7 +359,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // ---- NAVIGATION ----
     const navToggle = $('#navToggle'),
         navLinks = $('#navLinks'),
-        navClose = $('#navClose');
 
     function setMenu(open) {
         if (!navLinks || !navToggle) return;
@@ -372,7 +371,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else navToggle.focus();
     }
     if (navToggle) navToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('open')));
-    if (navClose) navClose.addEventListener('click', () => setMenu(false));
 
     $$('.nav__links a[data-section]').forEach(a => a.addEventListener('click', e => {
         e.preventDefault();
