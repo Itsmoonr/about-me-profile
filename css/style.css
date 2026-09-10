@@ -491,9 +491,6 @@ body {
         padding: var(--space-1) var(--space-6) var(--space-1) var(--space-3);
         font-size: .7rem;
     }
-    .nav__close {
-        display: flex !important;
-    }
 }
 
 .sr-only {
