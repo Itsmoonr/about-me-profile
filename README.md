@@ -1,6 +1,6 @@
 <div align="center">
 
-```
+```text
 ██████╗   ██████╗   ██████╗   ██████╗
 ██╔══██╗ ██╔═══██╗ ██╔════╝  ██╔════╝
 ██████╔╝ ██║   ██║ ╚█████╗   ╚█████╗
@@ -11,46 +11,47 @@
 
 ### *A life, rendered in vanilla HTML, CSS, and JavaScript.*
 
-[![Live Demo](https://img.shields.io/badge/▶_live_demo-online-f4a261?style=for-the-badge)](https://itsmoonr.github.io/about-me-profile/)
-[![License: MIT](https://img.shields.io/github/license/Itsmoonr/about-me-profile?style=for-the-badge&color=66c0f4)](LICENSE)
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](#)
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](#)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](#)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-success?style=for-the-badge)](#)
+[![Live Demo](https://img.shields.io/badge/▶_Live_Demo-online-f4a261?style=for-the-badge)](https://itsmoonr.github.io/about-me-profile/)
+[![License](https://img.shields.io/github/license/Itsmoonr/about-me-profile?style=for-the-badge&color=66c0f4)](./LICENSE)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Zero Runtime Dependencies](https://img.shields.io/badge/runtime%20dependencies-0-success?style=for-the-badge)](#-chapter-iii--the-toolkit-tech-stack)
 
 <br>
 
-*"Grateful for those who left, cherishing those who stayed.*
-*Thank you, past, present, and future.*
+*"Grateful for those who left, cherishing those who stayed.*  
+*Thank you, past, present, and future.*  
 *And I hope this moment lasts forever."*
 
 <br>
 
-**[✦ View Live](https://itsmoonr.github.io/about-me-profile/) · [Chapter I](#-chapter-i—-the-vision) · [Getting Started](#-chapter-v—-loading-the-save) · [Contact](#-end-credits)**
+**[✦ View Live](https://itsmoonr.github.io/about-me-profile/)** ·
+**[Chapter I](#-chapter-i--the-vision)** ·
+**[Getting Started](#-chapter-v--loading-the-save-getting-started)** ·
+**[End Credits](#-end-credits)**
 
 </div>
 
-<br>
-
-> ⚠️ **Before you press start:** this site comes with ambient music, particle effects (rain/snow), a glowing cursor, and continuous scroll-driven motion. Best experienced on desktop, at a comfortable volume, with a cup of tea nearby.
+> ⚠️ **Before you press start:** this site comes with ambient music, particle effects (rain/snow), a glowing cursor, and continuous scroll-driven motion. It is best experienced on a desktop with a comfortable volume.
 
 ---
 
 ## 📖 Table of Contents — *Save Slots*
 
 | # | Chapter | Contents |
-|---|--------|----------|
-| 0 | [Chapter 0 — Boot Sequence](#-chapter-0—-boot-sequence) | What this is, and why it exists |
-| I | [Chapter I — The Vision](#-chapter-i—-the-vision) | The idea behind the design |
-| II | [Chapter II — Abilities Unlocked](#-chapter-ii—-abilities-unlocked-features) | Every feature, no exaggeration |
-| III | [Chapter III — The Toolkit](#-chapter-iii—-the-toolkit-tech-stack) | The technology behind the scenes |
-| IV | [Chapter IV — The Archive](#-chapter-iv—-the-archive-project-structure) | Project structure |
-| V | [Chapter V — Loading the Save](#-chapter-v—-loading-the-save-getting-started) | Running it on your machine |
-| VI | [Chapter VI — Multiverse](#-chapter-vi—-multiverse-internationalization) | The EN / VI / JA language system |
-| VII | [Chapter VII — Hidden Passages](#-chapter-vii—-hidden-passages-easter-eggs) | Secrets buried in the code |
-| VIII | [Chapter VIII — Accessibility](#-chapter-viii—-accessibility--performance) | Accessibility & performance |
-| IX | [Chapter IX — Horizon](#-chapter-ix—-horizon-whats-next) | What's coming next |
-| X | [Chapter X — Contributing](#-chapter-x—-contributing) | Want to help out? |
+|---|---|---|
+| 0 | [Chapter 0 — Boot Sequence](#-chapter-0--boot-sequence) | What this is, and why it exists |
+| I | [Chapter I — The Vision](#-chapter-i--the-vision) | The idea behind the design |
+| II | [Chapter II — Abilities Unlocked](#-chapter-ii--abilities-unlocked-features) | The features that actually exist |
+| III | [Chapter III — The Toolkit](#-chapter-iii--the-toolkit-tech-stack) | The technology behind the scenes |
+| IV | [Chapter IV — The Archive](#-chapter-iv--the-archive-project-structure) | Project structure |
+| V | [Chapter V — Loading the Save](#-chapter-v--loading-the-save-getting-started) | Running it locally |
+| VI | [Chapter VI — Multiverse](#-chapter-vi--multiverse-internationalization) | EN / VI / JA |
+| VII | [Chapter VII — Hidden Passages](#-chapter-vii--hidden-passages-easter-eggs) | Secrets buried in the code |
+| VIII | [Chapter VIII — Accessibility](#-chapter-viii--accessibility--performance) | Accessibility & performance |
+| IX | [Chapter IX — Horizon](#-chapter-ix--horizon-whats-next) | What's coming next |
+| X | [Chapter X — Contributing](#-chapter-x--contributing) | Want to help out? |
 | — | [License](#-license) | MIT |
 | — | [End Credits](#-end-credits) | Thanks & contact |
 
@@ -58,136 +59,236 @@
 
 ## 🎬 Chapter 0 — Boot Sequence
 
-Not every portfolio needs an opening cutscene. This one does.
+Not every portfolio needs an opening cutscene.
 
-This isn't a typical "About Me" page with a few bio lines and an attached résumé. It's a **save file** — where one real life, from the unpredictable rain of Ho Chi Minh City to the cold, unfamiliar streets of Tokyo, is told in the language of an RPG: there's a Profile, there are Chapters, there are Abilities, a Journal, and even a **scroll progress bar** so you always know how far into the story you are.
+This one does.
 
-No frameworks. No external libraries. Not a single `npm install`. Just plain HTML, CSS, and JavaScript — and a lot of small details, all handcrafted.
+This isn't a typical “About Me” page with a few biography lines and an attached résumé. It's a **save file** — one real life, from the unpredictable rain of Ho Chi Minh City to the unfamiliar streets of Tokyo, told through the language of an RPG: there's a Profile, there are Chapters, there are Abilities, a Journal, and even a scroll progress bar so you always know where you are in the story.
+
+No frameworks. No JavaScript packages. No build pipeline.
+
+Just plain HTML, CSS, and JavaScript — and a lot of small details, handcrafted one by one.
 
 ---
 
 ## 🌌 Chapter I — The Vision
 
-> *"I write code to make things that feel a little alive. I design because I've learned that how something looks is its own kind of kindness to whoever's looking."*
+> *“I write code to make things that feel a little alive. I design because I've learned that how something looks is its own kind of kindness to whoever's looking.”*
 
 This site tells six chapters of **Ross Nguyen's** life — a university student, designer, and occasional writer — spanning Vietnam to Japan:
 
 `Homeland` → `The Leap to Japan` → `High School Years` → `Anti-Fraud Volunteering` → `University` → `What's Next`
 
-The core design idea: **a life isn't a static résumé — it's a save file still being written.** Every section — Profile, Chapters, Portfolio, Abilities, Journal, Contact — is built like consecutive game levels: an opening cutscene (the Hero section), a world map (the Chapters timeline), an inventory (Abilities), and a "Save Point" standing in for the usual footer.
+The core design idea is simple:
+
+> **A life isn't a static résumé — it's a save file still being written.**
+
+Every section is built around that idea:
+
+| Website | Story equivalent |
+|---|---|
+| Hero | Opening cutscene |
+| Profile | Character sheet |
+| Chapters | Story progression / world map |
+| Abilities | Inventory / unlocked skills |
+| Journal | Memory archive |
+| Contact | Open communication channel |
+| Save Point | Ending screen |
+
+The website is not trying to make a résumé more decorative.
+
+It is trying to make a personal identity **feel lived-in**.
 
 ---
 
 ## ⚡ Chapter II — Abilities Unlocked *(Features)*
 
-Everything listed below **actually exists in the code** — this is not a marketing description.
+Everything below is intended to describe functionality that actually exists in the code — not marketing copy.
 
-### 🎭 Cinematic experience
-- **Real-time Day/Night Lighting** — the site reads the visitor's own system clock (`new Date().getHours()`) to switch between a day and night color palette. Visit at 2am and the lighting is different from 2pm. No manual toggle, no asking — it simply *lives in your timezone*.
-- **Dynamic Atmosphere System** — a Canvas-based particle system simulates rain falling through the early chapters (Vietnam), then **transitions into snow** the exact moment you scroll into Chapter III (the arrival in Japan). The weather changes with the story, not by chance.
-- **Glowing Mouse Light** that follows the cursor with smooth linear interpolation (lerp), fading near screen edges.
-- **Parallax Orbs** — floating light orbs that react to scroll velocity, adding depth.
-- **Cinematic Vignette & Film Grain** — a darkened edge overlay and film-grain texture, closer to a movie frame than a landing page.
-- **Scroll Progress Bar** at the top — because you deserve to know how far you've come in the story.
+### 🎭 Cinematic Experience
 
-### 🕹️ Game-inspired structure
-- **Chapters Timeline** — an animated SVG path connecting all 6 life chapters, drawn in sync with scroll position.
-- **Profile Stat Block** — personal info displayed like a character stat sheet: Name, Location, Origin, Path, Essence, Specialization...
-- **Journal / Cinematic Gallery** — a photo diary in lightbox-modal form, navigable by arrow keys or Prev/Next buttons, each frame with its own caption.
-- **"Save Point" Footer** — instead of a plain footer, a save-game screen with a "↑ Top" button to "Continue?" the journey.
+- **Automatic time-based lighting** — the site reads the visitor's local system time with `new Date().getHours()` and adjusts the visual palette accordingly.
+- **Dynamic atmosphere system** — a Canvas-based particle system creates rain and transitions into snow as the story progresses through the chapters.
+- **Glowing mouse light** — a cursor-following radial light uses smooth interpolation for a softer, cinematic movement.
+- **Parallax orbs** — floating background lights react to scroll movement to add depth.
+- **Cinematic vignette & film grain** — subtle overlays create a film-frame texture instead of a conventional flat page.
+- **Scroll progress bar** — a thin progress indicator tracks how far the visitor has travelled through the story.
+- **Shutter transition** — visual interactions can trigger a brief camera-like flash.
 
-### 🎵 A hand-built music player
-The background music player is written entirely from scratch — no embedded Spotify or YouTube player. It includes: play/pause, a draggable seek bar, volume control, and a **real-time Canvas visualizer** that reacts to actual audio signal via the Web Audio API — not a simulated animation.
+### 🕹️ Game-Inspired Structure
 
-### 🌐 Real multilingual support, not machine translation
-Three languages — **English, Vietnamese, and 日本語** — are hand-written line by line, stored in a single `T` object, switch instantly with no page reload, and **remember your choice** via `localStorage` for your next visit.
+- **Chapters Timeline** — an animated SVG path visually connects all six story chapters and reacts to scroll position.
+- **Profile Stat Block** — personal information is presented like a character stat sheet.
+- **Journal / Cinematic Gallery** — the photo diary opens in a lightbox-style modal with previous/next navigation and keyboard support.
+- **Save Point Footer** — the usual footer becomes a final game-inspired checkpoint with a `↑ Top` action and a “Continue?” prompt.
+- **Interactive project cards** — portfolio entries expand to reveal their longer story, tags, and status.
 
-### ♿ Nobody left behind
-A skip-to-content link, `aria-live`, `aria-expanded`, full semantic `role` attributes, meaningful alt text on every image, respect for `prefers-reduced-motion` for motion-sensitive users, and a graceful `<noscript>` fallback for anyone with JavaScript disabled.
+### 🎵 A Hand-Built Music Player
 
-### 🔍 Built-in health check
-Type `verifySite()` in the browser console to run a quick diagnostic: are all critical DOM elements present, is translation data complete across all 3 languages, are there exactly 4 project cards... A small but genuinely useful health check, hidden right inside the product itself.
+The background music player is built directly with browser APIs rather than an embedded Spotify or YouTube widget.
+
+It includes:
+
+- play / pause
+- seekable progress bar
+- current / total time
+- volume control
+- mute / unmute
+- real-time visualizer
+
+The visualizer analyzes the actual audio signal through the **Web Audio API** rather than playing a decorative animation unrelated to the music.
+
+### 🌐 Multilingual by Design
+
+Three languages are supported:
+
+**English · Tiếng Việt · 日本語**
+
+Translations are stored in a centralized `T` object and applied dynamically through the interface's `data-i18n` attributes.
+
+The selected language is persisted with `localStorage`, so the choice survives the next visit.
+
+No translation framework is required.
+
+### ♿ Nobody Left Behind
+
+Accessibility is treated as part of the build, not an afterthought.
+
+The implementation includes:
+
+- skip-to-content navigation
+- semantic landmarks
+- meaningful `alt` text
+- ARIA labels / states
+- keyboard-accessible interactions
+- visible `:focus-visible` states
+- reduced-motion support through `prefers-reduced-motion`
+- mobile navigation
+- `<noscript>` fallback content
+- graceful audio failure handling
+
+### 🔍 Built-In Health Check
+
+Open the browser console and run:
+
+```js
+window.verifySite()
+```
+
+The site performs a small runtime diagnostic covering critical structure and interface data.
+
+It is deliberately lightweight — but useful when making changes to a project where a broken selector can otherwise be surprisingly easy to miss.
 
 ---
 
 ## 🧰 Chapter III — The Toolkit *(Tech Stack)*
 
-Not a stat block to show off — just an honest statement: **there's no magic here, only patience.**
+Not a stat block to show off.
 
-| Category | Technology | Notes |
+Just an honest statement about how the experience is built.
+
+| Category | Technology | Role |
 |---|---|---|
-| Structure | Semantic HTML5 | Full `<header>`, `<main>`, `<section>`, `<footer>` |
-| Styling | Vanilla CSS3 | CSS custom properties (design tokens), no Sass/Tailwind |
-| Interactivity | JavaScript (Vanilla, ES5+) | No jQuery, no React, no build step |
-| Motion graphics | Canvas API | Weather particle system, audio visualizer |
-| Audio | Web Audio API | Real-time frequency analysis |
-| Scroll observation | Intersection Observer API | Triggers reveal animations |
-| Typography | Google Fonts | `Instrument Serif`, `Inter`, `JetBrains Mono` |
-| SEO | Open Graph, Twitter Card, JSON-LD (`schema.org/Person`) | Clean social sharing, machine-readable identity |
-| Local storage | `localStorage` | Remembers the selected language |
-| Deployment | GitHub Pages | 100% static, no server required |
+| Structure | Semantic HTML5 | Page structure and accessible landmarks |
+| Styling | Vanilla CSS3 | Design tokens, layout, responsive behavior, motion |
+| Interactivity | Vanilla JavaScript | UI state and interaction logic |
+| Motion graphics | Canvas API | Atmospheric particles and audio visualizer |
+| Vector motion | SVG | Chapter timeline |
+| Audio | Web Audio API | Audio analysis and interaction sounds |
+| Scroll observation | Intersection Observer API | Reveal animations |
+| Persistence | `localStorage` | Language preference |
+| Typography | Google Fonts | Instrument Serif, Inter, JetBrains Mono |
+| SEO | Open Graph, Twitter Card, JSON-LD | Sharing and structured identity |
+| Deployment | GitHub Pages | Static hosting |
 
-**External dependencies:** zero. Not a single `<script src="cdn...">` beyond Google Fonts. This was a deliberate choice — light, fast, and not dependent on anyone else's infrastructure to keep working.
+### Runtime Dependencies
+
+**Zero JavaScript runtime dependencies.**
+
+There is no React, Vue, jQuery, Bootstrap, Tailwind, npm package, or client-side framework required for the site to run.
+
+Google Fonts is used as an external typography resource.
+
+The project intentionally keeps the runtime small and browser-native.
 
 ---
 
 ## 🗂️ Chapter IV — The Archive *(Project Structure)*
 
-```
+```text
 about-me-profile/
-├── index.html              # The entire structure — one file, six chapters
+├── index.html              # Page structure, metadata, sections, and UI markup
 ├── css/
-│   └── style.css           # Design system: colors, spacing, easing, breakpoints
+│   └── style.css           # Design system, effects, responsive layout, motion
 ├── js/
-│   └── script.js           # Translations, effects, interaction logic
+│   └── script.js           # Translations, atmosphere, interactions, audio, UI logic
 ├── images/
 │   ├── favicon.png
 │   ├── ross-portrait.jpg
 │   └── gallery/
 │       ├── gallery-1.jpg   # Tokyo · 2022 · First snowfall
-│       ├── gallery-2.jpg   # University · 2024 · A late-night design session
+│       ├── gallery-2.jpg   # University · 2024 · Late-night design work
 │       ├── gallery-3.jpg   # Osaka · 2023 · Neon rain
 │       ├── gallery-4.jpg   # Studio · 2024 · A quiet hour
 │       ├── gallery-5.jpg   # People · 2023 · A stranger's smile
-│       └── gallery-6.jpg   # Kyoto · 2022 · A temple lit up at night
+│       └── gallery-6.jpg   # Kyoto · 2022 · A temple lit at night
 ├── audio/
-│   └── ambient.mp3          # Lo-fi / ambient background music
-└── LICENSE                  # MIT
+│   └── ambient.mp3         # Lo-fi / ambient background music
+└── LICENSE                 # MIT License
 ```
+
+Some portfolio preview imagery currently comes from `picsum.photos`, while the main portrait and cinematic journal use local assets.
 
 ---
 
 ## 🕹️ Chapter V — Loading the Save *(Getting Started)*
 
-No `npm install` needed. No build tool required. This is a static site — clone it, and it just runs.
+No `npm install`.
+
+No build tool.
+
+No `.env`.
+
+No configuration file.
+
+This is a static site.
+
+### 1. Clone the repository
 
 ```bash
-# 1. Clone the project
 git clone https://github.com/Itsmoonr/about-me-profile.git
 cd about-me-profile
-
-# 2. Open it directly in your browser
-open index.html          # macOS
-# or just double-click index.html on Windows/Linux
 ```
 
-For a smoother experience (especially proper font and image preloading), a lightweight local server is recommended over opening the file directly:
+### 2. Run it locally
+
+A local HTTP server is recommended because it behaves more like the production environment than opening `index.html` directly.
+
+Using Python:
 
 ```bash
-# Using Python (usually pre-installed)
 python3 -m http.server 8000
-# then open http://localhost:8000
-
-# Or use VS Code + the "Live Server" extension
 ```
 
-That's it. No config, no `.env`, no dependencies to install. **Save loaded.**
+Then open:
+
+```text
+http://localhost:8000
+```
+
+Or use VS Code with the **Live Server** extension.
+
+> Opening `index.html` directly may work for much of the interface, but a local server is the safer way to test the complete experience.
+
+**Save loaded.**
 
 ---
 
 ## 🌏 Chapter VI — Multiverse *(Internationalization)*
 
-Three parallel universes, one character:
+Three parallel universes.
+
+One character.
 
 | Code | Language | Status |
 |---|---|---|
@@ -195,64 +296,106 @@ Three parallel universes, one character:
 | `vi` | Vietnamese | ✅ Complete |
 | `ja` | 日本語 | ✅ Complete |
 
-Want to add a fourth language? Every string lives inside the `T` object at the top of `js/script.js`. Just:
+Want to add another language?
 
-1. Add a new language key (e.g. `de` for German) following the same structure as the existing ones.
-2. Add `<option value="de">🇩🇪 DE</option>` to the language selector in `index.html`.
-3. No logic changes needed — `applyLanguage()` handles the rest automatically.
+The translation system is centralized in `js/script.js`.
+
+A new language generally requires:
+
+1. adding a new language object following the existing `T` structure
+2. adding an `<option>` to the selector in `index.html`
+
+The existing language-application logic handles the rest.
 
 ---
 
 ## 🗝️ Chapter VII — Hidden Passages *(Easter Eggs)*
 
-A game-inspired product needs secrets. Try these keys while not focused on any input field:
+A game-inspired website should probably hide a few secrets.
+
+Try these keys while focus is not inside a text input:
 
 | Key | What happens |
 |---|---|
 | `E` | ✦ Secret found — confirmed curious explorer |
-| `N` | 💀 Game Over — scrolls straight down to the "Save Point" at the bottom |
-| `Y` | ✦ Respawn — scrolls back to the top, ready to continue |
+| `N` | 💀 Game Over — jumps to the Save Point |
+| `Y` | ✦ Respawn — returns to the beginning |
+
+There are also quieter interactions hidden throughout the interface.
+
+Some things are more fun to discover than to document.
 
 ---
 
 ## ♿ Chapter VIII — Accessibility & Performance
 
-- Full keyboard navigation, with a **skip link** straight to the main content.
-- Respects `prefers-reduced-motion`: motion-sensitive users get reduced animation.
-- Images use `loading="lazy"` (except the hero image, which uses `fetchpriority="high"`), with explicit `width`/`height` to prevent **Cumulative Layout Shift (CLS)**.
-- The main animation loop (`requestAnimationFrame`) automatically pauses when the tab is hidden (`visibilitychange`), saving battery and CPU.
-- A graceful `<noscript>` fallback is provided for visitors with JavaScript disabled.
+The cinematic layer should never be allowed to become a usability problem.
+
+The implementation includes several safeguards:
+
+- full keyboard navigation with a skip link to main content
+- `prefers-reduced-motion` support for users who prefer less animation
+- explicit image `width` / `height` attributes to reduce layout shifts
+- lazy loading for non-critical images
+- high loading priority for the hero portrait
+- animation-loop pausing when the document becomes hidden
+- responsive navigation and touch-oriented behavior
+- a `<noscript>` fallback
+- audio error handling instead of failing silently
+
+The goal is simple:
+
+> **Keep the atmosphere. Remove the friction.**
 
 ---
 
 ## 🔭 Chapter IX — Horizon *(What's Next)*
 
-Just like the site's own "Chapter VI" puts it: *not as an expert, but as someone who still believes curiosity is the most useful skill there is.* A few directions worth exploring next:
+The story is still being written.
 
-- [ ] Add real screenshots / a demo GIF to the top of this README
-- [ ] Turn it into a Progressive Web App (PWA) — offline support
-- [ ] Add a fourth language (German is currently being learned 👀)
-- [ ] Manual dark/light toggle, alongside the automatic time-based mode
+A few possible next chapters:
+
+- [ ] Add a real hero screenshot and short demo GIF to this README
+- [ ] Explore Progressive Web App capabilities and offline support
+- [ ] Add German (`de`) as a fourth language
+- [ ] Add an optional manual light/dark override alongside automatic time-based lighting
+- [ ] Expand selected projects into deeper case studies with screenshots and measurable outcomes
+
+The project is intentionally unfinished in the best possible way.
+
+There is still room for another chapter.
 
 ---
 
 ## 🤝 Chapter X — Contributing
 
-This is a personal, narrative-driven project, but feedback on code quality, accessibility, or performance is always welcome.
+This is a personal, narrative-driven project, but thoughtful feedback is welcome — especially around:
+
+- code quality
+- accessibility
+- performance
+- interaction design
+- maintainability
+
+A typical contribution flow:
 
 ```bash
-1. Fork the repo
-2. Create a new branch:   git checkout -b feature/your-feature-name
-3. Commit your changes:   git commit -m "Add: short description"
-4. Push the branch:       git push origin feature/your-feature-name
-5. Open a Pull Request
+git checkout -b feature/your-feature-name
+git commit -m "Add: short description"
+git push origin feature/your-feature-name
 ```
+
+Then open a Pull Request.
+
+For larger changes, please explain the reasoning behind the change, not only the implementation.
 
 ---
 
 ## 📜 License
 
-Released under the **[MIT License](LICENSE)** — free to use, copy, and modify. Just keep the attribution.
+Released under the [**MIT License**](./LICENSE).
+
+You are free to use, copy, modify, and redistribute the project under the terms of the license.
 
 ---
 
@@ -261,19 +404,21 @@ Released under the **[MIT License](LICENSE)** — free to use, copy, and modify.
 <div align="center">
 
 **Thanks for reading all the way to here.**
-If you saw a bit of your own journey somewhere in this, I'd genuinely love to hear about it.
 
-📬 **[moonsicson@gmail.com](mailto:moonsicson@gmail.com)**
-&nbsp;·&nbsp;
-🐙 **[GitHub](https://github.com/Itsmoonr)**
-&nbsp;·&nbsp;
-📸 **[Instagram](https://www.instagram.com/muunst_a/)**
-&nbsp;·&nbsp;
-🎮 **[Steam](https://steamcommunity.com/id/moondareal/)**
+If you saw a bit of your own journey somewhere in this,  
+I'd genuinely love to hear about it.
+
+📬 [**moonsicson@gmail.com**](mailto:moonsicson@gmail.com)  
+·  
+🐙 [**GitHub**](https://github.com/Itsmoonr)  
+·  
+📸 [**Instagram**](https://www.instagram.com/muunst_a/)  
+·  
+🎮 [**Steam**](https://steamcommunity.com/id/moondareal/)
 
 <br>
 
-*"The story's still going."*
+*“The story's still going.”*
 
 **— Ross**
 
