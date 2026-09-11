@@ -228,8 +228,6 @@ Instagram: @muunst_a
 
 Steam: moondareal
 
-<div align="center">
 "Grateful for those who left, cherishing those who stayed."
 
 Thanks for stopping by. The story's still going.
-</div> ```
