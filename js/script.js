@@ -224,7 +224,7 @@ const T = {
         contact: {
             label: "連絡する",
             title: "<span class='highlight'>チャンネル</span>を開く",
-            invite: "コラボでも、フリーランスの仕事でも、ただの雑談 settled, いつでも歓迎です。",
+            invite: "コラボでも、フリーランスの仕事でも、ただの雑談でも、いつでも歓迎です。",
             form: { name: "名前", email: "メールアドレス", subject: "件名", message: "メッセージ", submit: "送信する", nameError: "お名前を入力してください", emailError: "有効なメールアドレスを入力してください", messageError: "メッセージを入力してください", success: "✓ 送信完了！なるべく早く返信します。" }
         },
         ending: { title: "セーブポイント", message: "物語はまだ続いてる。", continue: "続ける?", reflection: "ここまで一緒に歩いてくれてありがとう。もしどこかに自分自身の旅の影を見つけてくれたなら、ぜひ聞かせてほしい。一緒に次の章を書いていこう。", signature: "Ross より" },
@@ -249,6 +249,10 @@ function getT(lang, path) {
 }
 
 let journalItemsData = [];
+
+// Màu particle — được ghi đè bởi initDayNightLighting()
+let particleRainRGB = '102,192,244';
+let particleSnowRGB = '245,247,250';
 
 function applyLanguage(lang) {
     document.documentElement.lang = lang;
@@ -293,15 +297,25 @@ function applyLanguage(lang) {
 }
 
 // ============================================================
-//  REAL-TIME DAY / NIGHT LIGHTING
+//  DAY / NIGHT LIGHTING
+//  Cùng họ màu (xanh navy), chỉ sáng & tươi hơn vào ban ngày.
+//  Chạy 1 lần lúc load — toggle class + gán 2 biến string.
+//  Không animation, không setInterval → 0 chi phí hiệu năng.
 // ============================================================
 function initDayNightLighting() {
     const hour = new Date().getHours();
     const isDaytime = hour >= 6 && hour < 18;
+
+    document.documentElement.classList.toggle('day-theme', isDaytime);
+
     if (isDaytime) {
-        document.documentElement.classList.add('day-theme');
+        // Ban ngày — xanh sáng hơn, giữ cool tone
+        particleRainRGB = '125,207,255';
+        particleSnowRGB = '245,247,250';
     } else {
-        document.documentElement.classList.remove('day-theme');
+        // Ban đêm — xanh navy tối
+        particleRainRGB = '102,192,244';
+        particleSnowRGB = '245,247,250';
     }
 }
 
@@ -373,7 +387,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Hamburger toggle: stopPropagation so click-outside doesn't close it immediately
     if (navToggle) {
         navToggle.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -381,7 +394,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Click nav links: scroll + close menu
     $$('.nav__links a[data-section]').forEach(function(a) {
         a.addEventListener('click', function(e) {
             e.preventDefault();
@@ -390,7 +402,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Click outside menu to close
     document.addEventListener('click', function(e) {
         if (!navLinks || !navLinks.classList.contains('open')) return;
         if (navLinks.contains(e.target)) return;
@@ -398,7 +409,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setMenu(false);
     });
 
-    // ESC to close menu
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && navLinks && navLinks.classList.contains('open')) {
             setMenu(false);
@@ -461,7 +471,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let audioCtx = null;
     let audioUnlocked = false;
 
-    // Unlock audio only after first real user gesture
     function unlockAudio() {
         if (audioUnlocked) return;
         try {
@@ -624,14 +633,15 @@ document.addEventListener('DOMContentLoaded', function() {
         Particle.prototype.draw = function(mode) {
             ctx.beginPath();
             if (mode === 'rain') {
-                ctx.strokeStyle = 'rgba(102, 192, 244, ' + this.alpha + ')';
+                // Màu theo giờ — cập nhật từ initDayNightLighting()
+                ctx.strokeStyle = 'rgba(' + particleRainRGB + ',' + this.alpha + ')';
                 ctx.lineWidth = this.r;
                 ctx.moveTo(this.x, this.y);
                 ctx.lineTo(this.x + this.vx * 2, this.y + this.length);
                 ctx.stroke();
             } else {
                 ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(245, 247, 250, ' + this.alpha + ')';
+                ctx.fillStyle = 'rgba(' + particleSnowRGB + ',' + this.alpha + ')';
                 ctx.fill();
             }
         };
@@ -696,7 +706,6 @@ document.addEventListener('DOMContentLoaded', function() {
             scrollProgress.style.width = (frac * 100) + '%';
         }
 
-        // Mouse light update
         if (!isTouch && mouseLight) {
             lx += (mx - lx) * 0.06;
             ly += (my - ly) * 0.06;
@@ -706,14 +715,12 @@ document.addEventListener('DOMContentLoaded', function() {
             mouseLight.style.opacity = near ? '0.15' : '1';
         }
 
-        // Parallax orbs update (every 2 frames)
         frameCount++;
         if (frameCount % UPDATE_INTERVAL === 0) {
             if (orbs[0]) orbs[0].style.transform = 'translate3d(' + (-25 + frac * 45) + 'px,' + (-15 + frac * 70) + 'px,0)';
             if (orbs[1]) orbs[1].style.transform = 'translate3d(' + (18 - frac * 35) + 'px,' + (-50 + frac * 100) + 'px,0)';
             if (orbs[2]) orbs[2].style.transform = 'translate3d(' + (-12 + frac * 28) + 'px,' + (35 - frac * 85) + 'px,0)';
 
-            // Update Background Lightning
             const bg = $('#bgLighting');
             if (bg) {
                 if (!bgScrolled && frac > 0.25) {
@@ -726,7 +733,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Weather update (canvas)
         if (window._weatherState) {
             window._weatherState.update();
         }
@@ -961,7 +967,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    //  VISUALIZER: single cached gradient (optimized)
+    //  VISUALIZER
     // ============================================================
     function startVisualizer() {
         if (!ctxVis) return;
@@ -973,10 +979,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxHeight = h * 0.8;
         let time = 0;
 
-        // Single cached gradient
+        // Gradient đổi theo theme — tạo 1 lần, không tốn hiệu năng
+        const isDay = document.documentElement.classList.contains('day-theme');
         const gradient = ctxVis.createLinearGradient(0, 0, 0, h);
-        gradient.addColorStop(0, '#66c0f4');
-        gradient.addColorStop(1, '#f4a261');
+        if (isDay) {
+            gradient.addColorStop(0, '#7dcfff');
+            gradient.addColorStop(1, '#a8d8f0');
+        } else {
+            gradient.addColorStop(0, '#66c0f4');
+            gradient.addColorStop(1, '#f4a261');
+        }
 
         function draw() {
             if (!isPlaying) { stopVisualizer(); return; }
