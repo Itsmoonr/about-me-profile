@@ -332,8 +332,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // ---- LOADING ----
     const placeholder = $('#loadingPlaceholder');
     if (placeholder) {
-        setTimeout(() => placeholder.classList.add('hidden'), 400);
-        setTimeout(() => { placeholder.style.display = 'none'; }, 1200);
+        // Bắt đầu fade sớm để không che LCP element
+        setTimeout(() => placeholder.classList.add('hidden'), 100);
+        setTimeout(() => { placeholder.style.display = 'none'; }, 400);
     }
 
     // ---- LANGUAGE ----
