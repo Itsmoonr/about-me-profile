@@ -298,9 +298,6 @@ function applyLanguage(lang) {
 
 // ============================================================
 //  DAY / NIGHT LIGHTING
-//  Cùng họ màu (xanh navy), chỉ sáng & tươi hơn vào ban ngày.
-//  Chạy 1 lần lúc load — toggle class + gán 2 biến string.
-//  Không animation, không setInterval → 0 chi phí hiệu năng.
 // ============================================================
 function initDayNightLighting() {
     const hour = new Date().getHours();
@@ -309,11 +306,9 @@ function initDayNightLighting() {
     document.documentElement.classList.toggle('day-theme', isDaytime);
 
     if (isDaytime) {
-        // Ban ngày — xanh sáng hơn, giữ cool tone
         particleRainRGB = '125,207,255';
         particleSnowRGB = '245,247,250';
     } else {
-        // Ban đêm — xanh navy tối
         particleRainRGB = '102,192,244';
         particleSnowRGB = '245,247,250';
     }
@@ -567,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    //  DYNAMIC ATMOSPHERE SYSTEM
+    //  DYNAMIC ATMOSPHERE SYSTEM (tối ưu reflow)
     // ============================================================
     (function initAtmosphere() {
         const canvas = $('#heroCanvas');
@@ -578,17 +573,16 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentMode = 'rain';
         let chapter3TopCache = 0;
 
+        // Đọc offset chỉ trong RAF — tránh forced reflow
         function updateCache() {
-            const chapters = $$('.chapter-item');
-            if (chapters.length >= 3) {
-                let el = chapters[2];
-                let top = 0;
-                while (el) {
-                    top += el.offsetTop;
-                    el = el.offsetParent;
-                }
+            if (chapter3TopCache) return;
+            requestAnimationFrame(function() {
+                const chapters = $$('.chapter-item');
+                if (chapters.length < 3) return;
+                let el = chapters[2], top = 0;
+                while (el) { top += el.offsetTop; el = el.offsetParent; }
                 chapter3TopCache = top;
-            }
+            });
         }
 
         function resize() {
@@ -598,6 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
             canvas.width = w * dpr;
             canvas.height = h * dpr;
             ctx.scale(dpr, dpr);
+            chapter3TopCache = 0;
             updateCache();
         }
 
@@ -633,7 +628,6 @@ document.addEventListener('DOMContentLoaded', function() {
         Particle.prototype.draw = function(mode) {
             ctx.beginPath();
             if (mode === 'rain') {
-                // Màu theo giờ — cập nhật từ initDayNightLighting()
                 ctx.strokeStyle = 'rgba(' + particleRainRGB + ',' + this.alpha + ')';
                 ctx.lineWidth = this.r;
                 ctx.moveTo(this.x, this.y);
@@ -741,34 +735,50 @@ document.addEventListener('DOMContentLoaded', function() {
     lastTime = performance.now();
     frameId = requestAnimationFrame(mainLoop);
 
-    // ---- CHAPTERS TIMELINE SVG ----
+    // ---- CHAPTERS TIMELINE SVG (tối ưu reflow) ----
     const path = $('#chaptersPath');
     const container = $('#chaptersContainer');
     const svg = $('#chaptersSVG');
     let timelineUpdatePending = false;
+    let timelineCache = { top: 0, height: 0, valid: false };
 
     function updateTimeline() {
         if (!path || !container || !svg) return;
         const h = container.scrollHeight;
+        const top = container.offsetTop;
+        timelineCache.top = top;
+        timelineCache.height = h;
+        timelineCache.valid = true;
+
         svg.setAttribute('viewBox', '0 0 2 ' + h);
         svg.setAttribute('height', h);
         path.setAttribute('d', 'M1,0 L1,' + h);
         const len = path.getTotalLength();
         path.style.strokeDasharray = len;
         path.style.strokeDashoffset = len;
+        path._len = len;
     }
-    updateTimeline();
-    window.addEventListener('resize', updateTimeline, { passive: true });
+    requestAnimationFrame(updateTimeline);
+    window.addEventListener('resize', function() {
+        timelineCache.valid = false;
+        updateTimeline();
+    }, { passive: true });
+    window.addEventListener('load', function() {
+        timelineCache.valid = false;
+        updateTimeline();
+    }, { passive: true });
 
     function drawTimeline() {
         if (!path || !container) return;
+        if (!timelineCache.valid) updateTimeline();
         const y = window.pageYOffset;
-        const top = container.offsetTop;
-        const h = container.scrollHeight;
+        const top = timelineCache.top;
+        const h = timelineCache.height;
         const bottom = y + window.innerHeight;
         if (bottom > top && y < top + h) {
             const progress = (bottom - top) / (h + window.innerHeight);
-            path.style.strokeDashoffset = path.getTotalLength() * (1 - Math.min(progress, 1));
+            const len = path._len || path.getTotalLength();
+            path.style.strokeDashoffset = len * (1 - Math.min(progress, 1));
         }
     }
 
@@ -784,7 +794,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', drawTimelineRaf, { passive: true });
 
     // ============================================================
-    //  MUSIC PLAYER & AUDIO CONTROL
+    //  MUSIC PLAYER
     // ============================================================
     const musicPlayer = $('#musicPlayer');
     const playBtn = $('#musicToggle');
@@ -804,16 +814,23 @@ document.addEventListener('DOMContentLoaded', function() {
     let audioErr = false;
     let volumeBeforeMute = 0.8;
     let currentVolume = 0.8;
+    let cachedVisSize = null;
 
     if (visualizerCanvas) {
         ctxVis = visualizerCanvas.getContext('2d');
-        const resizeVis = function() {
+        const measureVis = function() {
+            if (cachedVisSize) return cachedVisSize;
             const rect = visualizerCanvas.getBoundingClientRect();
-            visualizerCanvas.width = rect.width || 120;
-            visualizerCanvas.height = rect.height || 30;
+            cachedVisSize = { w: rect.width || 120, h: rect.height || 30 };
+            visualizerCanvas.width = cachedVisSize.w;
+            visualizerCanvas.height = cachedVisSize.h;
+            return cachedVisSize;
         };
-        resizeVis();
-        window.addEventListener('resize', resizeVis);
+        requestAnimationFrame(measureVis);
+        window.addEventListener('resize', function() {
+            cachedVisSize = null;
+            measureVis();
+        }, { passive: true });
     }
 
     function hideMusic() { if (musicPlayer) musicPlayer.classList.add('hidden'); }
@@ -972,6 +989,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function startVisualizer() {
         if (!ctxVis) return;
         stopVisualizer();
+        if (!cachedVisSize) {
+            const rect = visualizerCanvas.getBoundingClientRect();
+            cachedVisSize = { w: rect.width || 120, h: rect.height || 30 };
+            visualizerCanvas.width = cachedVisSize.w;
+            visualizerCanvas.height = cachedVisSize.h;
+        }
         const w = visualizerCanvas.width;
         const h = visualizerCanvas.height;
         const bars = 24;
@@ -979,7 +1002,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxHeight = h * 0.8;
         let time = 0;
 
-        // Gradient đổi theo theme — tạo 1 lần, không tốn hiệu năng
         const isDay = document.documentElement.classList.contains('day-theme');
         const gradient = ctxVis.createLinearGradient(0, 0, 0, h);
         if (isDay) {
