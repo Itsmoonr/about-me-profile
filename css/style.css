@@ -1,28 +1,29 @@
 /* ============================================
    FONT METRICS OVERRIDE — chống CLS khi font swap
+   Values khớp hhea metrics thật của từng font
    ============================================ */
 @font-face {
     font-family: 'Inter Fallback';
-    src: local('Arial');
-    size-adjust: 107%;
-    ascent-override: 90%;
-    descent-override: 22.4%;
+    src: local('Arial'), local('Helvetica'), local('Liberation Sans');
+    size-adjust: 107.12%;
+    ascent-override: 90.20%;
+    descent-override: 22.48%;
     line-gap-override: 0%;
 }
 @font-face {
     font-family: 'Instrument Serif Fallback';
-    src: local('Georgia'), local('Times New Roman');
-    size-adjust: 100%;
-    ascent-override: 92%;
-    descent-override: 24%;
+    src: local('Georgia'), local('Times New Roman'), local('Liberation Serif');
+    size-adjust: 110%;
+    ascent-override: 80%;
+    descent-override: 20%;
     line-gap-override: 0%;
 }
 @font-face {
     font-family: 'JetBrains Mono Fallback';
-    src: local('Courier New'), local('monospace');
+    src: local('Courier New'), local('Courier'), local('Menlo'), local('Consolas'), local('Liberation Mono'), local('DejaVu Sans Mono');
     size-adjust: 100%;
-    ascent-override: 88%;
-    descent-override: 24%;
+    ascent-override: 102%;
+    descent-override: 30%;
     line-gap-override: 0%;
 }
 
@@ -738,14 +739,14 @@ body {
     letter-spacing: .02em;
     margin-bottom: var(--space-3);
     line-height: 1.6;
+    min-height: 4em;
 }
-.hero__tagline span,
-.hero__invite span,
-.hero__cta-group span {
+.hero__tagline > span {
     display: inline-block;
     opacity: 0;
-    transform: translateY(12px);
-    animation: heroWordIn .5s var(--ease-out) forwards;
+    transform: translateY(16px);
+    animation: heroWordIn .6s var(--ease-out) forwards;
+    animation-delay: calc(.55s + var(--i, 0) * .07s);
 }
 .hero__invite {
     font-size: 1.05rem;
@@ -754,11 +755,25 @@ body {
     line-height: 1.8;
     font-style: italic;
     max-width: 440px;
+    min-height: 2.2em;
+}
+.hero__invite > span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: heroWordIn .5s var(--ease-out) forwards;
+    animation-delay: calc(1.20s + var(--i, 0) * .07s);
 }
 .hero__cta-group {
     display: flex;
     gap: var(--space-4);
     flex-wrap: wrap;
+}
+.hero__cta-group span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: heroWordIn .5s var(--ease-out) forwards;
 }
 .hero__cta-group span:nth-child(1) { animation-delay: 2.20s; }
 .hero__cta-group span:nth-child(2) { animation-delay: 2.27s; }
@@ -897,7 +912,7 @@ body {
 }
 @keyframes heroFadeIn {
     from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-    to { opacity: .5; transform: translateX(-50%) translateY(0); }
+    to { opacity: .72; transform: translateX(-50%) translateY(0); }
 }
 .hero__scroll-dot {
     width: 8px;
@@ -2086,6 +2101,22 @@ body {
     }
     .cinematic-vignette {
         opacity: 0.3;
+    }
+    .nav {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .nav__links {
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+    }
+    .music-player {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .journal-modal {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
     .parallax-orb {
         filter: blur(25px) !important;
