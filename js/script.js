@@ -269,15 +269,18 @@ function applyLanguage(lang) {
         inviteEl = $('#heroInvite');
     const taglineText = getT(lang, 'hero.tagline'),
         inviteText = getT(lang, 'hero.invite');
-    if (taglineEl && taglineText) {
+    // Chỉ re-render khi ngôn ngữ đổi — EN đã pre-render sẵn trong HTML để tránh CLS
+    if (taglineEl && taglineText && taglineEl.dataset.renderedLang !== lang) {
         taglineEl.innerHTML = taglineText.split(' ').map((w, i) =>
-            `<span style="display:inline-block;opacity:0;transform:translateY(16px);animation:heroWordIn .6s cubic-bezier(.22,.61,.36,1) ${.55 + i * .07}s forwards;">${w}</span>`
+            `<span style="--i:${i}">${w}</span>`
         ).join(' ');
+        taglineEl.dataset.renderedLang = lang;
     }
-    if (inviteEl && inviteText) {
+    if (inviteEl && inviteText && inviteEl.dataset.renderedLang !== lang) {
         inviteEl.innerHTML = inviteText.split(' ').map((w, i) =>
-            `<span style="display:inline-block;opacity:0;transform:translateY(12px);animation:heroWordIn .5s cubic-bezier(.22,.61,.36,1) ${1.20 + i * .07}s forwards;">${w}</span>`
+            `<span style="--i:${i}">${w}</span>`
         ).join(' ');
+        inviteEl.dataset.renderedLang = lang;
     }
 
     const modal = $('#journalModal');
