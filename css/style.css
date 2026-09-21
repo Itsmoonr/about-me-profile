@@ -1,4 +1,32 @@
 /* ============================================
+   FONT METRICS OVERRIDE — chống CLS khi font swap
+   ============================================ */
+@font-face {
+    font-family: 'Inter Fallback';
+    src: local('Arial');
+    size-adjust: 107%;
+    ascent-override: 90%;
+    descent-override: 22.4%;
+    line-gap-override: 0%;
+}
+@font-face {
+    font-family: 'Instrument Serif Fallback';
+    src: local('Georgia'), local('Times New Roman');
+    size-adjust: 100%;
+    ascent-override: 92%;
+    descent-override: 24%;
+    line-gap-override: 0%;
+}
+@font-face {
+    font-family: 'JetBrains Mono Fallback';
+    src: local('Courier New'), local('monospace');
+    size-adjust: 100%;
+    ascent-override: 88%;
+    descent-override: 24%;
+    line-gap-override: 0%;
+}
+
+/* ============================================
    ROOT & RESET
    ============================================ */
 :root {
@@ -24,9 +52,9 @@
     --vignette-color: rgba(0, 0, 0, 0.28);
     --shadow-card: 0 12px 48px rgba(0, 0, 0, 0.5);
     --shadow-glow: 0 0 40px rgba(102, 192, 244, 0.08);
-    --font-display: 'Instrument Serif', 'Georgia', serif;
-    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+    --font-display: 'Instrument Serif', 'Instrument Serif Fallback', 'Georgia', serif;
+    --font-body: 'Inter', 'Inter Fallback', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', 'SF Mono', monospace;
     --space-1: 4px;  --space-2: 8px;  --space-3: 12px;  --space-4: 16px;
     --space-5: 20px; --space-6: 24px; --space-7: 32px;  --space-8: 40px;
     --space-9: 48px; --space-10: 56px; --space-11: 72px; --space-12: 96px;
@@ -50,34 +78,22 @@
 
 /* ============================================
    DAY THEME — Brighter Cool Blue
-   Cùng họ màu với ban đêm (xanh navy), chỉ
-   sáng & tươi hơn — không đổi sang tông ấm.
-   Chạy 1 lần lúc load → 0 chi phí hiệu năng.
    ============================================ */
 .day-theme {
-    /* Nền: vẫn navy, nhưng sáng hơn rõ rệt */
     --bg-deep:        #182a44;
     --bg-surface:     #1f3554;
     --bg-card:        #284268;
     --bg-card-hover:  #33517d;
-
-    /* Accent: xanh sáng hơn, gold giữ nguyên */
     --accent-warm:    #7dcfff;
     --accent-teal:    #f4a261;
     --accent-coral:   #d87c6a;
     --accent-gradient: linear-gradient(145deg, #7dcfff, #f4a261);
     --accent-glow:    rgba(125, 207, 255, 0.20);
-
-    /* Chữ: trắng có ánh xanh, dịu hơn một chút */
     --text-primary:   #f0f6fc;
     --text-secondary: #c8d8e8;
     --text-muted:     #8fa5bd;
-
-    /* Viền: navy sáng hơn */
     --border-subtle:  #3a5476;
     --border-glow:    #4a6f96;
-
-    /* Overlay đồng bộ tông xanh sáng */
     --overlay-bg:        rgba(24, 42, 68, .75);
     --overlay-bg-strong: rgba(24, 42, 68, .94);
     --menu-bg:           rgba(31, 53, 84, .97);
@@ -86,7 +102,6 @@
     --vignette-color:    rgba(0, 20, 50, 0.25);
 }
 
-/* Đèn nền & orb: xanh sáng hơn nhưng vẫn cool */
 .day-theme .bg-lighting {
     background: radial-gradient(ellipse at 25% 20%, rgba(125, 207, 255, 0.10), transparent 55%);
 }
@@ -99,8 +114,6 @@
 .day-theme .parallax-orb.orb-3 {
     background: radial-gradient(circle, rgba(168, 216, 240, .4) 0%, transparent 70%);
 }
-
-/* Nút gradient vẫn giữ chữ navy tối */
 .day-theme .hero__cta,
 .day-theme .contact__form-submit,
 .day-theme .music-player__play,
@@ -135,6 +148,9 @@ body {
 ::selection {
     background: rgba(102, 192, 244, 0.25);
     color: #fff;
+}
+.day-theme ::selection {
+    background: rgba(125, 207, 255, 0.30);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -804,6 +820,7 @@ body {
 }
 .hero__cta--secondary:active { transform: scale(.97); }
 
+/* ── Hero portrait — CLS-safe ── */
 .hero__portrait {
     width: 100%;
     max-width: 480px;
@@ -812,20 +829,11 @@ body {
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .04);
-    background: var(--bg-card);
+    background: #182230;
     position: relative;
-    transition: transform .4s var(--ease-out), box-shadow .5s var(--ease-out);
-    opacity: 0;
-    transform: scale(.96) translateY(20px);
-    animation: heroPortraitIn .9s var(--ease-out) .3s forwards;
-    will-change: transform, opacity;
 }
 .hero__portrait:hover {
     box-shadow: 0 24px 72px rgba(0, 0, 0, .7), 0 0 0 1px var(--accent-glow);
-}
-@keyframes heroPortraitIn {
-    from { opacity: 0; transform: scale(.96) translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 .hero__portrait img {
     width: 100%;
@@ -833,9 +841,15 @@ body {
     object-fit: cover;
     filter: brightness(.90) contrast(1.08) saturate(.95);
     display: block;
-    transition: transform .6s var(--ease-out);
+    transition: transform .6s var(--ease-out), opacity .8s var(--ease-out);
+    opacity: 0;
+    animation: portraitFadeIn .9s var(--ease-out) .2s forwards;
+}
+@keyframes portraitFadeIn {
+    to { opacity: 1; }
 }
 .hero__portrait:hover img { transform: scale(1.03); }
+
 .hero__portrait-caption {
     position: absolute;
     bottom: var(--space-4);
@@ -1005,9 +1019,6 @@ body {
     color: var(--text-primary);
     word-break: break-word;
 }
-.day-theme .profile__stat-value {
-    color: var(--text-primary);
-}
 .profile__stat>div:last-child {
     min-width: 0;
     display: flex;
@@ -1021,7 +1032,7 @@ body {
 }
 
 /* ============================================
-   CHAPTERS & BOKEH FOCUS
+   CHAPTERS
    ============================================ */
 .chapters {
     position: relative;
@@ -1173,8 +1184,8 @@ body {
     stroke-width: 2;
     stroke-dasharray: 1200;
     stroke-dashoffset: 1200;
-    transition: stroke-dashoffset .1s linear;
     opacity: .3;
+    will-change: stroke-dashoffset;
 }
 
 /* ============================================
