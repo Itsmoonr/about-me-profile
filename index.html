@@ -7,21 +7,58 @@
     <meta name="theme-color" content="#0b1118" />
     <meta name="color-scheme" content="dark" />
     <title>Ross Nguyen · Designer &amp; Developer</title>
-    <!-- Preconnect để tải font nhanh hơn -->
+
+    <!-- ===== Preconnect ===== -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-    <!-- Không preload font cụ thể để tránh lỗi 404 -->
+
+    <!-- ===== Preload hero image — chỉ WebP ===== -->
+    <link rel="preload" as="image"
+          href="images/ross-portrait-960.webp"
+          type="image/webp"
+          fetchpriority="high"
+          imagesrcset="images/ross-portrait-480.webp 480w,
+                       images/ross-portrait-960.webp 960w"
+          imagesizes="(max-width: 820px) 90vw, 480px" />
+
+    <!-- ===== Google Fonts non-blocking ===== -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,300..700&family=JetBrains+Mono:wght@400;600&display=swap"
+          media="print"
+          onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,300..700&family=JetBrains+Mono:wght@400;600&display=swap" />
+    </noscript>
+
     <meta property="og:title" content="Ross Nguyen · Designer &amp; Developer" />
     <meta property="og:description" content="From Vietnam to Tokyo, building bridges between worlds." />
-    <meta property="og:image" content="images/ross-portrait.jpg" />
+    <meta property="og:image" content="images/ross-portrait-960.webp" />
+    <meta property="og:image:type" content="image/webp" />
     <meta property="og:url" content="https://itsmoonr.github.io/about-me-profile/" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="images/ross-portrait-960.webp" />
     <script type="application/ld+json">
         { "@context": "https://schema.org", "@type": "Person", "name": "Ross Nguyen", "description": "Designer, developer, storyteller. From Vietnam to Japan, building bridges between worlds.", "url": "https://itsmoonr.github.io/about-me-profile/", "sameAs": ["https://github.com/Itsmoonr", "https://www.instagram.com/muunst_a/", "https://steamcommunity.com/id/moondareal/"], "knowsLanguage": ["vi", "en", "ja"] }
     </script>
-    <link rel="icon" type="image/png" href="images/favicon.png" />
-    <!-- ===== CSS ===== -->
+    <link rel="icon" type="image/webp" href="images/favicon.webp" />
+
+    <!-- ===== Inline critical CSS ===== -->
+    <style>
+        :root{--bg-deep:#0b1118;--text-primary:#f4f4f4;--accent-gradient:linear-gradient(145deg,#66c0f4,#f4a261);--font-display:'Instrument Serif','Georgia',serif;--font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono','SF Mono',monospace}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{font-size:17px;scroll-behavior:smooth}
+        body{font-family:var(--font-body);background:var(--bg-deep);color:var(--text-primary);line-height:1.7;overflow-x:hidden;min-height:100vh}
+        .hero{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;padding:120px clamp(20px,5vw,36px) 80px;overflow:hidden}
+        .hero__content{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:72px;width:100%;position:relative;z-index:2}
+        .hero__text{max-width:520px}
+        .hero__name{font-family:var(--font-display);font-size:clamp(5rem,14vw,9rem);font-weight:400;line-height:.92;background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;letter-spacing:-.02em}
+        .hero__subtitle{font-size:1rem;color:#f4a261;letter-spacing:.15em;margin-bottom:16px;font-family:var(--font-mono);text-transform:uppercase}
+        .hero__portrait{width:100%;max-width:480px;aspect-ratio:3/4;margin:0 auto;border-radius:20px;overflow:hidden;background:#182230;position:relative}
+        .hero__portrait img{width:100%;height:100%;object-fit:cover;display:block}
+        @media (max-width:820px){.hero__content{grid-template-columns:1fr;text-align:center;gap:40px}.hero{padding:100px 16px 180px}.hero__text{margin:0 auto}}
+    </style>
+
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -83,7 +120,16 @@
                     </div>
                 </div>
                 <div class="hero__portrait" id="heroPortrait">
-                    <img src="images/ross-portrait.jpg" alt="Ross Nguyen — Vietnamese designer and developer based in Tokyo" fetchpriority="high" width="500" height="667" loading="eager" />
+                    <img
+                        src="images/ross-portrait-960.webp"
+                        srcset="images/ross-portrait-480.webp 480w,
+                                images/ross-portrait-960.webp 960w"
+                        sizes="(max-width: 820px) 90vw, 480px"
+                        alt="Ross Nguyen — Vietnamese designer and developer based in Tokyo"
+                        width="480" height="640"
+                        fetchpriority="high"
+                        decoding="async"
+                        loading="eager" />
                     <span class="hero__portrait-caption" data-i18n="hero.caption">Tokyo · 2023 · a rare quiet moment</span>
                     <span class="hero__portrait-badge">✦ Designer</span>
                 </div>
@@ -153,7 +199,7 @@
             <p class="portfolio__intro" data-i18n="portfolio.intro">Here are a few things I've made, each one taught me something about design, code, or people.</p>
             <div class="portfolio__grid">
                 <div class="project-card" role="button" tabindex="0" aria-expanded="false" aria-label="Think Fraud — click to expand details">
-                    <div class="project-card__image"><img src="https://picsum.photos/id/3/1200/675" alt="Think Fraud project preview" loading="lazy" width="600" height="338" onerror="this.style.display='none'" /></div>
+                    <div class="project-card__image"><img src="https://picsum.photos/id/3/1200/675" alt="Think Fraud project preview" loading="lazy" width="1200" height="675" decoding="async" onerror="this.style.display='none'" /></div>
                     <span class="project-card__stamp" data-i18n="portfolio.1.stamp">Impact</span>
                     <h3 class="project-card__title" data-i18n="portfolio.1.title">Think Fraud</h3>
                     <p class="project-card__summary" data-i18n="portfolio.1.summary">Helping over 50,000 people avoid getting scammed online.</p>
@@ -162,7 +208,7 @@
                     <span class="project-card__status" data-i18n="portfolio.1.status">Status: Complete</span><span class="project-card__status-live" aria-live="polite"></span>
                 </div>
                 <div class="project-card" role="button" tabindex="0" aria-expanded="false" aria-label="Restaurant Cashier — click to expand details">
-                    <div class="project-card__image"><img src="https://picsum.photos/seed/ramen/600/338" alt="Restaurant Cashier project preview" loading="lazy" width="600" height="338" onerror="this.style.display='none'" /></div>
+                    <div class="project-card__image"><img src="https://picsum.photos/seed/ramen/1200/675" alt="Restaurant Cashier project preview" loading="lazy" width="1200" height="675" decoding="async" onerror="this.style.display='none'" /></div>
                     <span class="project-card__stamp" data-i18n="portfolio.2.stamp">Craft</span>
                     <h3 class="project-card__title" data-i18n="portfolio.2.title">Restaurant Cashier</h3>
                     <p class="project-card__summary" data-i18n="portfolio.2.summary">Three years handling the register and the books at a ramen house.</p>
@@ -171,7 +217,7 @@
                     <span class="project-card__status" data-i18n="portfolio.2.status">Status: Complete</span><span class="project-card__status-live" aria-live="polite"></span>
                 </div>
                 <div class="project-card" role="button" tabindex="0" aria-expanded="false" aria-label="Global Elite — click to expand details">
-                    <div class="project-card__image"><img src="https://picsum.photos/seed/gaming/600/338" alt="Global Elite project preview" loading="lazy" width="600" height="338" onerror="this.style.display='none'" /></div>
+                    <div class="project-card__image"><img src="https://picsum.photos/seed/gaming/1200/675" alt="Global Elite project preview" loading="lazy" width="1200" height="675" decoding="async" onerror="this.style.display='none'" /></div>
                     <span class="project-card__stamp" data-i18n="portfolio.3.stamp">Obsession</span>
                     <h3 class="project-card__title" data-i18n="portfolio.3.title">Global Elite</h3>
                     <p class="project-card__summary" data-i18n="portfolio.3.summary">Reaching the top through talent and relentless practice.</p>
@@ -180,7 +226,7 @@
                     <span class="project-card__status" data-i18n="portfolio.3.status">Status: Active</span><span class="project-card__status-live" aria-live="polite"></span>
                 </div>
                 <div class="project-card" role="button" tabindex="0" aria-expanded="false" aria-label="Polyglot — click to expand details">
-                    <div class="project-card__image"><img src="https://picsum.photos/id/1073/1200/675" alt="Polyglot project preview" loading="lazy" width="600" height="338" onerror="this.style.display='none'" /></div>
+                    <div class="project-card__image"><img src="https://picsum.photos/id/1073/1200/675" alt="Polyglot project preview" loading="lazy" width="1200" height="675" decoding="async" onerror="this.style.display='none'" /></div>
                     <span class="project-card__stamp" data-i18n="portfolio.4.stamp">Bridge</span>
                     <h3 class="project-card__title" data-i18n="portfolio.4.title">Polyglot</h3>
                     <p class="project-card__summary" data-i18n="portfolio.4.summary">Four languages, endless connections.</p>
@@ -200,65 +246,21 @@
             </div>
             <div class="abilities__grid">
                 <span class="ability-category" data-i18n="abilities.cat1">The Craft</span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
-                    <span data-i18n="abilities.skill1">Creative Thinking</span>
-                </span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                    <span data-i18n="abilities.skill2">Storytelling</span>
-                </span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                    <span data-i18n="abilities.skill3">UI/UX Design</span>
-                </span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                    <span data-i18n="abilities.skill4">Photography</span>
-                </span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></svg>
-                    <span data-i18n="abilities.skill5">Video Editing</span>
-                </span>
+                <span class="ability-tag"><svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg><span data-i18n="abilities.skill1">Creative Thinking</span></span>
+                <span class="ability-tag"><svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span data-i18n="abilities.skill2">Storytelling</span></span>
+                <span class="ability-tag"><svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span data-i18n="abilities.skill3">UI/UX Design</span></span>
+                <span class="ability-tag"><svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span data-i18n="abilities.skill4">Photography</span></span>
+                <span class="ability-tag"><svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/></svg><span data-i18n="abilities.skill5">Video Editing</span></span>
 
                 <span class="ability-category" data-i18n="abilities.cat2">The Tools</span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                    <span data-i18n="abilities.skill6">Web Development</span>
-                </span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                    <span data-i18n="abilities.skill7">Research</span>
-                </span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                    <span data-i18n="abilities.skill8">Cybersecurity Basics</span>
-                </span>
+                <span class="ability-tag"><svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg><span data-i18n="abilities.skill6">Web Development</span></span>
+                <span class="ability-tag"><svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span data-i18n="abilities.skill7">Research</span></span>
+                <span class="ability-tag"><svg class="ability-tag__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg><span data-i18n="abilities.skill8">Cybersecurity Basics</span></span>
 
                 <span class="ability-category" data-i18n="abilities.cat3">Languages</span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon ability-tag__icon--flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#DA251D"/><polygon fill="#FF0" points="15,4 16.76,9.4 22.45,9.4 17.85,12.7 19.6,18.1 15,14.8 10.4,18.1 12.15,12.7 7.55,9.4 13.24,9.4"/></svg>
-                    <span data-i18n="abilities.lang.vi">Vietnamese (Native)</span>
-                </span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon ability-tag__icon--flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0,0 L30,20 M30,0 L0,20" stroke="#fff" stroke-width="4"/><path d="M0,0 L30,20 M30,0 L0,20" stroke="#C8102E" stroke-width="2"/><path d="M15,0 V20 M0,10 H30" stroke="#fff" stroke-width="6"/><path d="M15,0 V20 M0,10 H30" stroke="#C8102E" stroke-width="4"/></svg>
-                    <span data-i18n="abilities.lang.en">English (Fluent)</span>
-                </span>
-
-                <span class="ability-tag">
-                    <svg class="ability-tag__icon ability-tag__icon--flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#BC002D"/></svg>
-                    <span data-i18n="abilities.lang.ja">Japanese (Fluent)</span>
-                </span>
+                <span class="ability-tag"><svg class="ability-tag__icon ability-tag__icon--flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#DA251D"/><polygon fill="#FF0" points="15,4 16.76,9.4 22.45,9.4 17.85,12.7 19.6,18.1 15,14.8 10.4,18.1 12.15,12.7 7.55,9.4 13.24,9.4"/></svg><span data-i18n="abilities.lang.vi">Vietnamese (Native)</span></span>
+                <span class="ability-tag"><svg class="ability-tag__icon ability-tag__icon--flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0,0 L30,20 M30,0 L0,20" stroke="#fff" stroke-width="4"/><path d="M0,0 L30,20 M30,0 L0,20" stroke="#C8102E" stroke-width="2"/><path d="M15,0 V20 M0,10 H30" stroke="#fff" stroke-width="6"/><path d="M15,0 V20 M0,10 H30" stroke="#C8102E" stroke-width="4"/></svg><span data-i18n="abilities.lang.en">English (Fluent)</span></span>
+                <span class="ability-tag"><svg class="ability-tag__icon ability-tag__icon--flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#BC002D"/></svg><span data-i18n="abilities.lang.ja">Japanese (Fluent)</span></span>
             </div>
         </section>
 
@@ -271,32 +273,32 @@
             </div>
             <div class="journal__grid">
                 <div class="journal-item" role="button" tabindex="0" aria-expanded="false" aria-label="Tokyo, 2022. First snowfall." data-index="0">
-                    <img src="images/gallery/gallery-1.jpg" alt="First snowfall in Tokyo, 2022" loading="lazy" width="400" height="300" />
+                    <img src="images/gallery/gallery-1.webp" alt="First snowfall in Tokyo, 2022" loading="lazy" width="400" height="300" decoding="async" />
                     <div class="journal-item__meta"><span>Tokyo</span><span class="journal-item__excerpt">2022 · The first time Tokyo turned white with snow…</span><span class="journal-item__full" data-i18n="journal.1.desc">2022 · The first time Tokyo turned white with snow, I realized I wasn't a stranger here anymore.</span></div>
                     <div class="journal-item__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><line x1="14" y1="8" x2="14" y2="20"/><line x1="8" y1="14" x2="20" y2="14"/></svg></div>
                 </div>
                 <div class="journal-item" role="button" tabindex="0" aria-expanded="false" aria-label="University, 2024. Late-night design work." data-index="1">
-                    <img src="images/gallery/gallery-2.jpg" alt="Late-night design work at university, 2024" loading="lazy" width="400" height="300" />
+                    <img src="images/gallery/gallery-2.webp" alt="Late-night design work at university, 2024" loading="lazy" width="400" height="300" decoding="async" />
                     <div class="journal-item__meta"><span>University</span><span class="journal-item__excerpt">2024 · Late-night design work, when the world goes quiet…</span><span class="journal-item__full" data-i18n="journal.2.desc">2024 · Late-night design work, when the world goes quiet and my head gets loud with ideas.</span></div>
                     <div class="journal-item__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><line x1="14" y1="8" x2="14" y2="20"/><line x1="8" y1="14" x2="20" y2="14"/></svg></div>
                 </div>
                 <div class="journal-item" role="button" tabindex="0" aria-expanded="false" aria-label="Osaka, 2023. Neon rain." data-index="2">
-                    <img src="images/gallery/gallery-3.jpg" alt="Neon rain in Osaka, 2023" loading="lazy" width="400" height="300" />
+                    <img src="images/gallery/gallery-3.webp" alt="Neon rain in Osaka, 2023" loading="lazy" width="400" height="300" decoding="async" />
                     <div class="journal-item__meta"><span>Osaka</span><span class="journal-item__excerpt">2023 · Rain under the lights, a city that never stops dreaming…</span><span class="journal-item__full" data-i18n="journal.3.desc">2023 · Rain under the lights, a city that never really stops dreaming.</span></div>
                     <div class="journal-item__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><line x1="14" y1="8" x2="14" y2="20"/><line x1="8" y1="14" x2="20" y2="14"/></svg></div>
                 </div>
                 <div class="journal-item" role="button" tabindex="0" aria-expanded="false" aria-label="Studio, 2024. Quiet hour." data-index="3">
-                    <img src="images/gallery/gallery-4.jpg" alt="Quiet hour in the studio, 2024" loading="lazy" width="400" height="300" />
+                    <img src="images/gallery/gallery-4.webp" alt="Quiet hour in the studio, 2024" loading="lazy" width="400" height="300" decoding="async" />
                     <div class="journal-item__meta"><span>Studio</span><span class="journal-item__excerpt">2024 · That quiet hour when ideas start turning into something real…</span><span class="journal-item__full" data-i18n="journal.4.desc">2024 · That quiet hour when ideas start turning into something real.</span></div>
                     <div class="journal-item__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><line x1="14" y1="8" x2="14" y2="20"/><line x1="8" y1="14" x2="20" y2="14"/></svg></div>
                 </div>
                 <div class="journal-item" role="button" tabindex="0" aria-expanded="false" aria-label="People, 2023. A stranger's smile." data-index="4">
-                    <img src="images/gallery/gallery-5.jpg" alt="A stranger's smile, 2023" loading="lazy" width="400" height="300" />
+                    <img src="images/gallery/gallery-5.webp" alt="A stranger's smile, 2023" loading="lazy" width="400" height="300" decoding="async" />
                     <div class="journal-item__meta"><span>People</span><span class="journal-item__excerpt">2023 · A stranger's smile, just enough to remind me…</span><span class="journal-item__full" data-i18n="journal.5.desc">2023 · A stranger's smile, just enough to remind me connection is everywhere if you look.</span></div>
                     <div class="journal-item__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><line x1="14" y1="8" x2="14" y2="20"/><line x1="8" y1="14" x2="20" y2="14"/></svg></div>
                 </div>
                 <div class="journal-item" role="button" tabindex="0" aria-expanded="false" aria-label="Kyoto, 2022. Temple of light." data-index="5">
-                    <img src="images/gallery/gallery-6.jpg" alt="Temple lit up at night in Kyoto, 2022" loading="lazy" width="400" height="300" />
+                    <img src="images/gallery/gallery-6.webp" alt="Temple lit up at night in Kyoto, 2022" loading="lazy" width="400" height="300" decoding="async" />
                     <div class="journal-item__meta"><span>Kyoto</span><span class="journal-item__excerpt">2022 · A temple lit up at night, one still moment…</span><span class="journal-item__full" data-i18n="journal.6.desc">2022 · A temple lit up at night, one still moment in a world that never slows down.</span></div>
                     <div class="journal-item__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="14" cy="14" r="12"/><line x1="14" y1="8" x2="14" y2="20"/><line x1="8" y1="14" x2="20" y2="14"/></svg></div>
                 </div>
@@ -416,7 +418,7 @@
             <button class="journal-modal__nav-btn journal-modal__nav-btn--right" id="journalModalNext" data-i18n="journal.next">Next</button>
             <div class="journal-modal__scroll">
                 <h2 id="journalModalTitle" class="sr-only">Enlarged photo view</h2>
-                <img class="journal-modal__img" id="journalModalImg" src="" alt="" />
+                <img class="journal-modal__img" id="journalModalImg" src="" alt="" width="1200" height="800" />
                 <p class="journal-modal__desc" id="journalModalDesc"></p>
             </div>
         </div>
@@ -429,7 +431,6 @@
         </div>
     </noscript>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script src="js/script.js" defer></script>
 </body>
 </html>
