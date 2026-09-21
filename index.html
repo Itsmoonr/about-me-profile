@@ -21,11 +21,10 @@
                        images/ross-portrait-960.webp 960w"
           imagesizes="(max-width: 820px) 90vw, 480px" />
 
-    <!-- ===== Google Fonts non-blocking ===== -->
-    <link rel="stylesheet"
+    <!-- ===== Google Fonts preload (fetch sớm, không chặn render) ===== -->
+    <link rel="preload" as="style"
           href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,300..700&family=JetBrains+Mono:wght@400;600&display=swap"
-          media="print"
-          onload="this.media='all'" />
+          onload="this.onload=null;this.rel='stylesheet'" />
     <noscript>
         <link rel="stylesheet"
               href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,300..700&family=JetBrains+Mono:wght@400;600&display=swap" />
@@ -78,7 +77,7 @@
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
     <header class="nav" id="nav" role="banner" aria-label="Main navigation">
-        <a href="#hero" class="nav__logo" aria-label="Ross Nguyen home">R <span>·</span></a>
+        <a href="#hero" class="nav__logo" aria-label="R · Ross Nguyen home">R <span>·</span></a>
         <div style="display:flex;align-items:center;gap:var(--space-2);">
             <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
                 <span></span><span></span><span></span>
@@ -112,8 +111,8 @@
                 <div class="hero__text">
                     <h1 class="hero__name" aria-label="Ross"><span>R</span><span>o</span><span>s</span><span>s</span></h1>
                     <p class="hero__subtitle"><span>Designer</span><span> · </span><span>Developer</span><span> · </span><span>Storyteller</span></p>
-                    <p class="hero__tagline" id="heroTagline"></p>
-                    <p class="hero__invite" id="heroInvite"></p>
+                    <p class="hero__tagline" id="heroTagline" data-rendered-lang="en"><span style="--i:0">From</span> <span style="--i:1">the</span> <span style="--i:2">glamour</span> <span style="--i:3">of</span> <span style="--i:4">Ho</span> <span style="--i:5">Chi</span> <span style="--i:6">Minh</span> <span style="--i:7">City</span> <span style="--i:8">to</span> <span style="--i:9">Tokyo,</span> <span style="--i:10">the</span> <span style="--i:11">City</span> <span style="--i:12">of</span> <span style="--i:13">Lights,</span> <span style="--i:14">I've</span> <span style="--i:15">been</span> <span style="--i:16">writing</span> <span style="--i:17">a</span> <span style="--i:18">story</span> <span style="--i:19">that</span> <span style="--i:20">connects</span> <span style="--i:21">two</span> <span style="--i:22">countries.</span></p>
+                    <p class="hero__invite" id="heroInvite" data-rendered-lang="en"><span style="--i:0">Every</span> <span style="--i:1">line</span> <span style="--i:2">of</span> <span style="--i:3">code,</span> <span style="--i:4">every</span> <span style="--i:5">frame,</span> <span style="--i:6">every</span> <span style="--i:7">story</span> <span style="--i:8">here</span> <span style="--i:9">is</span> <span style="--i:10">a</span> <span style="--i:11">piece</span> <span style="--i:12">of</span> <span style="--i:13">my</span> <span style="--i:14">journey.</span></p>
                     <div class="hero__cta-group">
                         <span><a href="#profile" class="hero__cta" data-i18n="hero.cta">Begin the journey</a></span>
                         <span><a href="#contact" class="hero__cta hero__cta--secondary" data-i18n="hero.contact">Get in touch</a></span>
