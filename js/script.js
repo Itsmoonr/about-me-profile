@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
         const frac = scrollY / maxScroll;
         if (scrollProgress) {
-            scrollProgress.style.width = (frac * 100) + '%';
+            scrollProgress.style.transform = 'scaleX(' + frac + ')';
         }
 
         if (!isTouch && mouseLight) {
