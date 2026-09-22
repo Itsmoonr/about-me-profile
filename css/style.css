@@ -122,6 +122,16 @@
 .day-theme .skip-link {
     color: #0d1e33;
 }
+/* Fix specificity: rule trên ghi đè màu chữ của nút secondary trong day theme.
+   Restore lại --text-secondary (contrast 9.7:1 trên #182a44). */
+.day-theme .hero__cta--secondary {
+    color: var(--text-secondary);
+}
+/* Fix contrast 4.27 → 8.0 cho "SCROLL" trong day theme.
+   Chỉ override day theme, dark theme giữ #f4a261 gốc. */
+.day-theme .hero__scroll-indicator {
+    color: #f7b587;
+}
 
 *, 
 *::before,
@@ -251,6 +261,8 @@ body {
     background: var(--accent-gradient);
     box-shadow: 0 0 12px rgba(102, 192, 244, 0.35);
     transition: width .08s linear;
+    transform: scaleX(0);
+    transform-origin: left center;
     pointer-events: none;
 }
 
